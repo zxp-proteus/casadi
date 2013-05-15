@@ -1,0 +1,6 @@
+Name: casadi
+Description: A Symbolic Framework for Automatic Differentation
+URL: http://casadi.org
+Version: @PC_VERSION@
+Libs: @PC_LIBRARY_DIRS@ @PC_LIBS@
+Cflags: @PC_CXX_FLAGS@ @PC_INCLUDE_DIRS@ 

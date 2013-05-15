@@ -313,6 +313,89 @@ if(WITH_DSDP AND BLAS_FOUND AND LAPACK_FOUND)
 endif()
 add_feature_info(dsdp-interface DSDP_FOUND "Interface to the interior point SDP solver DSDP (requires BLAS and LAPACK).")
 
+# Flags and links
+
+set(CASADI_CXX_FLAGS "")
+set(CASADI_LINK_LIBRARIES_LIST "")
+set(CASADI_LINK_LIBRARIES_DIRS "")
+
+if(IPOPT_FOUND)
+  set(CASADI_LINK_LIBRARIES_DIRS ${CASADI_LINK_LIBRARIES_DIRS} ${IPOPT_LIBRARY_DIRS})
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_IPOPT")
+  if(WITH_IPOPT_CALLBACK)
+    set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_IPOPT_CALLBACK")
+  endif()
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_ipopt_interface ${IPOPT_LIBRARIES})
+endif()
+
+if(WITH_SUNDIALS)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_SUNDIALS")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_sundials_interface ${SUNDIALS_LIBRARIES})
+endif()
+
+if(ACADO_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_ACADO")
+  if(ACADO_SHARED_LIBRARIES)
+    set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_acado_interface casadi_qpoases_interface ${ACADO_SHARED_LIBRARIES})
+  else(ACADO_SHARED_LIBRARIES)
+    if(ACADO_LIBRARIES)
+      set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_acado_interface casadi_qpoases_interface ${ACADO_LIBRARIES})
+    endif(ACADO_LIBRARIES)
+  endif(ACADO_SHARED_LIBRARIES)
+endif()
+
+if(QPOASES_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_QPOASES")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_qpoases_interface ${QPOASES_LIBRARIES})
+endif()
+
+if(DSDP_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_DSDP")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_dsdp_interface ${DSDP_LIBRARIES})
+endif()
+
+if(WITH_CSPARSE)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_CSPARSE")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_csparse_interface ${CSPARSE_LIBRARIES})
+endif()
+
+if(KNITRO_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_KNITRO")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_knitro_interface ${KNITRO_LIBRARIES})
+endif()
+
+if(CPLEX_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_CPLEX")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_cplex_interface ${CPLEX_LIBRARIES})
+endif()
+
+# if(GSL_FOUND)
+#   set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_GSL")
+#   set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_gsl_interface ${GSL_LIBRARIES})
+# endif()
+
+if(OOQP_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_OOQP")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_ooqp_interface ${OOQP_LIBRARIES})
+endif()
+
+if(WORHP_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_WORHP")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_worhp_interface ${WORHP_LIBRARIES})
+endif()
+
+if(LAPACK_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_LAPACK")
+  set(CASADI_LINK_LIBRARIES_LIST ${CASADI_LINK_LIBRARIES_LIST} casadi_lapack_interface ${LAPACK_LIBRARIES})
+endif()
+
+# enabling openmp support if requesed
+if(OPENMP_FOUND)
+  set(CASADI_CXX_FLAGS ${CASADI_CXX_FLAGS} "-DWITH_OPENMP")
+endif()
+
+###### 
+
 add_subdirectory(symbolic)
 add_subdirectory(optimal_control)
 add_subdirectory(nonlinear_programming)
@@ -356,4 +439,40 @@ CONFIGURE_FILE(
   ${CMAKE_SOURCE_DIR}/symbolic/casadi_meta.cpp.cmake
   ${CMAKE_SOURCE_DIR}/symbolic/casadi_meta.cpp
   ESCAPE_QUOTES
+)
+
+if((${PACKAGE_VERSION} MATCHES "\\+") AND git_describe)
+set(PC_VERSION ${git_describe})
+else()
+set(PC_VERSION ${PACKAGE_VERSION})
+endif()
+
+set(PC_CXX_FLAGS "")
+set(PC_INCLUDE_DIRS "")
+set(PC_LIBRARY_DIRS "")
+set(PC_LIBS "")
+foreach(DIR ${CASADI_LINK_LIBRARIES_DIRS} ${CMAKE_BINARY_DIR}/lib)
+set(PC_LIBRARY_DIRS "${PC_LIBRARY_DIRS} -L${DIR}")
+endforeach()
+foreach(DIR ${CMAKE_SOURCE_DIR})
+set(PC_INCLUDE_DIRS "${PC_INCLUDE_DIRS} -I${DIR}")
+endforeach()
+foreach(FLAG ${CASADI_CXX_FLAGS})
+set(PC_CXX_FLAGS "${PC_CXX_FLAGS} ${FLAG}")
+endforeach()
+foreach(LIB ${CASADI_LINK_LIBRARIES_LIST} ${CASADI_DEPENDENCIES})
+if(LIB MATCHES "[\\/]")
+set(PC_LIBS "${PC_LIBS} ${LIB}")
+else()
+set(PC_LIBS "${PC_LIBS} -l${LIB}")
+endif()
+endforeach()
+
+set(PC_LIBRARY_DIRS "${PC_LIBRARY_DIRS} -L${DIR}")
+
+CONFIGURE_FILE(
+  ${CMAKE_SOURCE_DIR}/cmake_modules/casadi.pc.in
+  ${CMAKE_BINARY_DIR}/lib/pkgconfig/casadi.pc
+  ESCAPE_QUOTES
+  @ONLY
 )
