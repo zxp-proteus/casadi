@@ -3,7 +3,9 @@ branches:
     - /.*travis.*/
 
 build_script:
-  - cd
-  - cmake "-GMSYS Makefiles" ..
+  - mkdir build
+  - cd build
+  - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
+  - make
   #- cmake "-GVisual Studio 12 Win64" -H. -B_builds
   #- cmake --build _builds --config "Debug"
