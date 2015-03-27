@@ -4,6 +4,8 @@ branches:
 
 install:
   - cinst -y mingw
+  - cinst -y mingw-get
+  - mingw-get.exe gcc g++ msys-base 
   
 build_script:
   - mkdir build
