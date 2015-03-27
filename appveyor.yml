@@ -3,9 +3,7 @@ branches:
     - /.*travis.*/
 
 install:
-  - cinst cmake
-  - cinst make
-  - cinst mingw
+  - cinst -y mingw
   
 build_script:
   - mkdir build
