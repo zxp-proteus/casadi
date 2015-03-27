@@ -6,7 +6,6 @@ install:
   - cinst cmake
   - cinst make
   - cinst mingw
-  - cinst msys
   
 build_script:
   - mkdir build
