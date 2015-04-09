@@ -6,6 +6,7 @@ install:
   - cinst -y mingw
   - cinst -y mingw-get
   - cinst -y swig
+  - cinst -y numpy
   - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\MinGW\bin;C:\tools\MinGW\bin
   - mingw-get install gcc g++ msys-base 
   
@@ -14,5 +15,6 @@ build_script:
   - cd build
   - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
   - make
+  - make install
   #- cmake "-GVisual Studio 12 Win64" -H. -B_builds
   #- cmake --build _builds --config "Debug"
