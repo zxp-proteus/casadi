@@ -6,7 +6,7 @@ install:
   - cinst -y mingw
   - cinst -y mingw-get
   - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\MinGW\bin;C:\tools\MinGW\bin
-  - mingw-get gcc g++ msys-base 
+  - mingw-get install gcc g++ msys-base 
   
 build_script:
   - mkdir build
