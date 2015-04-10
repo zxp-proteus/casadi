@@ -1,9 +1,6 @@
 environment:
   global:
       CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\testbot\\helpers\\appveyor\\run_with_env.cmd"
-      PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.8"
-      PYTHON_ARCH: "32"
 
 branches: 
   except:
@@ -17,10 +14,6 @@ install:
   - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\MinGW\bin;C:\tools\MinGW\bin
   - mingw-get install gcc g++ msys-base 
   - "powershell ./testbot/helpers/appveyor/install.ps1"
-  - "python --version"
-  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "%CMD_IN_ENV% pip install numpy"
   
 build_script:
   - mkdir build
