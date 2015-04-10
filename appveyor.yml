@@ -3,7 +3,10 @@ environment:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
     # See: http://stackoverflow.com/a/13751649/163740
-    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\testbot\\helpers\\appveyor\\run_with_env.cmd"
+    - CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\testbot\\helpers\\appveyor\\run_with_env.cmd"
+    - PYTHON: "C:\\Python27"
+    - PYTHON_VERSION: "2.7.8"
+    - PYTHON_ARCH: "32"
 
 branches: 
   except:
@@ -16,7 +19,11 @@ install:
   - cinst -y swig
   - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\MinGW\bin;C:\tools\MinGW\bin
   - mingw-get install gcc g++ msys-base 
-  - "%CMD_IN_ENV% pi pip install numpy"
+  - "powershell ./testbot/helpers/appveyor/install.ps1"
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "%CMD_IN_ENV% pip install numpy"
   
 build_script:
   - mkdir build
