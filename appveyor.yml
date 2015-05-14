@@ -36,6 +36,8 @@ install:
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
+  - "%CMD_IN_ENV% pip install wheel"
+
   # Now that wheel has been installed, check to see if a numpy wheel has been
   # made yet. If it hasn't, compile it and put it in C:\tmp.
   - "powershell ./misc/install_numpy.ps1"
