@@ -1,7 +1,64 @@
+environment:
+  global:
+    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
+    # /E:ON and /V:ON options are not enabled in the batch script intepreter
+    # See: http://stackoverflow.com/a/13751649/163740
+    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\misc\\run_with_env.cmd"
+    PYTHON: "C:\\Python27"
+    PYTHON_VERSION: "2.7.8"
+    PYTHON_ARCH: "32"
+
+cache:
+  # I keep pre-built python wheels in this tmp folder so that I don't 
+  # compile them each session. (This is where I put the numpy wheels.)
+  # The file install_numpy.ps1 has been set as a cach item dependency,
+  # numpy will be rebuilt.
+  - C:\tmp -> \misc\install_numpy.ps1
+ 
+install:
+  - ECHO "Filesystem root:"
+  - ps: "ls \"C:/\""
+
+  - ECHO "Installed SDKs:"
+  - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
+
+  # Install Python (from the official .msi of http://python.org) and pip when
+  # not already installed.
+  - "powershell ./misc/install.ps1"
+
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+  # Check that we have the expected version and architecture for Python
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+  # Now that wheel has been installed, check to see if a numpy wheel has been
+  # made yet. If it hasn't, compile it and put it in C:\tmp.
+  - "powershell ./misc/install_numpy.ps1"
+  
+  # This is where I install numpy from the pre-built wheel I compiled either
+  # earlier in this session, or in a previous session.
+  - "%CMD_IN_ENV% pip install --no-index --find-links=c:\\tmp numpy"
+  
+
 branches: 
   except:
     - /.*travis.*/
 
+install:
+  - git clone https://github.com/casadi/testbot.git
+  - cinst -y mingw
+  - cinst -y mingw-get
+  - cinst -y swig
+  - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\MinGW\bin;C:\tools\MinGW\bin
+  - mingw-get install gcc g++ msys-base
+  
 build_script:
-  - cmake "-GVisual Studio 12 Win64" -H. -B_builds
-  - cmake --build _builds --config "Debug"
+  - mkdir build
+  - cd build
+  - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
+  - make
+  - make install
