@@ -59,6 +59,6 @@ branches:
 build_script:
   - mkdir build
   - cd build
-  - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
-  - make
-  - make install
+  #- cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
+  #- make
+  #- make install
