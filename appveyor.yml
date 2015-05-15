@@ -14,7 +14,9 @@ cache:
   # The file install_numpy.ps1 has been set as a cach item dependency,
   # numpy will be rebuilt.
   - C:\tmp -> \misc\install_numpy.ps1
- 
+  - C:\ProgramData\chocolatey\bin
+  - C:\ProgramData\chocolatey\lib
+
 install:
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
@@ -58,6 +60,6 @@ branches:
 build_script:
   - mkdir build
   - cd build
-  - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
-  - make
-  - make install
+#  - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
+#  - make
+#  - make install
