@@ -56,7 +56,7 @@ install:
 branches: 
   except:
     - /.*travis.*/
-  
+
 build_script:
   - mkdir build
   - cd build
