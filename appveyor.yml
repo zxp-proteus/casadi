@@ -3,5 +3,5 @@ branches:
     - /.*travis.*/
 
 build_script:
-  - cmake "-GVisual Studio 12 Win64" -H. -B_builds
+  - cmake "-GVisual Studio 12 Win64" -DWITH_PYTHON=ON -H. -B_builds
   - cmake --build _builds --config "Debug"
