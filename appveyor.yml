@@ -14,10 +14,9 @@ install:
   - git clone https://github.com/casadi/testbot.git
   - openssl aes-256-cbc -k "%keyA%" -in testbot/id_rsa_travis.enc -out id_rsa_travis -d
   - openssl aes-256-cbc -k "%keyA%" -in testbot/testbotcredentials.py.enc -out testbotcredentials.py -d
-  - "powershell testbot/helpers/install.ps1"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - pip install requests
-  - set PYTHONPATH=%PYTHONPATH%;C:\projects\testbot\helpers
+  - set PYTHONPATH=%PYTHONPATH%;C:\projects\casadi\testbot\helpers
   - python -c "from restricted import *; download('prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip')"
   - 7z e -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip"
   - ps: "ls"
