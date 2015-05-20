@@ -19,7 +19,7 @@ install:
   - pip install requests
   - set PYTHONPATH=%PYTHONPATH%;C:\projects\casadi\testbot\helpers
   - python -c "from restricted import *; download('prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip')"
-  - 7z e -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip"
+  - 7z x -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip"
   - ps: "ls"
   - xcopy /E tmp C:\tmp
   - ps: "ls C:/tmp"
