@@ -24,7 +24,7 @@ install:
   - openssl aes-256-cbc -k "%keyA%" -in testbot/id_rsa_travis.enc -out id_rsa_travis -d
   - openssl aes-256-cbc -k "%keyA%" -in testbot/testbotcredentials.py.enc -out testbotcredentials.py -d
   - "powershell testbot/helpers/install.ps1"
-  - pip install requests
+  - "%CMD_IN_ENV% pip install requests"
   - set PYTHONPATH=%PYTHONPATH%;C:\projects\testbot\helpers
   - python -c "from restricted import *; download('prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip')"
   - 7z e -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip"
