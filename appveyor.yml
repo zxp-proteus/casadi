@@ -23,8 +23,8 @@ install:
   - ps: "ls"
   - xcopy /E tmp C:\tmp
   - ps: "ls C:/tmp"
-  - xcopy /E bin C:\ProgramData\chocolatey\bin
-  - xcopy /E bin C:\ProgramData\chocolatey\lib
+  - xcopy /i /E bin C:\ProgramData\chocolatey\bin
+  - xcopy /i /E bin C:\ProgramData\chocolatey\lib
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
 
