@@ -20,10 +20,10 @@ install:
   - set PYTHONPATH=%PYTHONPATH%;C:\projects\casadi\testbot\helpers
   - python -c "from restricted import *; download('prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip')"
   - 7z x -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip" > nul
-  - xcopy /i /E tmp C:\tmp
+  - xcopy /Y /i /E tmp C:\tmp
   - ps: "ls C:/tmp"
-  - xcopy /i /E bin C:\ProgramData\chocolatey\bin
-  - xcopy /i /E bin C:\ProgramData\chocolatey\lib
+  - xcopy /Y /i /E bin C:\ProgramData\chocolatey\bin
+  - xcopy /Y /i /E bin C:\ProgramData\chocolatey\lib
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
 
