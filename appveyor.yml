@@ -7,6 +7,8 @@ environment:
     PYTHON: "C:\\Python27"
     PYTHON_VERSION: "2.7.8"
     PYTHON_ARCH: "32"
+    keyA:
+      secure: 44jgfY+doJx9eHLCweOl6Mf7qoeeRlA2Dch0cLUGbvRorXaqr6bs8tVsJ/KXGPVIA4DrXLlpaEeb2eJ5LM4Mdeq5Ux2txHsQpTAnBDSihWQ=
 
 cache:
   # I keep pre-built python wheels in this tmp folder so that I don't 
@@ -18,6 +20,18 @@ cache:
   - C:\ProgramData\chocolatey\lib
 
 install:
+  - git clone git@github.com:casadi/testbot.git
+  - openssl aes-256-cbc -k "%keyA%" -in testbot/id_rsa_travis.enc -out id_rsa_travis -d
+  - openssl aes-256-cbc -k "%keyA%" -in testbot/testbotcredentials.py.enc -out testbotcredentials.py -d
+  - pip install requests
+  - set PYTHONPATH=%PYTHONPATH%;C:\projects\testbot\helpers
+  - python -c "from restricted import *; download('prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip')"
+  - 7z e -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip"
+  - ps: "ls"
+  - xcopy /E tmp C:\tmp
+  - ps: "ls C:/tmp"
+  - xcopy /E bin C:\ProgramData\chocolatey\bin
+  - xcopy /E bin C:\ProgramData\chocolatey\lib
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
 
@@ -46,7 +60,6 @@ install:
   # This is where I install numpy from the pre-built wheel I compiled either
   # earlier in this session, or in a previous session.
   - "%CMD_IN_ENV% pip install --no-index --find-links=c:\\tmp numpy"
-  - git clone https://github.com/casadi/testbot.git
   - cinst -y mingw
   - cinst -y mingw-get
   - cinst -y swig
