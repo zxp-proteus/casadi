@@ -10,21 +10,13 @@ environment:
     keyA:
       secure: 44jgfY+doJx9eHLCweOl6Mf7qoeeRlA2Dch0cLUGbvRorXaqr6bs8tVsJ/KXGPVIA4DrXLlpaEeb2eJ5LM4Mdeq5Ux2txHsQpTAnBDSihWQ=
 
-cache:
-  # I keep pre-built python wheels in this tmp folder so that I don't 
-  # compile them each session. (This is where I put the numpy wheels.)
-  # The file install_numpy.ps1 has been set as a cach item dependency,
-  # numpy will be rebuilt.
-  - C:\tmp -> \misc\install_numpy.ps1
-  - C:\ProgramData\chocolatey\bin
-  - C:\ProgramData\chocolatey\lib
-
 install:
   - git clone https://github.com/casadi/testbot.git
   - openssl aes-256-cbc -k "%keyA%" -in testbot/id_rsa_travis.enc -out id_rsa_travis -d
   - openssl aes-256-cbc -k "%keyA%" -in testbot/testbotcredentials.py.enc -out testbotcredentials.py -d
   - "powershell testbot/helpers/install.ps1"
-  - "%CMD_IN_ENV% pip install requests"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - pip install requests
   - set PYTHONPATH=%PYTHONPATH%;C:\projects\testbot\helpers
   - python -c "from restricted import *; download('prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip')"
   - 7z e -y "prereq_%PYTHON_VERSION%_%PYTHON_ARCH%.zip"
