@@ -23,7 +23,7 @@ install:
   - xcopy /Y /i /E tmp C:\tmp
   - ps: "ls C:/tmp"
   - xcopy /Y /i /E bin C:\ProgramData\chocolatey\bin
-  - xcopy /Y /i /E bin C:\ProgramData\chocolatey\lib
+  - xcopy /Y /i /E lib C:\ProgramData\chocolatey\lib
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
 
@@ -65,6 +65,6 @@ branches:
 build_script:
   - mkdir build
   - cd build
-  #- cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
-  #- make
-  #- make install
+  - cmake "-GMSYS Makefiles" -DWITH_PYTHON=ON ..
+  - make
+  - make install
