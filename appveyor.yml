@@ -52,9 +52,6 @@ install:
   # This is where I install numpy from the pre-built wheel I compiled either
   # earlier in this session, or in a previous session.
   - "%CMD_IN_ENV% pip install --no-index --find-links=c:\\tmp numpy"
-  - cinst -y mingw
-  - cinst -y mingw-get
-  - cinst -y swig
   - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\MinGW\bin;C:\tools\MinGW\bin
   - mingw-get install gcc g++ msys-base
 
