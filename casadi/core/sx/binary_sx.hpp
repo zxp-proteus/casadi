@@ -29,7 +29,6 @@
 #include "sx_node.hpp"
 #include <stack>
 
-// CACHING_MULTIMAP macro defined in sparisty.hpp
 
 /// \cond INTERNAL
 namespace casadi {
@@ -57,49 +56,8 @@ class CASADI_EXPORT BinarySX : public SXNode {
         casadi_math<double>::fun(op, dep0_val, dep1_val, ret_val);
         return ret_val;
       } else {
-        BinarySX* bsx_node;
-
-#ifdef WITH_CSE
-        // Compute hash
-        std::size_t bsx_hash;
-        // Find hashes of dependencies from cache
-
-        // Find the range of nodes with matching hash (normally only zero or one)
-        std::pair<CachingMap::iterator,
-                  CachingMap::iterator> eq = cached_binarysx_.equal_range(bsx_hash);
-
-        // Loop over maching hashes
-        bool found_matching_node = false;
-        for (CachingMap::iterator i=eq.first; i!=eq.second; ++i) {
-
-          BinarySX* hash_match = shared_cast<SXNode>(wref.shared());
-
-          // Verify that operation and dependencies are the same
-          bool matching_op = hash_match->op_ == op;
-          bool matching_dep0a = hash_match->dep0_.zz_isEqual(dep0, 0);
-          bool matching_dep1a = hash_match->dep1_.zz_isEqual(dep1, 0);
-          bool matching_dep0b = hash_match->dep0_.zz_isEqual(dep1, 0);
-          bool matching_dep1b = hash_match->dep1_.zz_isEqual(dep0, 0);
-          bool matching_deps = (matching_dep0a && matching_dep1a) ||
-                               (matching_dep0b && matching_dep1b);
-          if (matching_op && matching_deps) {
-            // Equivalent node found
-            bsx_node = hash_match;
-            found_matching_node = true;
-          }
-        }
-        if (!found_matching_node) {
-          // Construct new node and add to cache
-          bsx_node = new BinarySX(op, dep0, dep1);
-          cached_binarysx_.insert(std::pair<std::size_t, BinarySX*>(bsx_hash,bsx_node));
-        }
-#elif // WITH_CSE
-        // No Common Subexpression Elimination
-        bsx_node = new BinarySX(op, dep0, dep1);
-#endif // WITH_CSE
-
         // Expression containing free variables
-        return SXElement::create(bsx_node);
+        return SXElement::create(new BinarySX(op, dep0, dep1));
       }
     }
 
@@ -221,55 +179,7 @@ class CASADI_EXPORT BinarySX : public SXNode {
 
     /** \brief  The dependencies of the node */
     SXElement dep0_, dep1_;
-
-  // protected:
-#ifdef WITH_CSE
-    /** \brief Hash map of all binary nodes currently allocated
-     * (storage is allocated for it in sx_element.cpp) */
-    static CACHING_MULTIMAP<std::size_t, BinarySX*> cached_binarysx_;
-
-    /** \brief Hash a sparsity pattern */
-    static std::size_t hash_binarysx(unsigned char op,
-                                     const SXElement& dep0,
-                                     const SXElement& dep1);
-/// \cond INTERNAL
-#ifndef SWIG
-   typedef CACHING_MULTIMAP<std::size_t, WeakRef> CachingMap;
-#endif // SWIGS
-#endif // WITH_CSE
 };
-
-//   /// \cond INTERNAL
-// #ifdef WITH_CSE
-//   /** \brief Hash value of an integer */
-//   template<typename T>
-//   inline size_t hash_value(T v) { return size_t(v);}
-//
-//   /** \brief Generate a hash value incrementally (function taken from boost) */
-//   template<typename T>
-//   inline void hash_combine(std::size_t& seed, T v) {
-//     seed ^= hash_value(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-//   }
-//
-//   /** \brief Generate a hash value incrementally, array */
-//   inline void hash_combine(std::size_t& seed, const int* v, int sz) {
-//     for (int i=0; i<sz; ++i) hash_combine(seed, v[i]);
-//   }
-//
-//   /** \brief Generate a hash value incrementally (function taken from boost) */
-//   inline void hash_combine(std::size_t& seed, const std::vector<int>& v) {
-//     hash_combine(seed, getPtr(v), v.size());
-//   }
-//
-//   /** \brief Hash a sparsity pattern */
-//   CASADI_EXPORT std::size_t hash_sparsity(int nrow, int ncol,
-//                                           const std::vector<int>& colind,
-//                                           const std::vector<int>& row);
-//
-//   CASADI_EXPORT std::size_t hash_sparsity(int nrow, int ncol,
-//                                           const int* colind,
-//                                           const int* row);
-// #endif // WITH_CSE
 
 } // namespace casadi
 /// \endcond

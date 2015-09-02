@@ -34,6 +34,7 @@
 /** \brief  Scalar expression (which also works as a smart pointer class to this class) */
 #include "sx_element.hpp"
 
+
 /// \cond INTERNAL
 namespace casadi {
 
@@ -41,11 +42,7 @@ namespace casadi {
       \author Joel Andersson
       \date 2010
   */
-  class SXNode
-#ifdef WITH_CSE
-    : public SharedObject
-#endif // WITH_CSE
-   {
+  class SXNode {
     friend class SXElement;
     friend class Matrix<SXElement>;
 
@@ -129,8 +126,6 @@ namespace casadi {
     unsigned int count;
 
   };
-
-  /// \endcond
 
 } // namespace casadi
 /// \endcond
