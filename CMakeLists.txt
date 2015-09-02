@@ -84,6 +84,7 @@ option(WITH_PYTHON_INTERRUPTS "With interrupt handling inside Python front-end" 
 option(WITH_DEBIAN_BUILD "Add -DWITH_DEBIAN_BUILD (used for debian-specific warnings)" OFF)
 option(WITH_DEEPBIND "Load plugins with RTLD_DEEPBIND (can be used to resolve conflicting libraries in e.g. MATLAB)" OFF)
 option(WITH_SELFCONTAINED "Make the install directory self-contained" OFF)
+option(WITH_CSE "Enable common subexpression elimination for SX nodes" ON)
 
 # static on windows, shared on linux/osx by default
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -168,7 +169,7 @@ set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
 # when building, don't use the install RPATH already
 # (but later on when installing)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${CMAKE_INSTALL_PREFIX}/lib/casadi")
 
@@ -506,6 +507,10 @@ endif()
 
 if(WITH_DEEPBIND)
   add_definitions(-DWITH_DEEPBIND)
+endif()
+
+if(WITH_CSE)
+  add_definitions(-DWITH_CSE)
 endif()
 
 ######################################################

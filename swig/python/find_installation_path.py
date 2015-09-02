@@ -26,4 +26,3 @@ import distutils.sysconfig
 import sys
 
 sys.stdout.write(distutils.sysconfig.get_python_lib())
-

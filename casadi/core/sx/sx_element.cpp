@@ -43,6 +43,9 @@ namespace casadi {
   // Allocate storage for the caching
   CACHING_MAP<int, IntegerSX*> IntegerSX::cached_constants_;
   CACHING_MAP<double, RealtypeSX*> RealtypeSX::cached_constants_;
+#ifdef WITH_CSE
+  CACHING_MULTIMAP<std::size_t, WeakRef> BinarySX::cached_binarysx_;
+#endif // WITH_CSE
 
   SXElement::SXElement() {
     node = casadi_limits<SXElement>::nan.node;
@@ -1928,4 +1931,3 @@ namespace std {
   }
 
 } // namespace std
-

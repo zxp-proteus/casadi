@@ -103,7 +103,7 @@ The idea is to supply a directory that python knows about (included in PYTHONPAT
   endif()
 endif()
 
-# Construct a dynamic loader for python 
+# Construct a dynamic loader for python
 # NOTE(@jaeandersson): Needed?
 file(WRITE "${PROJECT_BINARY_DIR}/python/casadi/casadi_loader.py" "failed_modules={}\nloaded_modules=[]\n")
 file(APPEND "${PROJECT_BINARY_DIR}/python/casadi/casadi_loader.py"
