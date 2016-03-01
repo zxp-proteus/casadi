@@ -53,6 +53,10 @@ if(WITH_MATLAB)
    add_subdirectory(matlab)
 endif()
 
+if(WITH_OCTAVE)
+   add_subdirectory(octave)
+endif()
+
 if(WITH_JSON)
    add_subdirectory(json)
 endif()

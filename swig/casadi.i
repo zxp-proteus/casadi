@@ -33,11 +33,13 @@
 
   /// Data structure in the target language holding data
 #ifdef SWIGPYTHON
-#define GUESTOBJECT PyObject
+#define GUEST_T PyObject*
 #elif defined(SWIGMATLAB)
-#define GUESTOBJECT mxArray
+#define GUEST_T mxArray*
+#elif defined(SWIGOCTAVE)
+#define GUEST_T octave_value
 #else
-#define GUESTOBJECT void
+#define GUEST_T void*
 #endif
 
 // Define printing routine
@@ -322,12 +324,12 @@ import_array();
 %fragment("casadi_decl", "header") {
   namespace casadi {
     /* Check if Null or None */
-    bool is_null(GUESTOBJECT *p);
+    bool is_null(GUEST_T p);
 
     /* Typemaps from CasADi types to types in the interfaced language:
      * 
      * to_ptr: Converts a pointer in interfaced language to C++:
-     *   Input: GUESTOBJECT pointer p
+     *   Input: GUEST_T
      *   Output: Pointer to pointer: At input, pointer to pointer to temporary
      *   The routine will either:
      *     - Do nothing, if 0
@@ -339,91 +341,98 @@ import_array();
      */
 
     // Basic types
-    bool to_ptr(GUESTOBJECT *p, bool** m);
-    GUESTOBJECT* from_ptr(const bool *a);
-    bool to_ptr(GUESTOBJECT *p, int** m);
-    GUESTOBJECT* from_ptr(const int *a);
-    bool to_ptr(GUESTOBJECT *p, double** m);
-    GUESTOBJECT* from_ptr(const double *a);
-    bool to_ptr(GUESTOBJECT *p, std::string** m);
-    GUESTOBJECT* from_ptr(const std::string *a);
+    bool to_ptr(GUEST_T p, bool** m);
+    GUEST_T from_ptr(const bool *a);
+    bool to_ptr(GUEST_T p, int** m);
+    GUEST_T from_ptr(const int *a);
+    bool to_ptr(GUEST_T p, double** m);
+    GUEST_T from_ptr(const double *a);
+    bool to_ptr(GUEST_T p, std::string** m);
+    GUEST_T from_ptr(const std::string *a);
 
     // std::vector
 #ifdef SWIGMATLAB
-    bool to_ptr(GUESTOBJECT *p, std::vector<double> **m);
-    GUESTOBJECT* from_ptr(const std::vector<double> *a);
-    bool to_ptr(GUESTOBJECT *p, std::vector<int>** m);
-    GUESTOBJECT* from_ptr(const std::vector<int> *a);
-    bool to_ptr(GUESTOBJECT *p, std::vector<std::string>** m);
-    GUESTOBJECT* from_ptr(const std::vector<std::string> *a);
+    bool to_ptr(GUEST_T p, std::vector<double> **m);
+    GUEST_T from_ptr(const std::vector<double> *a);
+    bool to_ptr(GUEST_T p, std::vector<int>** m);
+    GUEST_T from_ptr(const std::vector<int> *a);
+    bool to_ptr(GUEST_T p, std::vector<std::string>** m);
+    GUEST_T from_ptr(const std::vector<std::string> *a);
 #endif // SWIGMATLAB
-    template<typename M> bool to_ptr(GUESTOBJECT *p, std::vector<M>** m);
-    template<typename M> GUESTOBJECT* from_ptr(const std::vector<M> *a);
+    template<typename M> bool to_ptr(GUEST_T p, std::vector<M>** m);
+    template<typename M> GUEST_T from_ptr(const std::vector<M> *a);
 
     // std::pair
 #ifdef SWIGMATLAB
-    bool to_ptr(GUESTOBJECT *p, std::pair<int, int>** m);
-    GUESTOBJECT* from_ptr(const std::pair<int, int>* a);
+    bool to_ptr(GUEST_T p, std::pair<int, int>** m);
+    GUEST_T from_ptr(const std::pair<int, int>* a);
 #endif // SWIGMATLAB
-    template<typename M1, typename M2> bool to_ptr(GUESTOBJECT *p, std::pair<M1, M2>** m);
-    template<typename M1, typename M2> GUESTOBJECT* from_ptr(const std::pair<M1, M2>* a);
+    template<typename M1, typename M2> bool to_ptr(GUEST_T p, std::pair<M1, M2>** m);
+    template<typename M1, typename M2> GUEST_T from_ptr(const std::pair<M1, M2>* a);
 
     // std::map
-    template<typename M> bool to_ptr(GUESTOBJECT *p, std::map<std::string, M>** m);
-    template<typename M> GUESTOBJECT* from_ptr(const std::map<std::string, M> *a);
+    template<typename M> bool to_ptr(GUEST_T p, std::map<std::string, M>** m);
+    template<typename M> GUEST_T from_ptr(const std::map<std::string, M> *a);
 
     // Slice
-    bool to_ptr(GUESTOBJECT *p, casadi::Slice** m);
-    GUESTOBJECT* from_ptr(const casadi::Slice *a);
+    bool to_ptr(GUEST_T p, casadi::Slice** m);
+    GUEST_T from_ptr(const casadi::Slice *a);
 
     // Sparsity
-    bool to_ptr(GUESTOBJECT *p, casadi::Sparsity** m);
-    GUESTOBJECT* from_ptr(const casadi::Sparsity *a);
+    bool to_ptr(GUEST_T p, casadi::Sparsity** m);
+    GUEST_T from_ptr(const casadi::Sparsity *a);
 
     // Matrix<>
-    bool to_ptr(GUESTOBJECT *p, casadi::DM** m);
-    GUESTOBJECT* from_ptr(const casadi::DM *a);
-    bool to_ptr(GUESTOBJECT *p, casadi::IM** m);
-    GUESTOBJECT* from_ptr(const casadi::IM *a);
-    bool to_ptr(GUESTOBJECT *p, casadi::SX** m);
-    GUESTOBJECT* from_ptr(const casadi::SX *a);
+    bool to_ptr(GUEST_T p, casadi::DM** m);
+    GUEST_T from_ptr(const casadi::DM *a);
+    bool to_ptr(GUEST_T p, casadi::IM** m);
+    GUEST_T from_ptr(const casadi::IM *a);
+    bool to_ptr(GUEST_T p, casadi::SX** m);
+    GUEST_T from_ptr(const casadi::SX *a);
 
     // MX
-    bool to_ptr(GUESTOBJECT *p, casadi::MX** m);
-    GUESTOBJECT* from_ptr(const casadi::MX *a);
+    bool to_ptr(GUEST_T p, casadi::MX** m);
+    GUEST_T from_ptr(const casadi::MX *a);
 
     // Function
-    bool to_ptr(GUESTOBJECT *p, casadi::Function** m);
-    GUESTOBJECT* from_ptr(const casadi::Function *a);
+    bool to_ptr(GUEST_T p, casadi::Function** m);
+    GUEST_T from_ptr(const casadi::Function *a);
 
     // SXElem
-    bool to_ptr(GUESTOBJECT *p, casadi::SXElem** m);
-    GUESTOBJECT* from_ptr(const casadi::SXElem *a);
+    bool to_ptr(GUEST_T p, casadi::SXElem** m);
+    GUEST_T from_ptr(const casadi::SXElem *a);
 
     // GenericType
-    bool to_ptr(GUESTOBJECT *p, casadi::GenericType** m);
-    GUESTOBJECT* from_ptr(const casadi::GenericType *a);
+    bool to_ptr(GUEST_T p, casadi::GenericType** m);
+    GUEST_T from_ptr(const casadi::GenericType *a);
 
     // Same as to_ptr, but with pointer instead of pointer to pointer
-    template<typename M> bool to_val(GUESTOBJECT *p, M* m);
+    template<typename M> bool to_val(GUEST_T p, M* m);
 
     // Check if conversion is possible
-    template<typename M> bool can_convert(GUESTOBJECT *p) { return to_ptr(p, static_cast<M**>(0));}
+    template<typename M> bool can_convert(GUEST_T p) { return to_ptr(p, static_cast<M**>(0));}
 
     // Assign to a vector, if conversion is allowed
     template<typename E, typename M> bool assign_vector(E* d, int sz, std::vector<M>** m);
 
     // Same as the above, but with reference instead of pointer
-    template<typename M> GUESTOBJECT* from_ref(const M& m) { return from_ptr(&m);}
+    template<typename M> GUEST_T from_ref(const M& m) { return from_ptr(&m);}
+
+#ifdef SWIGOCTAVE
+    // Workaround: SwigValueWrapper::operator& is non-const
+    template<typename M> GUEST_T from_ref(const SwigValueWrapper<M>& m) {
+      return &const_cast<SwigValueWrapper<M>&>(m);
+    }
+#endif // SWIGOCTAVE
 
     // Specialization for std::vectors of booleans
-    GUESTOBJECT* from_ref(std::vector<bool>::const_reference m) {
+    GUEST_T from_ref(std::vector<bool>::const_reference m) {
       bool tmp = m;
       return from_ptr(&tmp);
     }
 
     // Same as the above, but with a temporary object
-    template<typename M> GUESTOBJECT* from_tmp(M m) { return from_ptr(&m);}
+    template<typename M> GUEST_T from_tmp(M m) { return from_ptr(&m);}
 #ifdef SWIGMATLAB
     // Get sparsity pattern
     Sparsity get_sparsity(const mxArray* p);
@@ -437,7 +446,7 @@ import_array();
 
 %fragment("casadi_aux", "header", fragment="casadi_decl") {
   namespace casadi {
-    template<typename M> bool to_val(GUESTOBJECT *p, M* m) {
+    template<typename M> bool to_val(GUEST_T p, M* m) {
       // Copy the pointer
       M *m2 = m;
       bool ret = to_ptr(p, m ? &m2 : 0);
@@ -447,7 +456,7 @@ import_array();
     }
 
     // Same as to_ptr, but with GenericType
-    template<typename M> bool to_generic(GUESTOBJECT *p, GenericType** m) {
+    template<typename M> bool to_generic(GUEST_T p, GenericType** m) {
       if (m) {
         // Temporary
         M tmp, *tmp_ptr=&tmp;
@@ -522,7 +531,7 @@ import_array();
       return traits_assign_vector<E, M>::assign(d, sz, m);
     }
 
-    bool is_null(GUESTOBJECT *p) {
+    bool is_null(GUEST_T p) {
 #ifdef SWIGPYTHON
       if (p == Py_None) return true;
 #endif
@@ -530,6 +539,14 @@ import_array();
       if (p == 0) return true;
 #endif
       return false;
+    }
+
+    bool is_ok(GUEST_T p) {
+#ifdef SWIGOCTAVE
+      return p.is_defined();
+#else
+      return p!=0;
+#endif
     }
 
 #ifdef SWIGMATLAB
@@ -574,7 +591,7 @@ import_array();
 
 %fragment("casadi_bool", "header", fragment="casadi_aux", fragment=SWIG_AsVal_frag(bool)) {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, bool** m) {
+    bool to_ptr(GUEST_T p, bool** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -585,7 +602,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT * from_ptr(const bool *a) {
+    GUEST_T  from_ptr(const bool *a) {
 #ifdef SWIGPYTHON
       return PyBool_FromLong(*a);
 #elif defined(SWIGMATLAB)
@@ -599,7 +616,7 @@ import_array();
 
 %fragment("casadi_int", "header", fragment="casadi_aux", fragment=SWIG_AsVal_frag(int), fragment=SWIG_AsVal_frag(long)) {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, int** m) {
+    bool to_ptr(GUEST_T p, int** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -634,7 +651,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT * from_ptr(const int *a) {
+    GUEST_T  from_ptr(const int *a) {
 #ifdef SWIGPYTHON
       return PyInt_FromLong(*a);
 #elif defined(SWIGMATLAB)
@@ -648,7 +665,7 @@ import_array();
 
 %fragment("casadi_double", "header", fragment="casadi_aux", fragment=SWIG_AsVal_frag(double)) {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, double** m) {
+    bool to_ptr(GUEST_T p, double** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -659,7 +676,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT * from_ptr(const double *a) {
+    GUEST_T  from_ptr(const double *a) {
 #ifdef SWIGPYTHON
       return PyFloat_FromDouble(*a);
 #elif defined(SWIGMATLAB)
@@ -677,7 +694,7 @@ import_array();
 
 #ifdef SWIGMATLAB
     // MATLAB row/column vector maps to std::vector<double>
-    bool to_ptr(GUESTOBJECT *p, std::vector<double> **m) {
+    bool to_ptr(GUEST_T p, std::vector<double> **m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -696,7 +713,7 @@ import_array();
       return false;
     }
 
-    bool to_ptr(GUESTOBJECT *p, std::vector<int>** m) {
+    bool to_ptr(GUEST_T p, std::vector<int>** m) {
       if (mxIsDouble(p) && mxGetNumberOfDimensions(p)==2
           && (mxGetM(p)<=1 || mxGetN(p)<=1)) {
         double* data = static_cast<double*>(mxGetData(p));
@@ -724,7 +741,7 @@ import_array();
     }
 
     // Cell array
-    template<typename M> bool to_ptr_cell(GUESTOBJECT *p, std::vector<M>** m) {
+    template<typename M> bool to_ptr_cell(GUEST_T p, std::vector<M>** m) {
       // Cell arrays (only row vectors)
       if (mxGetClassID(p)==mxCELL_CLASS) {
         int nrow = mxGetM(p), ncol = mxGetN(p);
@@ -758,7 +775,7 @@ import_array();
     }
 
     // MATLAB n-by-m char array mapped to vector of length m
-    bool to_ptr(GUESTOBJECT *p, std::vector<std::string>** m) {
+    bool to_ptr(GUEST_T p, std::vector<std::string>** m) {
       if (mxIsChar(p)) {
 	if (m) {
           // Get data
@@ -804,7 +821,7 @@ import_array();
     }
 #endif // SWIGMATLAB
 
-    template<typename M> bool to_ptr(GUESTOBJECT *p, std::vector<M>** m) {
+    template<typename M> bool to_ptr(GUEST_T p, std::vector<M>** m) {
       // Treat Null
       if (is_null(p)) return false;
 #ifdef SWIGPYTHON
@@ -905,17 +922,17 @@ import_array();
     }
 
 #ifdef SWIGMATLAB
-    GUESTOBJECT* from_ptr(const std::vector<double> *a) {
+    GUEST_T from_ptr(const std::vector<double> *a) {
       mxArray* ret = mxCreateDoubleMatrix(1, a->size(), mxREAL);
       std::copy(a->begin(), a->end(), static_cast<double*>(mxGetData(ret)));
       return ret;
     }
-    GUESTOBJECT* from_ptr(const std::vector<int> *a) {
+    GUEST_T from_ptr(const std::vector<int> *a) {
       mxArray* ret = mxCreateDoubleMatrix(1, a->size(), mxREAL);
       std::copy(a->begin(), a->end(), static_cast<double*>(mxGetData(ret)));
       return ret;
     }
-    GUESTOBJECT* from_ptr(const std::vector<std::string> *a) {
+    GUEST_T from_ptr(const std::vector<std::string> *a) {
       // Collect arguments as char arrays
       std::vector<const char*> str(a->size());
       for (size_t i=0; i<str.size(); ++i) str[i] = (*a)[i].c_str();
@@ -925,7 +942,7 @@ import_array();
     }
 #endif // SWIGMATLAB
 
-    template<typename M> GUESTOBJECT* from_ptr(const std::vector<M> *a) {
+    template<typename M> GUEST_T from_ptr(const std::vector<M> *a) {
 #ifdef SWIGPYTHON
       // std::vector maps to Python list
       PyObject* ret = PyList_New(a->size());
@@ -958,7 +975,7 @@ import_array();
 
 %fragment("casadi_function", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, Function** m) {
+    bool to_ptr(GUEST_T p, Function** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -972,7 +989,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const Function *a) {
+    GUEST_T from_ptr(const Function *a) {
       return SWIG_NewPointerObj(new Function(*a), $descriptor(casadi::Function *), SWIG_POINTER_OWN);
     }
   } // namespace casadi
@@ -980,7 +997,7 @@ import_array();
 
 %fragment("casadi_generictype", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, GenericType** m) {
+    bool to_ptr(GUEST_T p, GenericType** m) {
 #ifdef SWIGPYTHON
       if (p==Py_None) {
         if (m) **m=GenericType();
@@ -1017,7 +1034,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT * from_ptr(const GenericType *a) {
+    GUEST_T  from_ptr(const GenericType *a) {
       switch (a->getType()) {
       case OT_BOOL: return from_tmp(a->as_bool());
       case OT_INT: return from_tmp(a->as_int());
@@ -1040,7 +1057,7 @@ import_array();
 
 %fragment("casadi_string", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, std::string** m) {
+    bool to_ptr(GUEST_T p, std::string** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1073,7 +1090,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const std::string *a) {
+    GUEST_T from_ptr(const std::string *a) {
 #ifdef SWIGPYTHON
       return PyString_FromString(a->c_str());
 #elif defined(SWIGMATLAB)
@@ -1087,7 +1104,7 @@ import_array();
 
 %fragment("casadi_slice", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, Slice** m) {
+    bool to_ptr(GUEST_T p, Slice** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1125,7 +1142,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const Slice *a) {
+    GUEST_T from_ptr(const Slice *a) {
       return SWIG_NewPointerObj(new Slice(*a), $descriptor(casadi::Slice *), SWIG_POINTER_OWN);
     }
 
@@ -1134,7 +1151,7 @@ import_array();
 
 %fragment("casadi_map", "header", fragment="casadi_aux") {
   namespace casadi {
-    template<typename M> bool to_ptr(GUESTOBJECT *p, std::map<std::string, M>** m) {
+    template<typename M> bool to_ptr(GUEST_T p, std::map<std::string, M>** m) {
 #ifdef SWIGPYTHON
       if (PyDict_Check(p)) {
         PyObject *key, *value;
@@ -1170,7 +1187,7 @@ import_array();
       return false;
     }
 
-    template<typename M> GUESTOBJECT* from_ptr(const std::map<std::string, M> *a) {
+    template<typename M> GUEST_T from_ptr(const std::map<std::string, M> *a) {
 #ifdef SWIGPYTHON
       PyObject *p = PyDict_New();
       for (typename std::map<std::string, M>::const_iterator it=a->begin(); it!=a->end(); ++it) {
@@ -1213,7 +1230,7 @@ import_array();
 %fragment("casadi_pair", "header", fragment="casadi_aux") {
   namespace casadi {
 #ifdef SWIGMATLAB
-    bool to_ptr(GUESTOBJECT *p, std::pair<int, int>** m) {
+    bool to_ptr(GUEST_T p, std::pair<int, int>** m) {
       // (int,int) mapped to 2-by-1 double matrix
       if (mxIsDouble(p) && mxGetNumberOfDimensions(p)==2 && !mxIsSparse(p)
           && mxGetM(p)==1 && mxGetN(p)==2) {
@@ -1233,7 +1250,7 @@ import_array();
     }
 #endif // SWIGMATLAB
 
-    template<typename M1, typename M2> bool to_ptr(GUESTOBJECT *p, std::pair<M1, M2>** m) {
+    template<typename M1, typename M2> bool to_ptr(GUEST_T p, std::pair<M1, M2>** m) {
 #ifdef SWIGPYTHON
       if (PyTuple_Check(p) && PyTuple_Size(p)==2) {
         PyObject *p_first = PyTuple_GetItem(p, 0);
@@ -1255,7 +1272,7 @@ import_array();
     }
 
 #ifdef SWIGMATLAB
-    GUESTOBJECT* from_ptr(const std::pair<int, int>* a) {
+    GUEST_T from_ptr(const std::pair<int, int>* a) {
       // (int,int) mapped to 2-by-1 double matrix
       mxArray* ret = mxCreateDoubleMatrix(1, 2, mxREAL);
       double* data = static_cast<double*>(mxGetData(ret));
@@ -1265,7 +1282,7 @@ import_array();
     }
 #endif // SWIGMATLAB
 
-    template<typename M1, typename M2> GUESTOBJECT* from_ptr(const std::pair<M1, M2>* a) {
+    template<typename M1, typename M2> GUEST_T from_ptr(const std::pair<M1, M2>* a) {
 #ifdef SWIGPYTHON
       PyObject* ret = PyTuple_New(2);
       PyTuple_SetItem(ret, 0, from_ref(a->first));
@@ -1286,7 +1303,7 @@ import_array();
 
 %fragment("casadi_sx", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, SX** m) {
+    bool to_ptr(GUEST_T p, SX** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1397,7 +1414,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const SX *a) {
+    GUEST_T from_ptr(const SX *a) {
       return SWIG_NewPointerObj(new SX(*a), $descriptor(casadi::Matrix<casadi::SXElem> *), SWIG_POINTER_OWN);
     }
   } // namespace casadi
@@ -1405,7 +1422,7 @@ import_array();
 
 %fragment("casadi_sxelem", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, SXElem** m) {
+    bool to_ptr(GUEST_T p, SXElem** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1422,7 +1439,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const SXElem *a) {
+    GUEST_T from_ptr(const SXElem *a) {
       return from_ref(SX(*a));
     }
   } // namespace casadi
@@ -1430,7 +1447,7 @@ import_array();
 
 %fragment("casadi_mx", "header", fragment="casadi_decl") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, MX** m) {
+    bool to_ptr(GUEST_T p, MX** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1485,7 +1502,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const MX *a) {
+    GUEST_T from_ptr(const MX *a) {
       return SWIG_NewPointerObj(new MX(*a), $descriptor(casadi::MX*), SWIG_POINTER_OWN);
     }
   } // namespace casadi
@@ -1505,7 +1522,7 @@ import_array();
     }
 #endif // SWIGPYTHON
 
-    bool to_ptr(GUESTOBJECT *p, DM** m) {
+    bool to_ptr(GUEST_T p, DM** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1722,7 +1739,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const DM *a) {
+    GUEST_T from_ptr(const DM *a) {
       return SWIG_NewPointerObj(new DM(*a), $descriptor(casadi::Matrix<double>*), SWIG_POINTER_OWN);
     }
   } // namespace casadi
@@ -1730,7 +1747,7 @@ import_array();
 
 %fragment("casadi_sparsity", "header", fragment="casadi_aux") {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, Sparsity** m) {
+    bool to_ptr(GUEST_T p, Sparsity** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1744,7 +1761,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const Sparsity *a) {
+    GUEST_T from_ptr(const Sparsity *a) {
       return SWIG_NewPointerObj(new Sparsity(*a), $descriptor(casadi::Sparsity*), SWIG_POINTER_OWN);
     }
   } // namespace casadi
@@ -1752,7 +1769,7 @@ import_array();
 
 %fragment("casadi_imatrix", "header", fragment="casadi_aux", fragment=SWIG_AsVal_frag(int)) {
   namespace casadi {
-    bool to_ptr(GUESTOBJECT *p, IM** m) {
+    bool to_ptr(GUEST_T p, IM** m) {
       // Treat Null
       if (is_null(p)) return false;
 
@@ -1889,7 +1906,7 @@ import_array();
       return false;
     }
 
-    GUESTOBJECT* from_ptr(const IM *a) {
+    GUEST_T from_ptr(const IM *a) {
       return SWIG_NewPointerObj(new IM(*a), $descriptor(casadi::Matrix<int>*), SWIG_POINTER_OWN);
     }
   } // namespace casadi
@@ -1942,12 +1959,12 @@ import_array();
 
  // Return-by-value
 %typemap(out, noblock=1, fragment="casadi_all") xType, const xType {
-  if(!($result = casadi::from_ref($1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to " xName ".");
+  if(!casadi::is_ok($result = casadi::from_ref($1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to " xName ".");
 }
 
 // Return a const-ref behaves like return-by-value
 %typemap(out, noblock=1, fragment="casadi_all") const xType& {
-  if(!($result = casadi::from_ptr($1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to " xName ".");
+  if(!casadi::is_ok($result = casadi::from_ptr($1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to " xName ".");
 }
 
 // Inputs marked OUTPUT are also returned by the function, ...
@@ -2318,6 +2335,11 @@ class NZproxy:
 #endif // SWIGPYTHON
 
 #ifdef SWIGXML
+%define %matrix_helpers(Type)
+%enddef
+#endif
+
+#ifdef SWIGOCTAVE
 %define %matrix_helpers(Type)
 %enddef
 #endif
@@ -3085,7 +3107,7 @@ namespace casadi{
 namespace casadi{
   %extend Matrix<double> {
     // Convert to a dense matrix
-    GUESTOBJECT* full() const {
+    GUEST_T full() const {
 #ifdef SWIGPYTHON
       npy_intp dims[2] = {$self->size1(), $self->size2()};
       PyObject* ret = PyArray_SimpleNew(2, dims, NPY_DOUBLE);
@@ -3104,7 +3126,7 @@ namespace casadi{
 
 #ifdef SWIGMATLAB
     // Convert to a sparse matrix
-    GUESTOBJECT* sparse() const {
+    GUEST_T sparse() const {
       mxArray *p  = mxCreateSparse($self->size1(), $self->size2(), $self->nnz(), mxREAL);
       casadi::casadi_copy($self->ptr(), $self->nnz(), static_cast<double*>(mxGetData(p)));
       std::copy($self->colind(), $self->colind()+$self->size2()+1, mxGetJc(p));
@@ -3116,7 +3138,7 @@ namespace casadi{
 
   %extend Matrix<int> {
     // Convert to a dense matrix
-    GUESTOBJECT* full() const {
+    GUEST_T full() const {
 #ifdef SWIGPYTHON
       npy_intp dims[2] = {$self->size1(), $self->size2()};
       PyObject* ret = PyArray_SimpleNew(2, dims, NPY_INT);
@@ -3136,7 +3158,7 @@ namespace casadi{
 
 #ifdef SWIGMATLAB
     // Convert to a sparse matrix
-    GUESTOBJECT* sparse() const {
+    GUEST_T sparse() const {
       mxArray *p  = mxCreateSparse($self->size1(), $self->size2(), $self->nnz(), mxREAL);
       std::vector<double> nz = $self->get_nonzeros<double>();
       if (!nz.empty()) casadi::casadi_copy(&nz[0], $self->nnz(), static_cast<double*>(mxGetData(p)));
