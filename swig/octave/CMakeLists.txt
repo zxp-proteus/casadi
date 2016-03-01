@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.6)
 
-# begin Patch swig to get concat functionality
+# Find OCTAVE
 find_package(OCTAVE REQUIRED)
 include_directories (${OCTAVE_INCLUDE_DIR})
 include_directories (${OCTAVE_INCLUDE_DIR}/octave)
@@ -8,9 +8,6 @@ EXECUTE_PROCESS(COMMAND ${SWIG_EXECUTABLE} -swiglib OUTPUT_VARIABLE ORIG_SWIGDIR
 
 # OCTAVE front-end
 add_custom_target(octave DEPENDS casadiOCT)
-
-# Find OCTAVE
-#find_package(OCTAVE REQUIRED)
 
 include_directories(${OCTAVE_INCLUDE_DIR})
 #add_definitions(${OCTAVE_EXTRA_CXXFLAGS})

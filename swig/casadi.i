@@ -42,6 +42,11 @@
 #define GUEST_T void*
 #endif
 
+/// Either MATLAB or OCTAVE
+#if defined(SWIGMATLAB) || defined(SWIGOCTAVE)
+#define MATLABISH
+#endif
+
 // Define printing routine
 #ifdef SWIGPYTHON
 %{
@@ -154,7 +159,7 @@
 
 %ignore *::operator->;
 
-#ifdef SWIGMATLAB
+#ifdef MATLABISH
 %rename(disp) repr;
 #else
 %ignore print;
@@ -166,14 +171,14 @@
 %}
 
 // Print representation
-#ifdef SWIGMATLAB
+#ifdef MATLABISH
 #define SWIG_REPR disp
 #else
 #define SWIG_REPR __repr__
 #endif
 
 // Print description
-#ifdef SWIGMATLAB
+#ifdef MATLABISH
 #define SWIG_STR print
 #else
 #define SWIG_STR __str__
@@ -1085,6 +1090,14 @@ import_array();
 	return true;
       }
 #endif // SWIGMATLAB
+#ifdef SWIGOCTAVE
+      if (p.is_string()) {
+	if (m) {
+	  **m = p.string_value();
+        }
+	return true;
+      }
+#endif // SWIGOCTAVE
 
       // No match
       return false;
@@ -1095,6 +1108,8 @@ import_array();
       return PyString_FromString(a->c_str());
 #elif defined(SWIGMATLAB)
       return mxCreateString(a->c_str());
+#elif defined(SWIGOCTAVE)
+      return *a;
 #else
       return 0;
 #endif
