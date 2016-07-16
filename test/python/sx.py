@@ -1234,6 +1234,43 @@ class SXtests(casadiTestCase):
         isSmooth(x)
       warnings.simplefilter("ignore")
       isSmooth(x)
+      
+  def test_if_else_zero_sens(self):
+  
+    for X,Function in [(SX,SXFunction),(MX,MXFunction)]:
+      print X
+      x=X.sym('x')
+
+
+      a = 1+3*x+sqrt(3*x)*x+7*x
+      b = 1+2*x+sin(2*x)*x +x 
+      z = if_else(x>0,a,b)*x
+
+      f = Function("f",[x],[z,jacobian(z,x)])
+      fa = Function("f",[x],[a*x,jacobian(a*x,x)])
+      fb = Function("f",[x],[b*x,jacobian(b*x,x)])
+      
+      for i,j in zip(f([3]),fa([3])):
+        self.checkarray(i,j)
+
+      for i,j in zip(f([-3]),fb([-3])):
+        self.checkarray(i,j)
+
+
+      f = Function("f",[x],[z])
+      fa = Function("f",[x],[a*x])
+      fb = Function("f",[x],[b*x])
+
+
+      s = [3,0,1.37]
+
+      for i,j in zip(f.derForward(1)(s),fa.derForward(1)(s)):
+        self.checkarray(i,j)
+        
+      s = [-3,0,1.37]
+
+      for i,j in zip(f.derReverse(1)(s),fb.derReverse(1)(s)):
+        self.checkarray(i,j)
     
 if __name__ == '__main__':
     unittest.main()
