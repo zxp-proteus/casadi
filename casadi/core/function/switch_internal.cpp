@@ -116,6 +116,61 @@ namespace casadi {
     }
   }
 
+  void SwitchInternal::evalSX(const SXElement** arg, SXElement** res,
+      int* iw, SXElement* w) {
+    // On demand by Deltares, July 2016
+    // Expand as a sum of if_else_zero nodes
+
+    // Get conditional
+    const SXElement& index = *arg[0];
+
+    // Temporary storage for output accumulation
+    std::vector< SXElement> ret(nnzOut(), 0);
+
+    for (int k=0;k<f_.size()+1;++k) {
+      // Get the function to be evaluated
+      Function& fk = k<f_.size() ? f_[k] : f_def_;
+
+      // Construct condition
+      SXElement condk = k<f_.size() ? index==k : index>=f_.size();
+
+      // Input buffers
+      for (int i=1; i<nIn(); ++i) {
+        const Sparsity& s = fk.input(i-1).sparsity();
+        casadi_assert_message(s==input(i).sparsity(), "Not implemented");
+      }
+
+      // Output buffers
+      for (int i=0; i<nOut(); ++i) {
+        const Sparsity& s = fk.output(i).sparsity();
+        casadi_assert_message(s==output(i).sparsity(), "Not implemented");
+      }
+
+      // Evaluate the corresponding function
+      fk->evalSX(arg+1, res, iw, w);
+
+      // Store the results
+      int m=0;
+      for (int i=0;i<nOut();++i) {
+        for (int j=0;j<outputSparsity(i).nnz();++j) {
+          if (res[i])
+            ret[m] += if_else_zero(condk, res[i][j]);
+          m++;
+        }
+      }
+    }
+
+    // Retrieve results
+    int m=0;
+    for (int i=0;i<nOut();++i) {
+      for (int j=0;j<outputSparsity(i).nnz();++j) {
+        if (res[i])
+          res[i][j] = ret[m];
+        m++;
+      }
+    }
+  }
+
   void SwitchInternal::evalD(const double** arg, double** res, int* iw, double* w) {
     // Get conditional
     int k = static_cast<int>(*arg[0]);

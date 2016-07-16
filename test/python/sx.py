@@ -1237,7 +1237,7 @@ class SXtests(casadiTestCase):
       
   def test_if_else_zero_sens(self):
   
-    for X,Function in [(SX,SXFunction),(MX,MXFunction)]:
+    for X,Function,expand in [(SX,SXFunction,False),(MX,MXFunction,False),(MX,MXFunction,True)]:
       print X
       x=X.sym('x')
 
@@ -1260,6 +1260,14 @@ class SXtests(casadiTestCase):
       f = Function("f",[x],[z])
       fa = Function("f",[x],[a*x])
       fb = Function("f",[x],[b*x])
+
+      if expand:
+        print f
+        f = f.expand()
+        print f
+        fa = fa.expand()
+        fb = fb.expand()
+
 
 
       s = [3,0,1.37]
