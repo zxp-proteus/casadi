@@ -271,6 +271,12 @@ namespace casadi {
     // Only simplifications that do not result in extra nodes area allowed
     if (isEqual(y, *this, SXNode::eq_depth_))
       return sq();
+    // Make sure NaN does not propagate through an inactive branch
+    // On demand by Deltares, July 2016
+    else if (isOp(OP_IF_ELSE_ZERO))
+      return if_else_zero(getDep(0), getDep(1)*y);
+    else if (y.isOp(OP_IF_ELSE_ZERO))
+      return if_else_zero(y.getDep(0), y.getDep(1)*(*this));
     else if (!isConstant() && y.isConstant())
       return y.zz_times(*this);
     else if (isZero() || y->isZero()) // one of the terms is zero
