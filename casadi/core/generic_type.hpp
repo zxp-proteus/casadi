@@ -99,6 +99,7 @@ namespace casadi {
     operator int() const { return toInt();}
     operator double() const { return toDouble();}
     operator std::string() const { return toString();}
+    operator std::vector<bool>() const { return toBoolVector();}
     operator std::vector<int>() const { return toIntVector();}
     operator std::vector<std::vector<int> >() const { return toIntVectorVector();}
     operator std::vector<double>() const { return toDoubleVector();}
@@ -160,6 +161,7 @@ namespace casadi {
     double toDouble() const;
     std::string toString() const;
     std::vector<int> toIntVector() const;
+    std::vector<bool> toBoolVector() const;
     std::vector< std::vector<int> > toIntVectorVector() const;
     std::vector<double> toDoubleVector() const;
     std::vector<std::string> toStringVector() const;

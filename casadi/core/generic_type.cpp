@@ -362,6 +362,17 @@ namespace casadi {
     return asString();
   }
 
+  vector<bool> GenericType::toBoolVector() const {
+    casadi_assert_message(isIntVector(), "type mismatch");
+    vector<int> v = toIntVector();
+    vector<bool> ret(v.size());
+    for (int i=0; i<v.size(); ++i) {
+      casadi_assert_message(v[i]==0 || v[i]==1, "Entries must be zero or one");
+      ret[i] = v[i]==1;
+    }
+    return ret;
+  }
+
   vector<int> GenericType::toIntVector() const {
     casadi_assert_message(isIntVector(), "type mismatch");
     return asIntVector();
