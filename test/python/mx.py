@@ -2571,5 +2571,18 @@ class MXtests(casadiTestCase):
 
         self.checkfunction(f,fr)
 
+  def test_switch_sparsity_null(self):
+    x = MX.sym('x')
+    y = MX.sym('y')
+    
+    z =if_else(x > 0, x**3, 0)
+
+    f = MXFunction("f",[x],[z])
+    f.setInput(3)
+    g = MXFunction("f",[x],[x**3])
+    g.setInput(3)
+    
+    self.checkfunction(f,g,evals=1)
+
 if __name__ == '__main__':
     unittest.main()

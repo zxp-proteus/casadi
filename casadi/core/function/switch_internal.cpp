@@ -40,6 +40,90 @@ namespace casadi {
     setOption("name", "unnamed_switch");
   }
 
+  SwitchInternal* SwitchInternal::create(const std::vector<Function>& f, const Function& f_def) {
+    // Because const-correctness, we need (inexpensive) copies
+    Function fdef(f_def);
+    std::vector<Function> F(f);
+
+    // Obtain the union sparsity pattern of all functions
+    std::vector<Sparsity> sp_in, sp_out;
+    for (int k=0; k<=F.size(); ++k) {
+      Function& fk = k<F.size() ? F[k] : fdef;
+      if (fk.isNull()) continue;
+      fk.init(false);
+      for (int i=0; i<fk.nIn(); ++i) {
+        if (i>=sp_in.size()) sp_in.resize(i+1);
+        if (sp_in[i].isNull()) {
+          sp_in[i] = fk.input(i).sparsity();
+        } else {
+          sp_in[i] = sp_in[i] + fk.input(i).sparsity();
+        }
+      }
+
+      for (int i=0; i<fk.nOut(); ++i) {
+        if (i>=sp_out.size()) sp_out.resize(i+1);
+        if (sp_out[i].isNull()) {
+          sp_out[i] = fk.output(i).sparsity();
+        } else {
+          sp_out[i] = sp_out[i] + fk.output(i).sparsity();
+        }
+      }
+
+    }
+
+    // Allocate new SwitchInternal arguments
+    std::vector<Function> f_new(F.size());
+    Function f_def_new;
+
+    // Create symbolic inputs
+    std::vector<MX> sym_in(sp_in.size());
+    for (int i=0;i<sp_in.size();++i) {
+      sym_in[i] = MX::sym("x", sp_in[i]);
+    }
+
+    // Loop over function arguments
+    for (int k=0; k<=F.size(); ++k) {
+      Function& fk = k<F.size() ? F[k] : fdef;
+      if (fk.isNull()) continue;
+
+      // Check if fk requires sparsity to be modified
+      bool sp_mod = false;
+      for (int i=0;i<sp_in.size();++i) {
+        if (sp_in[i]!=fk.input(i).sparsity()) sp_mod = true;
+      }
+      for (int i=0;i<sp_out.size();++i) {
+        if (sp_out[i]!=fk.output(i).sparsity()) sp_mod = true;
+      }
+
+      // The function to get passed to SwitchInternal constructor
+      Function h;
+
+      if (sp_mod) {
+        casadi_assert(fk.nIn()==sym_in.size());
+        std::vector<MX> out = fk(sym_in);
+        casadi_assert(fk.nOut()==out.size());
+
+        // Make the sparsity conforming with the union
+        for (int i=0;i<out.size();++i) {
+          out[i] = project(out[i], sp_out[i]);
+        }
+
+        // Create new functon argument
+        h = MXFunction("helper", sym_in, out);
+      } else {
+        h = fk;
+      }
+      if (k<F.size()) {
+        f_new[k] = h;
+      } else {
+        f_def_new = h;
+      }
+    }
+
+    return new SwitchInternal(f_new, f_def_new);
+
+  }
+
   SwitchInternal::~SwitchInternal() {
   }
 

@@ -53,6 +53,12 @@ namespace casadi {
     /** \brief  Initialize */
     virtual void init();
 
+    /** \brief Creator function
+    * Part of bugfix #1792, on demand by Deltares, July 2016
+    */
+    static SwitchInternal*
+      create(const std::vector<Function>& f, const Function& f_def);
+
     /** \brief  Evaluate numerically, work vectors given */
     virtual void evalD(const double** arg, double** res, int* iw, double* w);
 
