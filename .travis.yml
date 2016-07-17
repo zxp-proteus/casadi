@@ -30,7 +30,7 @@ matrix:
         - sudo apt-get install valgrind -y
         - mkdir build
         - pushd build
-        - cmake -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_DOC=ON -DWITH_EXAMPLES=OFF  ..
+        - cmake -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_DOC=ON -DWITH_EXAMPLES=OFF  ..
         - make -j2
         - sudo make -j2 install
         - popd
@@ -46,7 +46,7 @@ matrix:
         - sudo apt-get install valgrind -y
         - mkdir build
         - pushd build
-        - cmake -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_DOC=ON -DWITH_EXAMPLES=OFF ..
+        - cmake -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_DOC=ON -DWITH_EXAMPLES=OFF ..
         - make -j2
         - sudo make -j2 install
         - popd
@@ -61,7 +61,7 @@ matrix:
       script:
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_PROFILING=ON -DWITH_DOC=ON -DWITH_EXAMPLES=ON -DWITH_COVERAGE=ON -DWITH_EXTRA_WARNINGS=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_PROFILING=ON -DWITH_DOC=ON -DWITH_EXAMPLES=ON -DWITH_COVERAGE=ON -DWITH_EXTRA_WARNINGS=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
         - make -j2
         - sudo make -j2 install
         - popd
@@ -79,7 +79,7 @@ matrix:
       script:
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_DOC=ON -DWITH_EXAMPLES=OFF -DWITH_EXTRA_WARNINGS=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_DOC=ON -DWITH_EXAMPLES=OFF -DWITH_EXTRA_WARNINGS=ON ..
         - make -j2
         - sudo make -j2 install
         - popd
@@ -98,7 +98,7 @@ matrix:
         - set -e
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_JSON=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_PROFILING=ON -DWITH_DOC=ON -DWITH_EXAMPLES=ON -DWITH_COVERAGE=ON -DWITH_EXTRA_WARNINGS=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_JSON=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DCMAKE_BUILD_TYPE=Debug -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_PROFILING=ON -DWITH_DOC=ON -DWITH_EXAMPLES=ON -DWITH_COVERAGE=ON -DWITH_EXTRA_WARNINGS=ON ..
         - make -j2
         - sudo make -j2 install
         - popd
@@ -119,7 +119,7 @@ matrix:
       script:
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
         - make
         - sudo make install
         - popd
@@ -150,7 +150,7 @@ matrix:
         - sudo apt-get -t vivid install pocl-opencl-icd
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
         - make
         - sudo make install
         - popd
@@ -171,7 +171,7 @@ matrix:
       script:
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_DEPRECATED_FEATURES=OFF -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_DEPRECATED_FEATURES=OFF -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_PYTHON=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
         - make
         - sudo make install
         - popd
@@ -192,7 +192,7 @@ matrix:
         - export languagetool="$mypwd/LanguageTool-2.7"
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_WERROR=ON -DWITH_EXTRA_WARNINGS=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_WERROR=ON -DWITH_EXTRA_WARNINGS=ON ..
         - make lint
         - export languagetool="$mypwd/LanguageTool-2.7" make spell
         - popd && pushd misc && python autogencode.py && popd
@@ -226,7 +226,7 @@ matrix:
       script:
         - mkdir build
         - pushd build
-        - cmake  -DOLD_LLVM=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
+        - cmake  -DOLD_LLVM=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_PYTHON=ON -DWITH_JSON=ON ..
         - make
         - sudo make install
         - popd
@@ -249,7 +249,7 @@ matrix:
         - popd
         - mkdir build
         - pushd build
-        - PATH=/home/travis/build/swig_matlab/bin:/home/travis/build/swig_matlab/share:$PATH cmake  -DOLD_LLVM=ON -DCMAKE_INSTALL_PREFIX=/home/travis/build/matlab-install -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=ON -DWITH_DEEPBIND=ON -DWITH_MATLAB=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_PROFILING=ON -DWITH_DOC=ON -DWITH_EXAMPLES=ON -DWITH_COVERAGE=ON -DWITH_EXTRA_WARNINGS=ON -DWITH_JSON=ON ..
+        - PATH=/home/travis/build/swig_matlab/bin:/home/travis/build/swig_matlab/share:$PATH cmake  -DOLD_LLVM=ON -DCMAKE_INSTALL_PREFIX=/home/travis/build/matlab-install -DWITH_CLANG=ON -DWITH_ECOS=ON -DWITH_MOSEK=OFF -DWITH_DEEPBIND=ON -DWITH_MATLAB=ON -DWITH_WORHP=ON -DWITH_SLICOT=ON -DWITH_OOQP=ON -DWITH_PROFILING=ON -DWITH_DOC=ON -DWITH_EXAMPLES=ON -DWITH_COVERAGE=ON -DWITH_EXTRA_WARNINGS=ON -DWITH_JSON=ON ..
         - make -j2
         - sudo make -j2 install
         - popd
