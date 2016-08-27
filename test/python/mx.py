@@ -2583,6 +2583,29 @@ class MXtests(casadiTestCase):
     g.setInput(3)
     
     self.checkfunction(f,g,evals=1)
+    
+  def test_interp1d(self):
+    v = [7,3,4,-3]
+    vs = MX.sym("x",4,1)
+
+    xq = [10,0,1,2,4,8,7,5,1.5]
+    x = [1,2,4,8]
+    F = MXFunction("f",[vs],[interp1d(x,vs,xq)])
+
+    self.checkarray(F([v])[0],np.interp(xq,x,v))
+
+
+
+    v = [7,3,4,-3]
+    vs = MX.sym("x",4,1)
+
+    xq = [10,0,1,2,3,4,3.5,3.25,1.5]
+    x = [1,2,3,4]
+    F = MXFunction("f",[vs],[interp1d(x,vs,xq,True)])
+
+    self.checkarray(F([v])[0],np.interp(xq,x,v))
+
+
 
 if __name__ == '__main__':
     unittest.main()

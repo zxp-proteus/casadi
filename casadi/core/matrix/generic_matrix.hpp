@@ -178,6 +178,8 @@ namespace casadi {
     /// \cond CLUTTER
     /**  @{  */
     /** \brief Accessed by friend functions */
+    MatType zz_interp1d(const std::vector<double>& x, const std::vector<double>& xq,
+        bool equidistant) const;
     int zz_sprank() const { return sprank(sparsity());}
     int zz_norm_0_mul(const MatType &A) const { return norm_0_mul(sparsity(), A.sparsity());}
     MatType zz_tril(bool includeDiagonal=true) const {
@@ -257,6 +259,17 @@ namespace casadi {
 \ingroup expression_tools
 @{
 */
+
+    /** \brief Performs 1d linear interpolation
+    *
+    * The data-points to be interpolated are given as (x[i], v[i]).
+    * xq[j] is used as interplating value
+    */
+    inline friend MatType interp1d(const std::vector<double>& x, const MatType&v,
+        const std::vector<double>& xq, bool equidistant=false) {
+      return v.zz_interp1d(x, xq, equidistant);
+    }
+
     /** \brief Matrix power x^n
      */
     inline friend MatType mpower(const MatType& x, const MatType& n) {
@@ -295,7 +308,7 @@ namespace casadi {
       return X.zz_quad_form();
     }
 
-    /** \brief Calculate some of squares: sum_ij X_ij^2 
+    /** \brief Calculate some of squares: sum_ij X_ij^2
      */
     inline friend MatType sum_square(const MatType &X) {
       return X.zz_sum_square();
@@ -491,7 +504,7 @@ namespace casadi {
     /** \brief Computes the Moore-Penrose pseudo-inverse
      *
      * If the matrix A is fat (size1<size2), mul(A, pinv(A)) is unity.
-     * 
+     *
      *  pinv(A)' = (AA')^(-1) A
      *
      *
@@ -624,13 +637,13 @@ namespace casadi {
 
 #if !defined(SWIG) || !defined(SWIGMATLAB)
     ///@{
-    /** \brief [DEPRECATED] Create a sparse matrix with all zeros 
+    /** \brief [DEPRECATED] Create a sparse matrix with all zeros
         Use MatType(nrow, ncol) instead **/
     static MatType sparse(int nrow=1, int ncol=1) { return MatType(nrow, ncol);}
     static MatType sparse(const std::pair<int, int>& rc) { return MatType(rc);}
     ///@}
 
-    /** \brief [DEPRECATED] Create a sparse matrix with nonzeros given as a (dense) vector 
+    /** \brief [DEPRECATED] Create a sparse matrix with nonzeros given as a (dense) vector
         Use MatType(Sparsity, nz) instead **/
     static MatType sparse(const Sparsity& sp, const MatType& nz) { return MatType(sp, nz); }
 #endif // !defined(SWIG) || !defined(SWIGMATLAB)
@@ -768,6 +781,65 @@ namespace casadi {
 
     ret[nsteps-1] = b;
     return vertcat(ret);
+  }
+
+
+  double CASADI_EXPORT index_interp1d(const std::vector<double>& x, double xq,
+    bool equidistant=false);
+
+  template<typename MatType>
+  MatType GenericMatrix<MatType>::zz_interp1d(const std::vector<double>& x,
+      const std::vector<double>& xq, bool equidistant) const {
+
+    const MatType& v = self();
+
+    casadi_assert(isIncreasing(x));
+
+    casadi_assert_message(x.size()==v.size1(),
+      "interp1d(x, v, xq): dimensions mismatch. v expected to have " << x.size() << " rows,"
+      " but got " << v.size1() << " instead.");
+
+    // Need at least two elements
+    casadi_assert_message(x.size()>=2, "interp1d(x, v, xq): x must be at least length 2.");
+
+    // Vectors to compose a sparse matrix
+    std::vector<double> val;
+    std::vector<int> colind(1, 0);
+    std::vector<int> row;
+
+    // Number of nonzeros in to-be composed matrix
+    int nnz = 0;
+    for (int i=0;i<xq.size();++i) {
+      // Obtain index corresponding to xq[i]
+      double ind = index_interp1d(x, xq[i], equidistant);
+
+      // Split into integer and fractional part
+      double int_partd;
+      double frac_part = modf(ind, &int_partd);
+      int int_part = static_cast<int>(int_partd);
+
+      if (frac_part==0) {
+        // Create a single entry
+        val.push_back(1);
+        row.push_back(int_part);
+        nnz+=1;
+        colind.push_back(nnz);
+      } else {
+        // Create a double entry
+        val.push_back(1-frac_part);
+        val.push_back(frac_part);
+        row.push_back(int_part);
+        row.push_back(int_part+1);
+        nnz+=2;
+        colind.push_back(nnz);
+      }
+    }
+
+    // Construct sparsity for composed matrix
+    Sparsity sp(x.size(), xq.size() , colind, row);
+
+    return mul(MatType(sp, val).T(), v);
+
   }
 
   template<typename MatType>

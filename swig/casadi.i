@@ -3037,6 +3037,11 @@ DECL M %SHOW(linspace)(const M& a, const M& b, int nsteps) {
   return linspace(a, b, nsteps);
 }
 
+DECL M %SHOW(interp1d)(const std::vector<double>& x, const M&v,
+        const std::vector<double>& xq, bool equidistant=false) {
+  return interp1d(x, v, xq, equidistant);
+}
+
 DECL M %SHOW(cross)(const M& a, const M& b, int dim = -1) {
   return cross(a, b, dim);      
 }
