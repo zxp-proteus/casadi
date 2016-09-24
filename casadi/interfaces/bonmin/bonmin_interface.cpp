@@ -200,6 +200,49 @@ namespace casadi {
     if (default_solver) {
       setOption("linear_solver", default_solver);
     }
+
+    // Start an BONMIN application
+    Ipopt::SmartPtr<Bonmin::RegisteredOptions> roptions = new Bonmin::RegisteredOptions();
+    BonminSetup::registerAllOptions(roptions);
+    map<string, Ipopt::SmartPtr<Ipopt::RegisteredOption> > regops =
+        roptions->RegisteredOptionsList();
+
+    for (map<string, Ipopt::SmartPtr<Ipopt::RegisteredOption> >::const_iterator it=regops.begin();
+        it!=regops.end();
+        ++it) {
+      // Option identifier
+      string opt_name = it->first;
+
+      // Short description goes here, even though we do have a longer description
+      string opt_desc = it->second->ShortDescription();
+
+      // Get the type
+      Ipopt::RegisteredOptionType ipopt_type = it->second->Type();
+      TypeID casadi_type;
+
+      // Map Ipopt option category to a CasADi options type
+      switch (ipopt_type) {
+      case Ipopt::OT_Number:    casadi_type = OT_REAL;          break;
+      case Ipopt::OT_Integer:   casadi_type = OT_INTEGER;       break;
+      case Ipopt::OT_String:    casadi_type = OT_STRING;        break;
+      case Ipopt::OT_Unknown:   continue; // NOTE: No mechanism to handle OT_Unknown options
+      default:                  continue; // NOTE: Unknown Ipopt options category
+      }
+
+      addOption(opt_name, casadi_type, GenericType(), opt_desc);
+
+      // Set default values of IPOPT options
+      if (casadi_type == OT_REAL) {
+        setDefault(opt_name, it->second->DefaultNumber());
+      } else if (casadi_type == OT_INTEGER) {
+        setDefault(opt_name, it->second->DefaultInteger());
+      } else if (casadi_type == OT_STRING) {
+        setDefault(opt_name, it->second->DefaultString());
+      }
+
+      // Save to map containing IPOPT specific options
+      ops_[opt_name] = casadi_type;
+    }
   }
 
   BonminInterface::~BonminInterface() {
@@ -277,6 +320,36 @@ namespace casadi {
 
     // Start an BONMIN application
     BonminSetup bonmin;
+
+    bonmin.initializeOptionsAndJournalist();
+
+    // Direct output through casadi::userOut()
+    StreamJournal* jrnl_raw = new StreamJournal("console", J_ITERSUMMARY);
+    jrnl_raw->SetOutputStream(&casadi::userOut());
+    jrnl_raw->SetPrintLevel(J_DBG, J_NONE);
+    SmartPtr<Journal> jrnl = jrnl_raw;
+    bonmin.journalist()->AddJournal(jrnl);
+
+    bool ret = true;
+    // Pass all the options to bonmin
+    for (map<string, TypeID>::const_iterator it=ops_.begin(); it!=ops_.end(); ++it)
+      if (hasSetOption(it->first)) {
+        GenericType op = getOption(it->first);
+        switch (it->second) {
+        case OT_REAL:
+          ret &= bonmin.options()->SetNumericValue(it->first, op.toDouble(), false);
+          break;
+        case OT_INTEGER:
+          ret &= bonmin.options()->SetIntegerValue(it->first, op.toInt(), false);
+          break;
+        case OT_STRING:
+          ret &= bonmin.options()->SetStringValue(it->first, op.toString(), false);
+          break;
+        default:
+          throw CasadiException("Illegal type");
+        }
+      }
+
 
     // Initialize
     bonmin.initialize(GetRawPtr(tminlp));
