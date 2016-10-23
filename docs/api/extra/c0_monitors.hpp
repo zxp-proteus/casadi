@@ -1,4 +1,34 @@
 /// \cond INTERNAL
+/** \class casadi::BonminInterface
+\n
+\par
+<a name='monitors'></a><table>
+<caption>List of available monitors</caption>
+<tr><th>Id</th><th>Used in</th></tr>
+<tr><td>eval_f</td><td>casadi::BonminInterface</td></tr>
+<tr><td>eval_g</td><td>casadi::BonminInterface</td></tr>
+<tr><td>eval_grad_f</td><td>casadi::BonminInterface</td></tr>
+<tr><td>eval_h</td><td>casadi::BonminInterface</td></tr>
+<tr><td>eval_jac_g</td><td>casadi::BonminInterface</td></tr>
+<tr><td>inputs</td><td>casadi::FunctionInternal</td></tr>
+<tr><td>outputs</td><td>casadi::FunctionInternal</td></tr>
+</table>
+*/
+/// \endcond
+/** \addtogroup plugin_NlpSolver_bonmin
+\n
+\par
+<a name='monitors'></a><table>
+<caption>List of available monitors</caption>
+<tr><th>Id</th></tr>
+<tr><td>eval_f</td></tr>
+<tr><td>eval_g</td></tr>
+<tr><td>eval_grad_f</td></tr>
+<tr><td>eval_h</td></tr>
+<tr><td>eval_jac_g</td></tr>
+</table>
+*/
+/// \cond INTERNAL
 /** \class casadi::CommonExternal
 \n
 \par

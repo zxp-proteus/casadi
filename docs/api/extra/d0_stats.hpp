@@ -1,4 +1,74 @@
 /// \cond INTERNAL
+/** \class casadi::BonminInterface
+\n
+\par
+<a name='stats'></a><table>
+<caption>List of available stats</caption>
+<tr><th>Id</th><th>Used in</th></tr>
+<tr><td>iter_count</td><td>casadi::BonminInterface</td></tr>
+<tr><td>iteration</td><td>casadi::BonminInterface</td></tr>
+<tr><td>iterations</td><td>casadi::BonminInterface</td></tr>
+<tr><td>n_eval_callback</td><td>casadi::BonminInterface</td></tr>
+<tr><td>n_eval_f</td><td>casadi::BonminInterface</td></tr>
+<tr><td>n_eval_g</td><td>casadi::BonminInterface</td></tr>
+<tr><td>n_eval_grad_f</td><td>casadi::BonminInterface</td></tr>
+<tr><td>n_eval_h</td><td>casadi::BonminInterface</td></tr>
+<tr><td>n_eval_jac_g</td><td>casadi::BonminInterface</td></tr>
+<tr><td>return_status</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_callback_fun.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_callback_fun.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_callback_prepare.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_callback_prepare.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_f.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_f.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_g.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_g.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_grad_f.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_grad_f.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_h.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_h.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_jac_g.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_eval_jac_g.wall</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_mainloop.proc</td><td>casadi::BonminInterface</td></tr>
+<tr><td>t_mainloop.wall</td><td>casadi::BonminInterface</td></tr>
+</table>
+*/
+/// \endcond
+/** \addtogroup plugin_NlpSolver_bonmin
+\n
+\par
+<a name='stats'></a><table>
+<caption>List of available stats</caption>
+<tr><th>Id</th></tr>
+<tr><td>iter_count</td></tr>
+<tr><td>iteration</td></tr>
+<tr><td>iterations</td></tr>
+<tr><td>n_eval_callback</td></tr>
+<tr><td>n_eval_f</td></tr>
+<tr><td>n_eval_g</td></tr>
+<tr><td>n_eval_grad_f</td></tr>
+<tr><td>n_eval_h</td></tr>
+<tr><td>n_eval_jac_g</td></tr>
+<tr><td>return_status</td></tr>
+<tr><td>t_callback_fun.proc</td></tr>
+<tr><td>t_callback_fun.wall</td></tr>
+<tr><td>t_callback_prepare.proc</td></tr>
+<tr><td>t_callback_prepare.wall</td></tr>
+<tr><td>t_eval_f.proc</td></tr>
+<tr><td>t_eval_f.wall</td></tr>
+<tr><td>t_eval_g.proc</td></tr>
+<tr><td>t_eval_g.wall</td></tr>
+<tr><td>t_eval_grad_f.proc</td></tr>
+<tr><td>t_eval_grad_f.wall</td></tr>
+<tr><td>t_eval_h.proc</td></tr>
+<tr><td>t_eval_h.wall</td></tr>
+<tr><td>t_eval_jac_g.proc</td></tr>
+<tr><td>t_eval_jac_g.wall</td></tr>
+<tr><td>t_mainloop.proc</td></tr>
+<tr><td>t_mainloop.wall</td></tr>
+</table>
+*/
+/// \cond INTERNAL
 /** \class casadi::CvodesInterface
 \n
 \par

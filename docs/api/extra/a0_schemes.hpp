@@ -573,6 +573,15 @@
 </table>
 */
 /// \cond INTERNAL
+/** \class casadi::BonminInterface
+\n
+\par
+@copydoc scheme_NlpSolverInput
+<br/>
+@copydoc scheme_NlpSolverOutput
+*/
+/// \endcond
+/// \cond INTERNAL
 /** \class casadi::CSparseCholeskyInternal
 \n
 \par
