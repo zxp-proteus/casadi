@@ -148,7 +148,7 @@ if NlpSolver.hasPlugin("bonmin"):
   nlp_solver = NlpSolver('nlp_solver', 'bonmin', nlp_prob, {"discrete": discrete})
 else:
   #nlp_solver = nlpsol('nlp_solver', 'knitro', nlp_prob, {"discrete": discrete})
-  nlp_solver = nlpsol('nlp_solver', 'ipopt', nlp_prob) # Solve relaxed problem
+  nlp_solver = NlpSolver('nlp_solver', 'ipopt', nlp_prob) # Solve relaxed problem
 
 # Plot the solution
 tgrid = [T/N*k for k in range(N+1)]
