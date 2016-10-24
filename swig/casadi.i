@@ -572,6 +572,12 @@ import_array();
     // Same as the above, but with reference instead of pointer
     template<typename M> GUESTOBJECT* from_ref(const M& m) { return from_ptr(&m);}
 
+    // Specialization for std::vectors of booleans
+    GUESTOBJECT* from_ref(std::vector<bool>::const_reference m) {
+      bool tmp = m;
+      return from_ptr(&tmp);
+    }
+
     // Same as the above, but with a temporary object
     template<typename M> GUESTOBJECT* from_tmp(M m) { return from_ptr(&m);}
 #ifdef SWIGMATLAB
