@@ -1176,6 +1176,11 @@ namespace casadi {
   }
 
   template<typename DataType>
+  Matrix<DataType> Matrix<DataType>::zz_log1p() const {
+    return unary(OP_LOG1P, *this);
+  }
+
+  template<typename DataType>
   Matrix<DataType> Matrix<DataType>::zz_log10() const {
     return log(*this)*(1/std::log(10.));
   }

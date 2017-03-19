@@ -209,6 +209,11 @@ class CASADI_EXPORT GenericExpression : public GenericExpressionCommon {
       return x.zz_log();
     }
 
+    /// log(1+x)
+    friend inline ExType log1p(const ExType& x) {
+      return x.zz_log1p();
+    }
+
     /// Base-10 logarithm
     friend inline ExType log10(const ExType& x) {
       return x.zz_log10();

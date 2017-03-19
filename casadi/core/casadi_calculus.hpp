@@ -50,7 +50,7 @@ namespace casadi {
 
     // Standard unary and binary functions
     OP_ADD,  OP_SUB,  OP_MUL,  OP_DIV,
-    OP_NEG,  OP_EXP,  OP_LOG,  OP_POW, OP_CONSTPOW,
+    OP_NEG,  OP_EXP,  OP_LOG, OP_LOG1P, OP_POW, OP_CONSTPOW,
     OP_SQRT,  OP_SQ,  OP_TWICE,
     OP_SIN,  OP_COS,  OP_TAN,
     OP_ASIN,  OP_ACOS,  OP_ATAN,
@@ -196,6 +196,7 @@ namespace casadi {
   using std::exp;
   using std::log;
   using std::log10;
+  using std::log1p;
   using std::abs;
   using std::fabs;
   using std::floor;
@@ -474,6 +475,7 @@ namespace casadi {
   template<>      struct F0XChecker<OP_NEG>{ static const bool check=true;};
   template<>      struct F0XChecker<OP_POW>{ static const bool check=true;};
   template<>      struct F0XChecker<OP_CONSTPOW>{ static const bool check=true;};
+  template<>      struct F0XChecker<OP_LOG1P>{ static const bool check=true;};
   template<>      struct F0XChecker<OP_SQRT>{ static const bool check=true;};
   template<>      struct F0XChecker<OP_SQ>{ static const bool check=true;};
   template<>      struct F0XChecker<OP_TWICE>{ static const bool check=true;};
@@ -630,6 +632,14 @@ namespace casadi {
   public:
     template<typename T> static inline void fcn(const T& x, T& f) { f = log(x);}
     template<typename T> static inline void der(const T& x, const T& f, T* d) { d[0]=1/x;}
+  };
+
+  /// Natural logarithm
+  template<>
+  struct UnaryOperation<OP_LOG1P>{
+  public:
+    template<typename T> static inline void fcn(const T& x, T& f) { f = log1p(x);}
+    template<typename T> static inline void der(const T& x, const T& f, T* d) { d[0]=1/(1+x);}
   };
 
   /// Power, defined only for x>=0

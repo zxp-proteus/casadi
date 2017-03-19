@@ -42,6 +42,7 @@ bool operation_checker(unsigned int op) {
     case OP_NEG:           return F<OP_NEG>::check;
     case OP_EXP:           return F<OP_EXP>::check;
     case OP_LOG:           return F<OP_LOG>::check;
+    case OP_LOG1P:         return F<OP_LOG1P>::check;
     case OP_POW:           return F<OP_POW>::check;
     case OP_CONSTPOW:      return F<OP_CONSTPOW>::check;
     case OP_SQRT:          return F<OP_SQRT>::check;
@@ -211,6 +212,7 @@ inline void casadi_math<T>::fun(unsigned char op, const T& x, const T& y, T& f) 
     case OP_NEG:       CNAME<OP_NEG>::fcn(X, Y, F, N);           break;\
     case OP_EXP:       CNAME<OP_EXP>::fcn(X, Y, F, N);           break;\
     case OP_LOG:       CNAME<OP_LOG>::fcn(X, Y, F, N);           break;\
+    case OP_LOG1P:     CNAME<OP_LOG1P>::fcn(X, Y, F, N);         break;\
     case OP_POW:       CNAME<OP_POW>::fcn(X, Y, F, N);           break;\
     case OP_CONSTPOW:  CNAME<OP_CONSTPOW>::fcn(X, Y, F, N);      break;\
     case OP_SQRT:      CNAME<OP_SQRT>::fcn(X, Y, F, N);          break;\
@@ -293,6 +295,7 @@ inline void casadi_math<T>::der(unsigned char op, const T& x, const T& y, const 
     case OP_NEG:       BinaryOperation<OP_NEG>::der(X, Y, F, D);        break;\
     case OP_EXP:       BinaryOperation<OP_EXP>::der(X, Y, F, D);        break;\
     case OP_LOG:       BinaryOperation<OP_LOG>::der(X, Y, F, D);        break;\
+    case OP_LOG1P:     BinaryOperation<OP_LOG1P>::der(X, Y, F, D);      break;\
     case OP_POW:       BinaryOperation<OP_POW>::der(X, Y, F, D);        break;\
     case OP_CONSTPOW:  BinaryOperation<OP_CONSTPOW>::der(X, Y, F, D);   break;\
     case OP_SQRT:      BinaryOperation<OP_SQRT>::der(X, Y, F, D);       break;\
@@ -352,6 +355,7 @@ inline void casadi_math<T>::derF(unsigned char op, const T& x, const T& y, T& f,
     case OP_NEG:       DerBinaryOpertion<OP_NEG>::derf(X, Y, F, D);        break;\
     case OP_EXP:       DerBinaryOpertion<OP_EXP>::derf(X, Y, F, D);        break;\
     case OP_LOG:       DerBinaryOpertion<OP_LOG>::derf(X, Y, F, D);        break;\
+    case OP_LOG1P:     DerBinaryOpertion<OP_LOG1P>::derf(X, Y, F, D);      break;\
     case OP_POW:       DerBinaryOpertion<OP_POW>::derf(X, Y, F, D);        break;\
     case OP_CONSTPOW:  DerBinaryOpertion<OP_CONSTPOW>::derf(X, Y, F, D);   break;\
     case OP_SQRT:      DerBinaryOpertion<OP_SQRT>::derf(X, Y, F, D);       break;\
@@ -459,6 +463,7 @@ inline void casadi_math<T>::printName(unsigned char op, std::ostream &stream) {
     case OP_NEG:                 stream << "neg";                 break;
     case OP_EXP:                 stream << "exp";                 break;
     case OP_LOG:                 stream << "log";                 break;
+    case OP_LOG1P:               stream << "log1p";               break;
     case OP_CONSTPOW:
     case OP_POW:                 stream << "pow";                 break;
     case OP_SQRT:                stream << "sqrt";                break;

@@ -198,6 +198,7 @@ namespace casadi {
     SXElement zz_mul(const SXElement& y) const { return zz_times(y);}
     SXElement zz_exp() const;
     SXElement zz_log() const;
+    SXElement zz_log1p() const;
     SXElement zz_sqrt() const;
     SXElement sq() const;
     SXElement zz_sin() const;

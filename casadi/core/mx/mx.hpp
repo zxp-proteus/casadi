@@ -396,6 +396,7 @@ namespace casadi {
     MX zz_atanh() const;
     MX zz_exp() const;
     MX zz_log() const;
+    MX zz_log1p() const;
     MX zz_log10() const;
     MX zz_floor() const;
     MX zz_ceil() const;

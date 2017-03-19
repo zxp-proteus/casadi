@@ -430,6 +430,7 @@ namespace casadi {
     Matrix<DataType> zz_atanh() const;
     Matrix<DataType> zz_exp() const;
     Matrix<DataType> zz_log() const;
+    Matrix<DataType> zz_log1p() const;
     Matrix<DataType> zz_log10() const;
     Matrix<DataType> zz_floor() const;
     Matrix<DataType> zz_ceil() const;

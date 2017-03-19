@@ -609,6 +609,10 @@ namespace casadi {
     return UnarySX::create(OP_LOG, *this);
   }
 
+  SXElement SXElement::zz_log1p() const {
+    return UnarySX::create(OP_LOG1P, *this);
+  }
+
   SXElement SXElement::zz_log10() const {
     return log(*this)*(1/std::log(10.));
   }
@@ -1900,4 +1904,3 @@ namespace std {
   }
 
 } // namespace std
-

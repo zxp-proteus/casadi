@@ -681,6 +681,10 @@ namespace casadi {
     return (*this)->getUnary(OP_LOG);
   }
 
+  MX MX::zz_log1p() const {
+    return (*this)->getUnary(OP_LOG1P);
+  }
+
   MX MX::zz_log10() const {
     return log(*this)*(1/std::log(10.));
   }
