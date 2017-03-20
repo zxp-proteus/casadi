@@ -2494,6 +2494,11 @@ except:
   arcsinh = lambda x: x.arcsinh()
   arccosh = lambda x: x.arccosh()
   copysign = lambda x,y: x.copysign(y)
+
+try:
+  from numpy import log1p
+except:
+  log1p = lambda x: x.log1p()
 %}
 #endif // SWIGPYTHON
 
@@ -3260,6 +3265,7 @@ DECL M %HIDE(asinh)(const M& x) { return asinh(x); }
 DECL M %HIDE(acosh)(const M& x) { return acosh(x); }
 DECL M %HIDE(exp)(const M& x) { return exp(x); }
 DECL M %HIDE(log)(const M& x) { return log(x); }
+DECL M %HIDE(log1p)(const M& x) { return log1p(x); }
 DECL M %HIDE(log10)(const M& x) { return log10(x); }
 DECL M %HIDE(floor)(const M& x) { return floor(x); }
 DECL M %HIDE(ceil)(const M& x) { return ceil(x); }
@@ -4012,6 +4018,7 @@ namespace casadi {
       def arctanh(x): return casadi_atanh(x)
       def exp(x): return casadi_exp(x)
       def log(x): return casadi_log(x)
+      def log1p(x): return casadi_log1p(x)
       def log10(x): return casadi_log10(x)
       def floor(x): return casadi_floor(x)
       def ceil(x): return casadi_ceil(x)
