@@ -2607,5 +2607,26 @@ class MXtests(casadiTestCase):
 
 
 
+  def test_is_equal_num(self):
+      a = MX(2)
+      b = MX(2)
+      self.assertTrue(isEqual(a,b,10))
+      
+      a = MX([2,2])
+      b = MX([2,2])
+      self.assertTrue(isEqual(a,b,10))
+      
+      a = MX([2,2])
+      b = MX([2])
+      self.assertFalse(isEqual(a,b,10))
+      
+      a = MX([3])
+      b = MX([2])
+      self.assertFalse(isEqual(a,b,10))
+      
+      a = MX([1,2])
+      b = MX([1,2])
+      self.assertTrue(isEqual(a,b,10))
+         
 if __name__ == '__main__':
     unittest.main()

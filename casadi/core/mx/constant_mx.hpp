@@ -295,6 +295,10 @@ namespace casadi {
     virtual bool isIdentity() const { return v_.value==1 && sparsity().isdiag();}
     virtual bool isValue(double val) const { return v_.value==val;}
 
+
+    /** \brief Check if two nodes are equivalent up to a given depth */
+    virtual bool zz_isEqual(const MXNode* node, int depth) const;
+
     /// Get the value (only for scalar constant nodes)
     virtual double getValue() const {
       return v_.value;
@@ -335,6 +339,19 @@ namespace casadi {
     /** \brief The actual numerical value */
     Value v_;
   };
+
+  template<typename Value>
+  bool Constant<Value>::zz_isEqual(const MXNode* node, int depth) const {
+
+    // In fact, this cast will work for any Value
+    const Constant<Value>* n = dynamic_cast<const Constant<Value>*>(node);
+    if (n==0) return false;
+    if (n->v_.value!=v_.value) return false;
+    // Check sparsity
+    if (this->sparsity()!=node->sparsity()) return false;
+
+    return true;
+  }
 
   template<typename Value>
   MX Constant<Value>::getHorzcat(const std::vector<MX>& x) const {
