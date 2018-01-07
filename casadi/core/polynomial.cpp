@@ -142,7 +142,7 @@ namespace casadi {
   Polynomial Polynomial::derivative() const {
     vector<casadi_real> ret_p(p_.size()-1);
     for (s_t k=1; k<p_.size(); ++k) {
-      ret_p[k-1] = k*p_[k];
+      ret_p[k-1] = static_cast<casadi_real>(k)*p_[k];
     }
     return Polynomial(ret_p);
   }
@@ -151,7 +151,7 @@ namespace casadi {
     vector<casadi_real> ret_p(p_.size()+1);
     ret_p[0] = 0;
     for (s_t k=0; k<p_.size(); ++k) {
-      ret_p[k+1] = p_[k]/(k+1);
+      ret_p[k+1] = p_[k]/static_cast<casadi_real>(k+1);
     }
     return Polynomial(ret_p);
   }

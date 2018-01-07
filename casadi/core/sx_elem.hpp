@@ -188,10 +188,10 @@ namespace casadi {
 
     /// \cond INTERNAL
     /// Get the temporary variable
-    s_t get_temp() const;
+    i_t get_temp() const;
 
     /// Set the temporary variable
-    void set_temp(s_t t) const;
+    void set_temp(i_t t) const;
 
     /// Check if marked (i.e. temporary is negative)
     bool marked() const;
@@ -267,18 +267,18 @@ namespace std {
     static const bool is_specialized = true;
     static casadi::SXElem min() throw();
     static casadi::SXElem max() throw();
-    static const s_t  digits = 0;
-    static const s_t  digits10 = 0;
+    static const int  digits = 0;
+    static const int  digits10 = 0;
     static const bool is_signed = false;
     static const bool is_integer = false;
     static const bool is_exact = false;
-    static const s_t radix = 0;
+    static const int radix = 0;
     static casadi::SXElem epsilon() throw();
     static casadi::SXElem round_error() throw();
-    static const s_t  min_exponent = 0;
-    static const s_t  min_exponent10 = 0;
-    static const s_t  max_exponent = 0;
-    static const s_t  max_exponent10 = 0;
+    static const int  min_exponent = 0;
+    static const int  min_exponent10 = 0;
+    static const int  max_exponent = 0;
+    static const int  max_exponent10 = 0;
 
     static const bool has_infinity = true;
     static const bool has_quiet_NaN = true;

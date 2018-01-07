@@ -51,7 +51,7 @@ namespace casadi {
     double margin = (v[v.size()-1]-v[0])*1e-14;
 
     for (s_t i=2;i<v.size();++i) {
-      double ref = v[0]+(i*(v[v.size()-1]-v[0]))/(v.size()-1);
+      double ref = v[0]+(static_cast<double>(i)*(v[v.size()-1]-v[0]))/static_cast<double>(v.size()-1);
       if (abs(ref-v[i])>margin) return false;
     }
     return true;
@@ -125,7 +125,7 @@ namespace casadi {
     #ifdef HAVE_MKSTEMPS
     // Preferred solution
     string ret = prefix + "XXXXXX" + suffix;
-    if (mkstemps(&ret[0], suffix.size()) == -1) {
+    if (mkstemps(&ret[0], static_cast<i_t>(suffix.size())) == -1) {
       casadi_error("Failed to create temporary file: '" + ret + "'");
     }
     return ret;

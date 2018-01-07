@@ -73,8 +73,8 @@ namespace casadi {
     if (a == b) return 0;
     s_t na = a.size();
     s_t nb = b.size();
-    if (na == 0) return nb;
-    if (nb == 0) return na;
+    if (na == 0) return static_cast<double>(nb);
+    if (nb == 0) return static_cast<double>(na);
 
     vector<s_t> v0(nb+1, 0);
     vector<s_t> v1(nb+1, 0);
@@ -101,7 +101,7 @@ namespace casadi {
         v0[j] = v1[j];
     }
 
-    return v1[nb];
+    return static_cast<double>(v1[nb]);
   }
 
   vector<string> Options::suggestions(const string& word, s_t amount) const {

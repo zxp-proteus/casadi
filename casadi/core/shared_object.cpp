@@ -126,7 +126,7 @@ namespace casadi {
     return reinterpret_cast<size_t>(get());
   }
 
-  WeakRef::WeakRef(s_t dummy) {
+  WeakRef::WeakRef(i_t dummy) {
     casadi_assert_dev(dummy==0);
   }
 

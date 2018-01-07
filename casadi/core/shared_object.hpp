@@ -172,7 +172,7 @@ namespace casadi {
     friend class SharedObjectInternal;
 
     /** \brief Default constructor */
-    WeakRef(s_t dummy=0);
+    WeakRef(i_t dummy=0);
 
     /** \brief Construct from a shared object (also implicit type conversion) */
     WeakRef(SharedObject shared);

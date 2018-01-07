@@ -1137,7 +1137,7 @@ namespace casadi {
     /** \brief Evaluate the function and the derivative function */
     static inline void derF(unsigned char op, const s_t& x, const s_t& y, s_t& f, s_t* d) {
       double d_real[2] = {static_cast<double>(d[0]), static_cast<double>(d[1])};
-      double f_real(f);
+      double f_real = static_cast<double>(f);
       casadi_math<double>::derF(op, static_cast<double>(x), static_cast<double>(y), f_real, d_real);
       f = static_cast<s_t>(f_real);
       d[0] = static_cast<s_t>(d_real[0]);

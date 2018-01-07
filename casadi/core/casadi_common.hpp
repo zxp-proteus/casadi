@@ -61,7 +61,7 @@
 
 namespace casadi {
 
-  typedef unsigned int e_t;
+  typedef unsigned char e_t;
   typedef int r_t;
   typedef signed long long int s_t;
   typedef unsigned long long int u_t;
