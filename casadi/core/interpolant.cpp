@@ -53,7 +53,7 @@ namespace casadi {
     casadi_assert(grid.size()>0, "At least one input required");
 
     // Consistency check, number of elements
-    unsigned int nel=1;
+    u_t nel=1;
     for (auto&& g : grid) {
       casadi_assert(g.size()>=2, "Need at least two grid points for every input");
       nel *= g.size();

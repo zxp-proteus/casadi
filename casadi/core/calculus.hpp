@@ -956,7 +956,7 @@ namespace casadi {
   };
 
   template<template<int> class F, typename T>
-  T operation_getter(unsigned e_t op) {
+  T operation_getter(e_t op) {
     switch (static_cast<Operation>(op)) {
     case OP_ASSIGN:        return F<OP_ASSIGN>::check;
     case OP_ADD:           return F<OP_ADD>::check;
@@ -1051,7 +1051,7 @@ namespace casadi {
   }
 
   template<template<int> class F>
-  bool operation_checker(unsigned e_t op) {
+  bool operation_checker(e_t op) {
     return operation_getter<F, bool>(op);
   }
 

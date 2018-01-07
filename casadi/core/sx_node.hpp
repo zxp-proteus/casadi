@@ -128,7 +128,7 @@ namespace casadi {
     mutable int temp;
 
     // Reference counter -- counts the number of parents of the node
-    unsigned int count;
+    e_t count;
 
   };
 

@@ -647,7 +647,7 @@ namespace casadi {
     // Degree
     int d;
     // ?
-    unsigned int h;
+    u_t h;
     // Flip
     #define FLIP(i) (-(i)-2)
     // Elbow room
@@ -1346,7 +1346,7 @@ namespace casadi {
     #if defined(_WIN32)
     srand(seed);
     #else
-    unsigned int seedu = seed;
+    u_t seedu = seed;
     #endif
 
     for (int k=0; k<n; ++k) {

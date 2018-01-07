@@ -144,6 +144,11 @@ namespace casadi {
   typedef int (*eval_t)(const double** arg, double** res, int* iw, double* w, void* mem);
   ///@}
 
+  typedef unsigned int e_t;
+  typedef int r_t;
+  typedef signed long long s_t;
+  typedef unsigned int u_t;
+
   /// String representation, any type
   template<typename T>
   std::string str(const T& v);

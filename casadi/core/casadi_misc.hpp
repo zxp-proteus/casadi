@@ -439,7 +439,7 @@ namespace casadi {
 
   template<typename T>
   void write_matlab(std::ostream &stream, const std::vector<std::vector<T> > &v) {
-    for (unsigned int i=0; i<v.size(); ++i) {
+    for (u_t i=0; i<v.size(); ++i) {
       std::copy(v[i].begin(), v[i].end(), std::ostream_iterator<T>(stream, " "));
       stream << std::endl;
     }
