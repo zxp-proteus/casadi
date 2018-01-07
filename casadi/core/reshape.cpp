@@ -36,26 +36,26 @@ namespace casadi {
     set_sparsity(sp);
   }
 
-  r_t Reshape::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Reshape::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  r_t Reshape::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Reshape::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  r_t Reshape::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t Reshape::eval_gen(const T** arg, T** res, s_t* iw, T* w) const {
     if (arg[0]!=res[0]) copy(arg[0], arg[0]+nnz(), res[0]);
     return 0;
   }
 
-  r_t Reshape::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Reshape::sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     copy_fwd(arg[0], res[0], nnz());
     return 0;
   }
 
-  r_t Reshape::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Reshape::sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     copy_rev(arg[0], res[0], nnz());
     return 0;
   }
@@ -81,20 +81,20 @@ namespace casadi {
 
   void Reshape::ad_forward(const std::vector<std::vector<MX> >& fseed,
                         std::vector<std::vector<MX> >& fsens) const {
-    for (int d = 0; d<fsens.size(); ++d) {
+    for (s_t d = 0; d<fsens.size(); ++d) {
       fsens[d][0] = reshape(fseed[d][0], size());
     }
   }
 
   void Reshape::ad_reverse(const std::vector<std::vector<MX> >& aseed,
                         std::vector<std::vector<MX> >& asens) const {
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       asens[d][0] += reshape(aseed[d][0], dep().size());
     }
   }
 
   void Reshape::generate(CodeGenerator& g,
-                         const std::vector<int>& arg, const std::vector<int>& res) const {
+                         const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     if (arg[0]==res[0]) return;
     g << g.copy(g.work(arg[0], nnz()), nnz(), g.work(res[0], nnz())) << "\n";
   }
@@ -117,7 +117,7 @@ namespace casadi {
     return true;
   }
 
-  int Reshape::n_primitives() const {
+  s_t Reshape::n_primitives() const {
     return dep()->n_primitives();
   }
 

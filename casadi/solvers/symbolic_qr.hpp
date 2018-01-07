@@ -48,7 +48,7 @@ namespace casadi {
     // Work vectors
     std::vector<const double*> arg;
     std::vector<double*> res;
-    std::vector<int> iw;
+    std::vector<s_t> iw;
     std::vector<double> w;
 
     // Allocate memory for a function
@@ -106,11 +106,11 @@ namespace casadi {
     r_t nfact(void* mem, const double* A) const override;
 
     // Solve the linear system
-    r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
+    r_t solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const override;
 
     /** \brief Evaluate symbolically (SX) */
-    void linsol_eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem,
-                        bool tr, int nrhs) const override;
+    void linsol_eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem,
+                        bool tr, s_t nrhs) const override;
 
     /// A documentation string
     static const std::string meta_doc;

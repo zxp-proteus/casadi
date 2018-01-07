@@ -113,7 +113,7 @@ namespace casadi {
     SharedObjectInternal* get() const;
 
     /// Get the reference count
-    int getCount() const;
+    s_t getCount() const;
 
     /// Swap content with another instance
     void swap(SharedObject& other);
@@ -172,7 +172,7 @@ namespace casadi {
     friend class SharedObjectInternal;
 
     /** \brief Default constructor */
-    WeakRef(int dummy=0);
+    WeakRef(s_t dummy=0);
 
     /** \brief Construct from a shared object (also implicit type conversion) */
     WeakRef(SharedObject shared);

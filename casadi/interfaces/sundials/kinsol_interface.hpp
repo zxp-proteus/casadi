@@ -112,13 +112,13 @@ namespace casadi {
     N_Vector u_scale_, f_scale_;
 
     /// Globalization strategy
-    int strategy_;
+    s_t strategy_;
 
     // Should KINSOL internal warning messages be ignored
     bool disable_internal_warnings_;
 
     // Maximum number of iterations
-    int max_iter_;
+    s_t max_iter_;
 
     // Use exact Jacobian?
     bool exact_jac_;
@@ -128,10 +128,10 @@ namespace casadi {
     LinsolType linear_solver_type_;
 
     // Bandwidth (for banded solvers)
-    int upper_bandwidth_, lower_bandwidth_;
+    s_t upper_bandwidth_, lower_bandwidth_;
 
     // Krylov subspace size (for iterative solvers)
-    int maxl_;
+    s_t maxl_;
 
     // Iterative solver
     enum IterativeSolver { GMRES, BCGSTAB, TFQMR};
@@ -150,7 +150,7 @@ namespace casadi {
     void get_jtimes();
 
     // Raise an error specific to KinSol
-    void kinsol_error(const std::string& module, int flag, bool fatal=true) const;
+    void kinsol_error(const std::string& module, s_t flag, bool fatal=true) const;
 
     /// A documentation string
     static const std::string meta_doc;
@@ -166,7 +166,7 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     /** \brief Cast to memory object */
     static KinsolMemory* to_mem(void *mem) {
@@ -181,28 +181,28 @@ namespace casadi {
               DlsMat J, N_Vector tmp1, N_Vector tmp2) const;
     void bjac(KinsolMemory& m, long N, long mupper, long mlower, N_Vector u, N_Vector fu, DlsMat J,
               N_Vector tmp1, N_Vector tmp2) const;
-    void jtimes(KinsolMemory& m, N_Vector v, N_Vector Jv, N_Vector u, int* new_u) const;
+    void jtimes(KinsolMemory& m, N_Vector v, N_Vector Jv, N_Vector u, s_t* new_u) const;
     void psetup(KinsolMemory& m, N_Vector u, N_Vector uscale, N_Vector fval, N_Vector fscale,
                 N_Vector tmp1, N_Vector tmp2) const;
     void psolve(KinsolMemory& m, N_Vector u, N_Vector uscale,
                 N_Vector fval, N_Vector fscale, N_Vector v, N_Vector tmp) const;
 
     /** \brief Wrappers to callback functions*/
-    static int func_wrapper(N_Vector u, N_Vector fval, void *user_data);
-    static int djac_wrapper(long N, N_Vector u, N_Vector fu, DlsMat J, void *user_data,
+    static s_t func_wrapper(N_Vector u, N_Vector fval, void *user_data);
+    static s_t djac_wrapper(long N, N_Vector u, N_Vector fu, DlsMat J, void *user_data,
                             N_Vector tmp1, N_Vector tmp2);
-    static int bjac_wrapper(long N, long mupper, long mlower, N_Vector u, N_Vector fu, DlsMat J,
+    static s_t bjac_wrapper(long N, long mupper, long mlower, N_Vector u, N_Vector fu, DlsMat J,
                             void *user_data, N_Vector tmp1, N_Vector tmp2);
-    static int jtimes_wrapper(N_Vector v, N_Vector Jv, N_Vector u, int* new_u, void *user_data);
-    static int psetup_wrapper(N_Vector u, N_Vector uscale, N_Vector fval, N_Vector fscale,
+    static s_t jtimes_wrapper(N_Vector v, N_Vector Jv, N_Vector u, s_t* new_u, void *user_data);
+    static s_t psetup_wrapper(N_Vector u, N_Vector uscale, N_Vector fval, N_Vector fscale,
                               void* user_data, N_Vector tmp1, N_Vector tmp2);
-    static int psolve_wrapper(N_Vector u, N_Vector uscale, N_Vector fval, N_Vector fscale,
+    static s_t psolve_wrapper(N_Vector u, N_Vector uscale, N_Vector fval, N_Vector fscale,
                               N_Vector v, void* user_data, N_Vector tmp);
 
     /** \brief Callback functions (updated) */
-    static int lsetup(KINMem kin_mem);
-    static int lsolve(KINMem kin_mem, N_Vector x, N_Vector b, double *sJpnorm, double *sFdotJp);
-    static void ehfun(int error_code, const char *module, const char *function,
+    static s_t lsetup(KINMem kin_mem);
+    static s_t lsolve(KINMem kin_mem, N_Vector x, N_Vector b, double *sJpnorm, double *sFdotJp);
+    static void ehfun(s_t error_code, const char *module, const char *function,
                       char *msg, void *eh_data);
   };
 

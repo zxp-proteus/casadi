@@ -49,17 +49,17 @@ namespace casadi {
     return "mac(" + arg.at(1) + "," + arg.at(2) + "," + arg.at(0) + ")";
   }
 
-  r_t Multiplication::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Multiplication::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int Multiplication::
-  eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  s_t Multiplication::
+  eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  r_t Multiplication::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t Multiplication::eval_gen(const T** arg, T** res, s_t* iw, T* w) const {
     if (arg[0]!=res[0]) copy(arg[0], arg[0]+dep(0).nnz(), res[0]);
     casadi_mtimes(arg[1], dep(1).sparsity(),
                arg[2], dep(2).sparsity(),
@@ -69,7 +69,7 @@ namespace casadi {
 
   void Multiplication::ad_forward(const std::vector<std::vector<MX> >& fseed,
                                std::vector<std::vector<MX> >& fsens) const {
-    for (int d=0; d<fsens.size(); ++d) {
+    for (s_t d=0; d<fsens.size(); ++d) {
       fsens[d][0] = fseed[d][0]
         + mac(dep(1), fseed[d][2], MX::zeros(dep(0).sparsity()))
         + mac(fseed[d][1], dep(2), MX::zeros(dep(0).sparsity()));
@@ -78,7 +78,7 @@ namespace casadi {
 
   void Multiplication::ad_reverse(const std::vector<std::vector<MX> >& aseed,
                                std::vector<std::vector<MX> >& asens) const {
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       asens[d][1] += mac(aseed[d][0], dep(2).T(), MX::zeros(dep(1).sparsity()));
       asens[d][2] += mac(dep(1).T(), aseed[d][0], MX::zeros(dep(2).sparsity()));
       asens[d][0] += aseed[d][0];
@@ -89,8 +89,8 @@ namespace casadi {
     res[0] = mac(arg[1], arg[2], arg[0]);
   }
 
-  int Multiplication::
-  sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  s_t Multiplication::
+  sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     copy_fwd(arg[0], res[0], nnz());
     Sparsity::mul_sparsityF(arg[1], dep(1).sparsity(),
                             arg[2], dep(2).sparsity(),
@@ -98,8 +98,8 @@ namespace casadi {
     return 0;
   }
 
-  int Multiplication::
-  sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  s_t Multiplication::
+  sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     Sparsity::mul_sparsityR(arg[1], dep(1).sparsity(),
                             arg[2], dep(2).sparsity(),
                             res[0], sparsity(), w);
@@ -108,7 +108,7 @@ namespace casadi {
   }
 
   void Multiplication::generate(CodeGenerator& g,
-                                const std::vector<int>& arg, const std::vector<int>& res) const {
+                                const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     // Copy first argument if not inplace
     if (arg[0]!=res[0]) {
       g << g.copy(g.work(arg[0], nnz()), nnz(), g.work(res[0], nnz())) << '\n';
@@ -122,20 +122,20 @@ namespace casadi {
 
   void DenseMultiplication::
   generate(CodeGenerator& g,
-           const std::vector<int>& arg, const std::vector<int>& res) const {
+           const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     // Copy first argument if not inplace
     if (arg[0]!=res[0]) {
       g << g.copy(g.work(arg[0], nnz()), nnz(),
                           g.work(res[0], nnz())) << '\n';
     }
 
-    int nrow_x = dep(1).size1(), nrow_y = dep(2).size1(), ncol_y = dep(2).size2();
+    s_t nrow_x = dep(1).size1(), nrow_y = dep(2).size1(), ncol_y = dep(2).size2();
     g.local("rr", "casadi_real", "*");
     g.local("ss", "casadi_real", "*");
     g.local("tt", "casadi_real", "*");
-    g.local("i", "int");
-    g.local("j", "int");
-    g.local("k", "int");
+    g.local("i", "s_t");
+    g.local("j", "s_t");
+    g.local("k", "s_t");
     g << "for (i=0, rr=" << g.work(res[0], nnz()) <<"; i<" << ncol_y << "; ++i)"
       << " for (j=0; j<" << nrow_x << "; ++j, ++rr)"
       << " for (k=0, ss=" << g.work(arg[1], dep(1).nnz()) << "+j, tt="

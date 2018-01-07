@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_CSPARSE_EXPORT
+  s_t CASADI_LINSOL_CSPARSE_EXPORT
   casadi_register_linsol_csparse(LinsolInternal::Plugin* plugin) {
     plugin->creator = CsparseInterface::creator;
     plugin->name = "csparse";
@@ -72,9 +72,9 @@ namespace casadi {
     m->A.nzmax = this->nnz();  // maximum number of entries
     m->A.m = this->nrow(); // number of rows
     m->A.n = this->ncol(); // number of columns
-    m->A.p = const_cast<int*>(this->colind()); // column pointers (size n+1)
+    m->A.p = const_cast<s_t*>(this->colind()); // column pointers (size n+1)
     // or column indices (size nzmax)
-    m->A.i = const_cast<int*>(this->row()); // row indices, size nzmax
+    m->A.i = const_cast<s_t*>(this->row()); // row indices, size nzmax
     m->A.x = 0; // numerical values, size nzmax
     m->A.nz = -1; // of entries in triplet matrix, -1 for compressed-column
 
@@ -90,7 +90,7 @@ namespace casadi {
     m->A.x = const_cast<double*>(A);
 
     // ordering and symbolic analysis
-    int order = 0; // ordering?
+    s_t order = 0; // ordering?
     if (m->S) cs_sfree(m->S);
     m->S = cs_sqr(order, &m->A, 0);
     return 0;
@@ -103,7 +103,7 @@ namespace casadi {
     m->A.x = const_cast<double*>(A);
 
     // Make sure that all entries of the linear system are valid
-    for (int k=0; k<this->nnz(); ++k) {
+    for (s_t k=0; k<this->nnz(); ++k) {
       casadi_assert(!isnan(A[k]),
         "Nonzero " + str(k) + " is not-a-number");
       casadi_assert(!isinf(A[k]),
@@ -150,13 +150,13 @@ namespace casadi {
     return 0;
   }
 
-  r_t CsparseInterface::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t CsparseInterface::solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<CsparseMemory*>(mem);
     casadi_assert_dev(m->N!=0);
 
     double *t = &m->temp_.front();
 
-    for (int k=0; k<nrhs; ++k) {
+    for (s_t k=0; k<nrhs; ++k) {
       if (tr) {
         cs_pvec(m->S->q, x, t, m->A.n) ;       // t = P2*b
         casadi_assert_dev(m->N->U!=0);

@@ -40,7 +40,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_IMPORTER_SHELL_EXPORT
+  s_t CASADI_IMPORTER_SHELL_EXPORT
   casadi_register_importer_shell(ImporterInternal::Plugin* plugin) {
     plugin->creator = ShellCompiler::creator;
     plugin->name = "shell";

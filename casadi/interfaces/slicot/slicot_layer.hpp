@@ -27,19 +27,19 @@
 #define CASADI_SLICOT_LAYER_HPP
 
 namespace casadi {
-  int slicot_mb03vd(int n, int p, int ilo, int ihi, double * a, int lda1, int lda2, double * tau,
-                     int ldtau, double * dwork=0);
+  s_t slicot_mb03vd(s_t n, s_t p, s_t ilo, s_t ihi, double * a, s_t lda1, s_t lda2, double * tau,
+                     s_t ldtau, double * dwork=0);
 
-  int slicot_mb03vy(int n, int p, int ilo, int ihi, double * a, int lda1, int lda2,
-                     const double * tau, int ldtau, double * dwork=0, int ldwork=0);
+  s_t slicot_mb03vy(s_t n, s_t p, s_t ilo, s_t ihi, double * a, s_t lda1, s_t lda2,
+                     const double * tau, s_t ldtau, double * dwork=0, s_t ldwork=0);
 
-  int slicot_mb03wd(char job, char compz, int n, int p, int ilo, int ihi, int iloz, int ihiz,
-                     double *h, int ldh1, int ldh2, double* z, int ldz1, int ldz2, double* wr,
-                     double *wi, double * dwork=0, int ldwork=0);
+  s_t slicot_mb03wd(char job, char compz, s_t n, s_t p, s_t ilo, s_t ihi, s_t iloz, s_t ihiz,
+                     double *h, s_t ldh1, s_t ldh2, double* z, s_t ldz1, s_t ldz2, double* wr,
+                     double *wi, double * dwork=0, s_t ldwork=0);
 
-  int slicot_mb05nd(int n, double delta, const double* a, int lda,
-                     double* ex, int ldex, double * exint, int ldexin,
-                     double tol, int* iwork, double * dwork, int ldwork);
+  s_t slicot_mb05nd(s_t n, double delta, const double* a, s_t lda,
+                     double* ex, s_t ldex, double * exint, s_t ldexin,
+                     double tol, s_t* iwork, double * dwork, s_t ldwork);
 
 } // namespace casadi
 

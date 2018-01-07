@@ -34,10 +34,10 @@ namespace casadi {
   /** \brief  An atomic operation for the SXElem virtual machine */
   struct ScalarAtomic {
     e_t op;     /// Operator index
-    int i0;
+    s_t i0;
     union {
       double d;
-      struct { int i1, i2; };
+      struct { s_t i1, i2; };
     };
   };
 
@@ -60,10 +60,10 @@ class CASADI_EXPORT SXFunction :
   ~SXFunction() override;
 
   /** \brief  Evaluate numerically, work vectors given */
-  r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+  r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
   /** \brief  evaluate symbolically while also propagating directional derivatives */
-  r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const override;
+  r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem) const override;
 
   /** Inline calls? */
   bool should_inline(bool always_inline, bool never_inline) const override {
@@ -92,7 +92,7 @@ class CASADI_EXPORT SXFunction :
 
   ///@{
   /** \brief Get function input(s) and output(s)  */
-  const SX sx_in(int ind) const override;
+  const SX sx_in(s_t ind) const override;
   const std::vector<SX> sx_in() const override;
   ///@}
 
@@ -114,16 +114,16 @@ class CASADI_EXPORT SXFunction :
   }
 
   /** \brief Hessian (forward over adjoint) via source code transformation */
-  SX hess(int iind=0, int oind=0);
+  SX hess(s_t iind=0, s_t oind=0);
 
   /** \brief Get the number of atomic operations */
-  int n_instructions() const override { return algorithm_.size();}
+  s_t n_instructions() const override { return algorithm_.size();}
 
   /** \brief Get an atomic operation operator index */
-  int instruction_id(int k) const override { return algorithm_.at(k).op;}
+  s_t instruction_id(s_t k) const override { return algorithm_.at(k).op;}
 
   /** \brief Get the (integer) input arguments of an atomic operation */
-  std::vector<int> instruction_input(int k) const override {
+  std::vector<s_t> instruction_input(s_t k) const override {
     auto e = algorithm_.at(k);
     if (casadi_math<double>::ndeps(e.op)==2 || e.op==OP_INPUT) {
       return {e.i1, e.i2};
@@ -135,12 +135,12 @@ class CASADI_EXPORT SXFunction :
   }
 
   /** \brief Get the floating point output argument of an atomic operation */
-  double instruction_constant(int k) const override {
+  double instruction_constant(s_t k) const override {
     return algorithm_.at(k).d;
   }
 
   /** \brief Get the (integer) output argument of an atomic operation */
-  std::vector<int> instruction_output(int k) const override {
+  std::vector<s_t> instruction_output(s_t k) const override {
     auto e = algorithm_.at(k);
     if (e.op==OP_OUTPUT) {
       return {e.i0, e.i2};
@@ -150,20 +150,20 @@ class CASADI_EXPORT SXFunction :
   }
 
 #ifdef WITH_DEPRECATED_FEATURES
-  std::pair<int, int> getAtomicInput(int k) const override {
+  std::pair<s_t, s_t> getAtomicInput(s_t k) const override {
     auto e = algorithm_.at(k);
     return {e.i1, e.i2};
   }
 
   /** \brief Get the (integer) output argument of an atomic operation */
-  int getAtomicOutput(int k) const override {
+  s_t getAtomicOutput(s_t k) const override {
     auto e = algorithm_.at(k);
     return e.i0;
   }
 #endif // WITH_DEPRECATED_FEATURES
 
   /** \brief Number of nodes in the algorithm */
-  int n_nodes() const override { return algorithm_.size() - nnz_out();}
+  s_t n_nodes() const override { return algorithm_.size() - nnz_out();}
 
   /** \brief  DATA MEMBERS */
 
@@ -210,10 +210,10 @@ class CASADI_EXPORT SXFunction :
   void codegen_body(CodeGenerator& g) const override;
 
   /** \brief  Propagate sparsity forward */
-  r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+  r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const override;
 
   /** \brief  Propagate sparsity backwards */
-  r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+  r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const override;
 
   /** \brief Return Jacobian of all input elements with respect to all output elements */
   Function get_jacobian(const std::string& name,
@@ -222,7 +222,7 @@ class CASADI_EXPORT SXFunction :
                                    const Dict& opts) const override;
 
   /** \brief Get default input value */
-  double get_default_in(int ind) const override { return default_in_.at(ind);}
+  double get_default_in(s_t ind) const override { return default_in_.at(ind);}
 
   /** \brief Export function in a specific language */
   void export_code_body(const std::string& lang,

@@ -71,7 +71,7 @@ namespace casadi {
 
     double *VZ, *T, *Z, *X, *Xbar, *nnKa, *nnKb, *eig_real, *eig_imag, *F, *FF, *A, *B;
     double *dwork, *wruntime;
-    int* partition, *iwruntime;
+    s_t* partition, *iwruntime;
 
     /// Solvers for low-order Discrete Periodic Sylvester Equations
     std::vector< std::vector< Linsol> > dpse_solvers;
@@ -139,10 +139,10 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     /** \brief  Evaluate numerically */
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// A documentation string
     static const std::string meta_doc;
@@ -151,9 +151,9 @@ namespace casadi {
 
   private:
     /// Dimension of state-space
-    int n_;
+    s_t n_;
 
-    inline int partindex(const SlicotDpleMemory* m, int i, int j, int k, int r, int c) const;
+    inline s_t partindex(const SlicotDpleMemory* m, s_t i, s_t j, s_t k, s_t r, s_t c) const;
 
     /// Numerical zero, used in periodic Schur form
     double psd_num_zero_;
@@ -167,7 +167,7 @@ namespace casadi {
   };
 
 
-  void slicot_periodic_schur(int n, int K, const double* a,
+  void slicot_periodic_schur(s_t n, s_t K, const double* a,
                              double* t,  double * z,
                              double* dwork, double* eig_real,
                              double *eig_imag, double num_zero=0);

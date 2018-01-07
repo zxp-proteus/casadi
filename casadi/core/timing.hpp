@@ -72,7 +72,7 @@ namespace casadi {
       void toc();
 
       /// Accumulated number of calls since last reset
-      int n_call;
+      s_t n_call;
 
       /// Accumulated wall time [s] since last reset
       double t_wall;

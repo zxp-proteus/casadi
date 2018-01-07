@@ -51,9 +51,9 @@ namespace casadi {
     // Constructor
     LinearInterpolant(const std::string& name,
                       const std::vector<double>& grid,
-                      const std::vector<int>& offset,
+                      const std::vector<s_t>& offset,
                       const std::vector<double>& values,
-                      int m);
+                      s_t m);
 
     // Destructor
     ~LinearInterpolant() override;
@@ -67,9 +67,9 @@ namespace casadi {
     /** \brief  Create a new Interpolant */
     static Interpolant* creator(const std::string& name,
                                 const std::vector<double>& grid,
-                                const std::vector<int>& offset,
+                                const std::vector<s_t>& offset,
                                 const std::vector<double>& values,
-                                int m) {
+                                s_t m) {
       return new LinearInterpolant(name, grid, offset, values, m);
     }
 
@@ -77,7 +77,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /// Evaluate numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     ///@{
     /** \brief Full Jacobian */
@@ -103,7 +103,7 @@ namespace casadi {
     const Options& get_options() const override { return options_;}
     ///@}
 
-    std::vector<int> lookup_mode_;
+    std::vector<s_t> lookup_mode_;
   };
 
   /** First order derivatives */
@@ -128,7 +128,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /// Evaluate numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     ///@{
     /** \brief Full Jacobian */

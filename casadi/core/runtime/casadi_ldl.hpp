@@ -7,14 +7,14 @@
 // len[parent] = ncol
 // len[w] >= ncol
 inline
-void casadi_ldl_colind(const int* sp, int* parent,
-                        int* l_colind, int* w) {
-  int n = sp[0];
-  const int *colind=sp+2, *row=sp+2+n+1;
+void casadi_ldl_colind(const s_t* sp, s_t* parent,
+                        s_t* l_colind, s_t* w) {
+  s_t n = sp[0];
+  const s_t *colind=sp+2, *row=sp+2+n+1;
   // Local variables
-  int r, c, k;
+  s_t r, c, k;
   // Work vectors
-  int* visited=w; w+=n;
+  s_t* visited=w; w+=n;
   // Loop over columns
   for (c=0; c<n; ++c) {
     // L(c,:) pattern: all nodes reachable in etree from nz in A(0:c-1,c)
@@ -44,14 +44,14 @@ void casadi_ldl_colind(const int* sp, int* parent,
 // Ref: User Guide for LDL by Tim Davis
 // len[w] >= n
 inline
-void casadi_ldl_row(const int* sp, const int* parent, int* l_colind, int* l_row, int *w) {
+void casadi_ldl_row(const s_t* sp, const s_t* parent, s_t* l_colind, s_t* l_row, s_t *w) {
   // Extract sparsity
-  int n = sp[0];
-  const int *colind = sp+2, *row = sp+n+3;
+  s_t n = sp[0];
+  const s_t *colind = sp+2, *row = sp+n+3;
   // Work vectors
-  int *visited=w; w+=n;
+  s_t *visited=w; w+=n;
   // Local variables
-  int r, c, k;
+  s_t r, c, k;
   // Compute nonzero pattern of kth row of L
   for (c=0; c<n; ++c) {
     // Not yet visited
@@ -82,18 +82,18 @@ void casadi_ldl_row(const int* sp, const int* parent, int* l_colind, int* l_row,
 // len[iw] >= 2*n
 // len[w] >= n
 template<typename T1>
-void casadi_ldl(const int* sp_a, const int* parent, const int* sp_l,
-                 const T1* a, T1* l, T1* d, int *iw, T1* w) {
+void casadi_ldl(const s_t* sp_a, const s_t* parent, const s_t* sp_l,
+                 const T1* a, T1* l, T1* d, s_t *iw, T1* w) {
   // Extract sparsities
-  int n = sp_a[0];
-  const int *colind = sp_a+2, *row = sp_a+n+3;
-  const int *l_colind = sp_l+2, *l_row = sp_l+n+3;
+  s_t n = sp_a[0];
+  const s_t *colind = sp_a+2, *row = sp_a+n+3;
+  const s_t *l_colind = sp_l+2, *l_row = sp_l+n+3;
   // Work vectors
-  int *visited=iw; iw+=n;
-  int *currcol=iw; iw+=n;
+  s_t *visited=iw; iw+=n;
+  s_t *currcol=iw; iw+=n;
   T1* y = w; w+=n;
   // Local variables
-  int r, c, k, k2;
+  s_t r, c, k, k2;
   T1 yr;
   // Keep track of current nonzero for each column of L
   for (c=0; c<n; ++c) currcol[c] = l_colind[c];
@@ -126,12 +126,12 @@ void casadi_ldl(const int* sp_a, const int* parent, const int* sp_l,
 // SYMBOL "ldl_trs"
 // Solve for (I+L) with L an optionally transposed strictly lower triangular matrix.
 template<typename T1>
-void casadi_ldl_trs(const int* sp_l, const T1* nz_l, T1* x, int tr) {
+void casadi_ldl_trs(const s_t* sp_l, const T1* nz_l, T1* x, s_t tr) {
   // Extract sparsity
-  int ncol=sp_l[1];
-  const int *colind=sp_l+2, *row=sp_l+2+ncol+1;
+  s_t ncol=sp_l[1];
+  const s_t *colind=sp_l+2, *row=sp_l+2+ncol+1;
   // Local variables
-  int c, k;
+  s_t c, k;
   if (tr) {
     // Backward substitution
     for (c=ncol-1; c>=0; --c) {
@@ -152,10 +152,10 @@ void casadi_ldl_trs(const int* sp_l, const T1* nz_l, T1* x, int tr) {
 // SYMBOL "ldl_solve"
 // Linear solve using an LDL factorized linear system
 template<typename T1>
-void casadi_ldl_solve(T1* x, int nrhs, const int* sp_l, const T1* l,
+void casadi_ldl_solve(T1* x, s_t nrhs, const s_t* sp_l, const T1* l,
                       const T1* d) {
-  int n = sp_l[1];
-  int i, k;
+  s_t n = sp_l[1];
+  s_t i, k;
   for (k=0; k<nrhs; ++k) {
     //      LDL'x = b <=> x = L\D\L'\b
     //  Solve for L'

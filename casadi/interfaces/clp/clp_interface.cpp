@@ -29,7 +29,7 @@ namespace casadi {
   using namespace std;
 
   extern "C"
-  int CASADI_CONIC_CLP_EXPORT
+  s_t CASADI_CONIC_CLP_EXPORT
   casadi_register_conic_clp(Conic::Plugin* plugin) {
     plugin->creator = ClpInterface::creator;
     plugin->name = "clp";
@@ -80,8 +80,8 @@ namespace casadi {
     return 0;
   }
 
-  int ClpInterface::
-  eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  s_t ClpInterface::
+  eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<ClpMemory*>(mem);
 
     // Statistics

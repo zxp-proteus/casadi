@@ -32,10 +32,10 @@
 
 // http://www.yolinux.com/TUTORIALS/LinuxTutorialMixingFortranAndC.html
 
-int main(int argc, char *argv[])
+s_t main(s_t argc, char *argv[])
 {
-  int n = 15;
-  int m = 18;
+  s_t n = 15;
+  s_t m = 18;
   std::vector<double> bl(n+m);
   std::vector<double> bu(n+m);
 
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
   //iObj   = 18  means the linear objective is row 18 in valA(*).
   //The objective row is free.
 
-  int iObj   = 17;
+  s_t iObj   = 17;
   bl[n+iObj] = -inf;
 
   // LBG

@@ -47,7 +47,7 @@ namespace casadi {
       static bool is_zero(const T& val) {
         return val==0;
       }
-      static bool is_equal(const T& x, const T& y, int depth) {
+      static bool is_equal(const T& x, const T& y, s_t depth) {
         return x==y;
       }
       static bool is_almost_zero(const T& val, double tol) {
@@ -63,7 +63,7 @@ namespace casadi {
         return true;
       }
       static bool is_integer(const T& val) {
-        return val==static_cast<int>(val);
+        return val==static_cast<s_t>(val);
       }
       static bool is_inf(const T& val) {
         return std::numeric_limits<T>::has_infinity && val==std::numeric_limits<T>::infinity();

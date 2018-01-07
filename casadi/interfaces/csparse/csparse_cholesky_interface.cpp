@@ -31,7 +31,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_CSPARSECHOLESKY_EXPORT
+  s_t CASADI_LINSOL_CSPARSECHOLESKY_EXPORT
   casadi_register_linsol_csparsecholesky(LinsolInternal::Plugin* plugin) {
     plugin->creator = CSparseCholeskyInterface::creator;
     plugin->name = "csparsecholesky";
@@ -74,9 +74,9 @@ namespace casadi {
     m->A.nzmax = this->nnz();  // maximum number of entries
     m->A.m = this->nrow(); // number of columns
     m->A.n = this->ncol(); // number of rows
-    m->A.p = const_cast<int*>(this->colind()); // row pointers (size n+1)
+    m->A.p = const_cast<s_t*>(this->colind()); // row pointers (size n+1)
     // or row indices (size nzmax)
-    m->A.i = const_cast<int*>(this->row()); // column indices, size nzmax
+    m->A.i = const_cast<s_t*>(this->row()); // column indices, size nzmax
     m->A.x = 0; // numerical values, size nzmax
     m->A.nz = -1; // of entries in triplet matrix, -1 for compressed-row
 
@@ -93,7 +93,7 @@ namespace casadi {
     m->A.x = const_cast<double*>(A);
 
     // ordering and symbolic analysis
-    int order = 0; // ordering?
+    s_t order = 0; // ordering?
     m->S = cs_schol(order, &m->A);
     return 0;
   }
@@ -105,8 +105,8 @@ namespace casadi {
     m->A.x = const_cast<double*>(A);
 
     // Make sure that all entries of the linear system are valid
-    int nnz = this->nnz();
-    for (int k=0; k<nnz; ++k) {
+    s_t nnz = this->nnz();
+    for (s_t k=0; k<nnz; ++k) {
       casadi_assert(!isnan(A[k]),
         "Nonzero " + str(k) + " is not-a-number");
       casadi_assert(!isinf(A[k]),
@@ -119,14 +119,14 @@ namespace casadi {
     return 0;
   }
 
-  int CSparseCholeskyInterface::
-  solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  s_t CSparseCholeskyInterface::
+  solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<CsparseCholMemory*>(mem);
 
     casadi_assert_dev(m->L!=0);
 
     double *t = &m->temp.front();
-    for (int k=0; k<nrhs; ++k) {
+    for (s_t k=0; k<nrhs; ++k) {
       if (tr) {
         cs_pvec(m->S->q, x, t, m->A.n) ;   // t = P1\b
         cs_ltsolve(m->L->L, t) ;               // t = L\t

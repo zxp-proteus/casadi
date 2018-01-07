@@ -40,7 +40,7 @@ using namespace std;
 
 namespace casadi {
   extern "C"
-  int CASADI_NLPSOL_BONMIN_EXPORT
+  s_t CASADI_NLPSOL_BONMIN_EXPORT
   casadi_register_nlpsol_bonmin(Nlpsol::Plugin* plugin) {
     plugin->creator = BonminInterface::creator;
     plugin->name = "bonmin";
@@ -214,7 +214,7 @@ namespace casadi {
   }
 
   void BonminInterface::set_work(void* mem, const double**& arg, double**& res,
-                                int*& iw, double*& w) const {
+                                s_t*& iw, double*& w) const {
     auto m = static_cast<BonminMemory*>(mem);
 
     // Set work in base classes
@@ -273,7 +273,7 @@ namespace casadi {
   public:
     BonMinMessageHandler(): CoinMessageHandler() { }
     /// Core of the class: the method that directs the messages
-    int print() override {
+    s_t print() override {
       uout() << messageBuffer_ << std::endl;
       return 0;
     }
@@ -392,10 +392,10 @@ namespace casadi {
 
   bool BonminInterface::
   intermediate_callback(BonminMemory* m, const double* x, const double* z_L, const double* z_U,
-                        const double* g, const double* lambda, double obj_value, int iter,
+                        const double* g, const double* lambda, double obj_value, s_t iter,
                         double inf_pr, double inf_du, double mu, double d_norm,
                         double regularization_size, double alpha_du, double alpha_pr,
-                        int ls_trials, bool full_callback) const {
+                        s_t ls_trials, bool full_callback) const {
     m->n_iter += 1;
     try {
       if (verbose_) casadi_message("intermediate_callback started");
@@ -412,7 +412,7 @@ namespace casadi {
         m->fstats.at("callback_fun").tic();
         if (full_callback) {
           casadi_copy(x, nx_, m->xk);
-          for (int i=0; i<nx_; ++i) {
+          for (s_t i=0; i<nx_; ++i) {
             m->lam_xk[i] = z_U[i]-z_L[i];
           }
           casadi_copy(lambda, ng_, m->lam_gk);
@@ -446,7 +446,7 @@ namespace casadi {
         m->res[0] = &ret_double;
 
         fcallback_(m->arg, m->res, m->iw, m->w, 0);
-        int ret = static_cast<int>(ret_double);
+        s_t ret = static_cast<s_t>(ret_double);
 
         m->fstats.at("callback_fun").toc();
         return  !ret;
@@ -476,7 +476,7 @@ namespace casadi {
 
       // Get dual solution (simple bounds)
       if (m->lam_xk) {
-        for (int i=0; i<nx_; ++i) {
+        for (s_t i=0; i<nx_; ++i) {
           m->lam_xk[i] = casadi::nan;
         }
       }
@@ -526,7 +526,7 @@ namespace casadi {
       // Initialize dual variables (simple bounds)
       if (init_z) {
         if (m->lam_x0) {
-          for (int i=0; i<nx_; ++i) {
+          for (s_t i=0; i<nx_; ++i) {
             z_L[i] = max(0., -m->lam_x0[i]);
             z_U[i] = max(0., m->lam_x0[i]);
           }
@@ -548,8 +548,8 @@ namespace casadi {
     }
   }
 
-  void BonminInterface::get_nlp_info(BonminMemory* m, int& nx, int& ng,
-                                    int& nnz_jac_g, int& nnz_h_lag) const {
+  void BonminInterface::get_nlp_info(BonminMemory* m, s_t& nx, s_t& ng,
+                                    s_t& nnz_jac_g, s_t& nnz_h_lag) const {
     try {
       // Number of variables
       nx = nx_;
@@ -568,14 +568,14 @@ namespace casadi {
     }
   }
 
-  int BonminInterface::get_number_of_nonlinear_variables() const {
+  s_t BonminInterface::get_number_of_nonlinear_variables() const {
     try {
       if (!pass_nonlinear_variables_) {
         // No Hessian has been interfaced
         return -1;
       } else {
         // Number of variables that appear nonlinearily
-        int nv = 0;
+        s_t nv = 0;
         for (auto&& i : nl_ex_) if (i) nv++;
         return nv;
       }
@@ -586,9 +586,9 @@ namespace casadi {
   }
 
   bool BonminInterface::
-  get_list_of_nonlinear_variables(int num_nonlin_vars, int* pos_nonlin_vars) const {
+  get_list_of_nonlinear_variables(s_t num_nonlin_vars, s_t* pos_nonlin_vars) const {
     try {
-      for (int i=0; i<nl_ex_.size(); ++i) {
+      for (s_t i=0; i<nl_ex_.size(); ++i) {
         if (nl_ex_[i]) *pos_nonlin_vars++ = i;
       }
       return true;

@@ -44,7 +44,7 @@ namespace casadi {
       // Start of x
       if (it==x.begin()) return 0;
 
-      int i = std::distance(x.begin(), it);
+      s_t i = std::distance(x.begin(), it);
 
       // Exactly on an entry
       if (*it == xq) return i;

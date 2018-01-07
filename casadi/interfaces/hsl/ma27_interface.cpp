@@ -31,7 +31,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_MA27_EXPORT
+  s_t CASADI_LINSOL_MA27_EXPORT
   casadi_register_linsol_ma27(LinsolInternal::Plugin* plugin) {
     plugin->creator = Ma27Interface::creator;
     plugin->name = "ma27";
@@ -71,8 +71,8 @@ namespace casadi {
     m->cntl[0] = 1e-8;     // Set pivot tolerance
 
     // Dynamically resized work vectors
-    int N = this->ncol();
-    int nnz = this->nnz();
+    s_t N = this->ncol();
+    s_t nnz = this->nnz();
     double liw_factor = 2;
     m->iw.resize(ceil(liw_factor * (2*nnz+3*N+1)));
     double la_factor = 2;
@@ -89,15 +89,15 @@ namespace casadi {
     casadi_assert_dev(A!=0);
 
     // Get sparsity
-    const int ncol = this->ncol();
-    const int* colind = this->colind();
-    const int* row = this->row();
+    const s_t ncol = this->ncol();
+    const s_t* colind = this->colind();
+    const s_t* row = this->row();
 
     // Get actual nonzeros
-    int nnz=0;
-    for (int cc=0; cc<ncol; ++cc) {
-      for (int el=colind[cc]; el<colind[cc+1]; ++el) {
-        int rr=row[el];
+    s_t nnz=0;
+    for (s_t cc=0; cc<ncol; ++cc) {
+      for (s_t el=colind[cc]; el<colind[cc+1]; ++el) {
+        s_t rr=row[el];
         if (rr>cc) continue; // only upper triangular part
         if (A[el]!=0) {
           m->nz[nnz] = A[el];
@@ -110,33 +110,33 @@ namespace casadi {
     m->nnz = nnz;
 
     // Order of the matrix
-    int N = this->ncol();
+    s_t N = this->ncol();
 
     // Symbolic factorization (MA27AD)
-    int LIW = m->iw.size();
-    int iflag = 0;
-    int info[20];
+    s_t LIW = m->iw.size();
+    s_t iflag = 0;
+    s_t info[20];
     double ops;
     ma27ad_(&N, &nnz, get_ptr(m->irn), get_ptr(m->jcn), &m->iw[0], &LIW,
             get_ptr(m->ikeep), get_ptr(m->iw1), &m->nsteps, &iflag, m->icntl, m->cntl,
             info, &ops);
     iflag = info[0];   // Information flag
-    int ierror = info[1];  // Error flag
-    //int nrlnec = info[4];  // recommended value for la
-    int nirnec = info[5];  // recommended value for liw
+    s_t ierror = info[1];  // Error flag
+    //s_t nrlnec = info[4];  // recommended value for la
+    s_t nirnec = info[5];  // recommended value for liw
     casadi_assert(iflag==0,
       "ma27ad_ returns iflag = " + str(iflag) + " with ierror = " + str(ierror));
 
     // Allocate more memory?
     double la_init_factor = 20.0; // This could be an option.
-    int la_min = ceil(la_init_factor * nirnec);
+    s_t la_min = ceil(la_init_factor * nirnec);
     if (la_min > m->nz.size()) m->nz.resize(la_min);
     double liw_init_factor = 5.0; // This could be an option.
-    int liw_min = ceil(liw_init_factor * nirnec);
+    s_t liw_min = ceil(liw_init_factor * nirnec);
     if (liw_min > m->iw.size()) m->iw.resize(liw_min);
 
     // Numerical factorization (MA27BD)
-    int LA = m->nz.size();
+    s_t LA = m->nz.size();
     LIW = m->iw.size();
     ma27bd_(&N, &nnz, get_ptr(m->irn), get_ptr(m->jcn), get_ptr(m->nz),
            &LA, get_ptr(m->iw), &LIW, get_ptr(m->ikeep), &m->nsteps,
@@ -161,26 +161,26 @@ namespace casadi {
     return 0;
   }
 
-  int Ma27Interface::neig(void* mem, const double* A) const {
+  s_t Ma27Interface::neig(void* mem, const double* A) const {
     auto m = static_cast<Ma27Memory*>(mem);
     casadi_assert_dev(m->is_nfact);
     return m->neig;
   }
 
-  int Ma27Interface::rank(void* mem, const double* A) const {
+  s_t Ma27Interface::rank(void* mem, const double* A) const {
     auto m = static_cast<Ma27Memory*>(mem);
     casadi_assert_dev(m->is_nfact);
     return m->rank;
   }
 
-  r_t Ma27Interface::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t Ma27Interface::solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<Ma27Memory*>(mem);
 
     // Solve for each right-hand-side
-    int N = this->ncol();
-    int LA = m->nz.size();
-    int LIW = m->iw.size();
-    for (int k=0; k<nrhs; ++k) {
+    s_t N = this->ncol();
+    s_t LA = m->nz.size();
+    s_t LIW = m->iw.size();
+    for (s_t k=0; k<nrhs; ++k) {
       ma27cd_(&N, get_ptr(m->nz), &LA, get_ptr(m->iw), &LIW, get_ptr(m->w),
               &m->maxfrt, x, get_ptr(m->iw1), &m->nsteps, m->icntl, m->cntl);
       x += N;

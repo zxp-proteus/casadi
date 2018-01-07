@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_SYMBOLICQR_EXPORT
+  s_t CASADI_LINSOL_SYMBOLICQR_EXPORT
   casadi_register_linsol_symbolicqr(LinsolInternal::Plugin* plugin) {
     plugin->creator = SymbolicQr::creator;
     plugin->name = "symbolicqr";
@@ -79,17 +79,17 @@ namespace casadi {
     SX A = SX::sym("A", sp_);
 
     // BTF factorization
-    vector<int> rowperm, colperm, rowblock, colblock, coarse_rowblock, coarse_colblock;
+    vector<s_t> rowperm, colperm, rowblock, colblock, coarse_rowblock, coarse_colblock;
     sp_.btf(rowperm, colperm, rowblock, colblock, coarse_rowblock, coarse_colblock);
 
     // Get the inverted column permutation
-    std::vector<int> inv_colperm(colperm.size());
-    for (int k=0; k<colperm.size(); ++k)
+    std::vector<s_t> inv_colperm(colperm.size());
+    for (s_t k=0; k<colperm.size(); ++k)
       inv_colperm[colperm[k]] = k;
 
     // Get the inverted row permutation
-    std::vector<int> inv_rowperm(rowperm.size());
-    for (int k=0; k<rowperm.size(); ++k)
+    std::vector<s_t> inv_rowperm(rowperm.size());
+    for (s_t k=0; k<rowperm.size(); ++k)
       inv_rowperm[rowperm[k]] = k;
 
     // Permute the linear system
@@ -169,7 +169,7 @@ namespace casadi {
     return 0;
   }
 
-  r_t SymbolicQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t SymbolicQr::solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<SymbolicQrMemory*>(mem);
 
     // Select solve function
@@ -180,7 +180,7 @@ namespace casadi {
     m->arg[0] = get_ptr(m->q);
     m->arg[1] = get_ptr(m->r);
     fill_n(get_ptr(m->res), solv.n_out(), nullptr);
-    for (int i=0; i<nrhs; ++i) {
+    for (s_t i=0; i<nrhs; ++i) {
       copy_n(x, nrow(), get_ptr(m->w)); // Copy x to a temporary
       m->arg[2] = get_ptr(m->w);
       m->res[0] = x;
@@ -191,8 +191,8 @@ namespace casadi {
     return 0;
   }
 
-  void SymbolicQr::linsol_eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem,
-                                 bool tr, int nrhs) const {
+  void SymbolicQr::linsol_eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem,
+                                 bool tr, s_t nrhs) const {
     //auto m = static_cast<SymbolicQrMemory*>(mem);
     casadi_assert_dev(arg[0]!=0);
     casadi_assert_dev(arg[1]!=0);
@@ -210,7 +210,7 @@ namespace casadi {
     v.push_back(SX::zeros(A.size1()));
     const SXElem* a=arg[0];
     SXElem* r=res[0];
-    for (int i=0; i<nrhs; ++i) {
+    for (s_t i=0; i<nrhs; ++i) {
       copy(a, a+v[2].nnz(), v[2]->begin());
       SX rr = solv(v).at(0);
       copy(rr->begin(), rr->end(), r);

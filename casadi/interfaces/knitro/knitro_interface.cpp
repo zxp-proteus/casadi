@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_NLPSOL_KNITRO_EXPORT
+  s_t CASADI_NLPSOL_KNITRO_EXPORT
   casadi_register_nlpsol_knitro(Nlpsol::Plugin* plugin) {
     plugin->creator = KnitroInterface::creator;
     plugin->name = "knitro";
@@ -115,7 +115,7 @@ namespace casadi {
   }
 
   void KnitroInterface::set_work(void* mem, const double**& arg, double**& res,
-                                 int*& iw, double*& w) const {
+                                 s_t*& iw, double*& w) const {
     auto m = static_cast<KnitroMemory*>(mem);
 
     // Set work in base classes
@@ -139,18 +139,18 @@ namespace casadi {
     casadi_assert_dev(m->kc==0);
     m->kc = KTR_new();
     casadi_assert_dev(m->kc!=0);
-    int status;
+    s_t status;
 
     // Jacobian sparsity
-    vector<int> Jcol, Jrow;
+    vector<s_t> Jcol, Jrow;
     if (!jacg_sp_.is_null()) {
       Jcol = jacg_sp_.get_col();
       Jrow = jacg_sp_.get_row();
     }
 
     // Hessian sparsity
-    int nnzH = hesslag_sp_.is_null() ? 0 : hesslag_sp_.nnz();
-    vector<int> Hcol, Hrow;
+    s_t nnzH = hesslag_sp_.is_null() ? 0 : hesslag_sp_.nnz();
+    vector<s_t> Hcol, Hrow;
     if (nnzH>0) {
       Hcol = hesslag_sp_.get_col();
       Hrow = hesslag_sp_.get_row();
@@ -192,24 +192,24 @@ namespace casadi {
     casadi_copy(m->ubx, nx_, m->wubx);
     casadi_copy(m->lbg, ng_, m->wlbg);
     casadi_copy(m->ubg, ng_, m->wubg);
-    for (int i=0; i<nx_; ++i) if (isinf(m->wlbx[i])) m->wlbx[i] = -KTR_INFBOUND;
-    for (int i=0; i<nx_; ++i) if (isinf(m->wubx[i])) m->wubx[i] =  KTR_INFBOUND;
-    for (int i=0; i<ng_; ++i) if (isinf(m->wlbg[i])) m->wlbg[i] = -KTR_INFBOUND;
-    for (int i=0; i<ng_; ++i) if (isinf(m->wubg[i])) m->wubg[i] =  KTR_INFBOUND;
+    for (s_t i=0; i<nx_; ++i) if (isinf(m->wlbx[i])) m->wlbx[i] = -KTR_INFBOUND;
+    for (s_t i=0; i<nx_; ++i) if (isinf(m->wubx[i])) m->wubx[i] =  KTR_INFBOUND;
+    for (s_t i=0; i<ng_; ++i) if (isinf(m->wlbg[i])) m->wlbg[i] = -KTR_INFBOUND;
+    for (s_t i=0; i<ng_; ++i) if (isinf(m->wubg[i])) m->wubg[i] =  KTR_INFBOUND;
 
     if (mi_) {
       // Convexity status of the objective function
-      const int objFnType = KTR_FNTYPE_UNCERTAIN;
+      const s_t objFnType = KTR_FNTYPE_UNCERTAIN;
 
       // Types of variables
-      vector<int> vtype;
+      vector<s_t> vtype;
       vtype.reserve(nx_);
       for (auto&& e : discrete_) {
         vtype.push_back(e ? KTR_VARTYPE_INTEGER : KTR_VARTYPE_CONTINUOUS);
       }
 
       // Convexity status of the constraint functions
-      vector<int> ftype(ng_, KTR_FNTYPE_UNCERTAIN);
+      vector<s_t> ftype(ng_, KTR_FNTYPE_UNCERTAIN);
 
       // Intialize
       status =
@@ -281,8 +281,8 @@ namespace casadi {
     m->kc = 0;
   }
 
-  int KnitroInterface::callback(const int evalRequestCode, const int n, const int m, const int nnzJ,
-                               const int nnzH, const double* const x, const double* const lambda,
+  s_t KnitroInterface::callback(const s_t evalRequestCode, const s_t n, const s_t m, const s_t nnzJ,
+                               const s_t nnzH, const double* const x, const double* const lambda,
                                double* const obj, double* const c, double* const objGrad,
                                double* const jac, double* const hessian, double* const hessVector,
                                void *userParams) {
@@ -331,7 +331,7 @@ namespace casadi {
     }
   }
 
-  const char* KnitroInterface::return_codes(int flag) {
+  const char* KnitroInterface::return_codes(s_t flag) {
     switch (flag) {
     case KTR_RC_OPTIMAL_OR_SATISFACTORY: return "KTR_RC_OPTIMAL_OR_SATISFACTORY";
     case KTR_RC_NEAR_OPT: return "KTR_RC_NEAR_OPT";

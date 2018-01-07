@@ -118,7 +118,7 @@ namespace casadi {
     std::string description;
 
     /// Variable reference (XML)
-    int valueReference;
+    s_t valueReference;
 
     /// Unit
     std::string unit;

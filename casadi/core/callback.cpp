@@ -52,35 +52,35 @@ namespace casadi {
     return (*this)->FunctionInternal::eval_dm(arg);
   }
 
-  r_t Callback::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t Callback::eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     return (*this)->FunctionInternal::eval(arg, res, iw, w, mem);
   }
 
-  r_t Callback::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
+  r_t Callback::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem) const {
     return (*this)->FunctionInternal::eval_sx(arg, res, iw, w, mem);
   }
 
-  int Callback::get_n_in() {
+  s_t Callback::get_n_in() {
     return (*this)->FunctionInternal::get_n_in();
   }
 
-  int Callback::get_n_out() {
+  s_t Callback::get_n_out() {
     return (*this)->FunctionInternal::get_n_out();
   }
 
-  Sparsity Callback::get_sparsity_in(int i) {
+  Sparsity Callback::get_sparsity_in(s_t i) {
     return (*this)->FunctionInternal::get_sparsity_in(i);
   }
 
-  Sparsity Callback::get_sparsity_out(int i) {
+  Sparsity Callback::get_sparsity_out(s_t i) {
     return (*this)->FunctionInternal::get_sparsity_out(i);
   }
 
-  std::string Callback::get_name_in(int i) {
+  std::string Callback::get_name_in(s_t i) {
     return (*this)->FunctionInternal::get_name_in(i);
   }
 
-  std::string Callback::get_name_out(int i) {
+  std::string Callback::get_name_out(s_t i) {
     return (*this)->FunctionInternal::get_name_out(i);
   }
 
@@ -101,26 +101,26 @@ namespace casadi {
   }
 
   Function Callback::
-  get_forward(int nfwd, const std::string& name,
+  get_forward(s_t nfwd, const std::string& name,
               const std::vector<std::string>& inames,
               const std::vector<std::string>& onames,
               const Dict& opts) const {
     return (*this)->FunctionInternal::get_forward(nfwd, name, inames, onames, opts);
   }
 
-  bool Callback::has_forward(int nfwd) const {
+  bool Callback::has_forward(s_t nfwd) const {
     return (*this)->FunctionInternal::has_forward(nfwd);
   }
 
   Function Callback::
-  get_reverse(int nadj, const std::string& name,
+  get_reverse(s_t nadj, const std::string& name,
               const std::vector<std::string>& inames,
               const std::vector<std::string>& onames,
               const Dict& opts) const {
     return (*this)->FunctionInternal::get_reverse(nadj, name, inames, onames, opts);
   }
 
-  bool Callback::has_reverse(int nadj) const {
+  bool Callback::has_reverse(s_t nadj) const {
     return (*this)->FunctionInternal::has_reverse(nadj);
   }
 

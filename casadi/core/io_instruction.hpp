@@ -36,16 +36,16 @@ namespace casadi {
   class CASADI_EXPORT IOInstruction : public MXNode {
   protected:
     // Input/output index
-    int ind_;
+    s_t ind_;
 
     // Segment number
-    int segment_;
+    s_t segment_;
 
     // Nonzero offset
-    int offset_;
+    s_t offset_;
 
     // Constructor (called from derived classes)
-    IOInstruction(int ind, int segment, int offset)
+    IOInstruction(s_t ind, s_t segment, s_t offset)
       : ind_(ind), segment_(segment), offset_(offset) {}
 
   public:
@@ -53,13 +53,13 @@ namespace casadi {
     ~IOInstruction() override {}
 
     // Get IO index
-    int ind() const override { return ind_;}
+    s_t ind() const override { return ind_;}
 
     // Get IO segment
-    int segment() const override { return segment_;}
+    s_t segment() const override { return segment_;}
 
     // Get IO offset
-    int offset() const override { return offset_;}
+    s_t offset() const override { return offset_;}
 
     /** Obtain information about node */
     Dict info() const override;
@@ -69,7 +69,7 @@ namespace casadi {
   class CASADI_EXPORT Input : public IOInstruction {
   public:
     // Constructor (called from derived classes)
-    Input(const Sparsity& sp, int ind, int segment, int offset);
+    Input(const Sparsity& sp, s_t ind, s_t segment, s_t offset);
 
     /// Destructor
     ~Input() override {}
@@ -82,7 +82,7 @@ namespace casadi {
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                  const std::vector<int>& arg, const std::vector<int>& res) const override;
+                  const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
   };
 
@@ -90,13 +90,13 @@ namespace casadi {
   class CASADI_EXPORT Output : public IOInstruction {
   public:
     // Constructor (called from derived classes)
-    Output(const MX& x, int ind, int segment, int offset);
+    Output(const MX& x, s_t ind, s_t segment, s_t offset);
 
     /// Destructor
     ~Output() override {}
 
     /** \brief  Number of outputs */
-    int nout() const override { return 0;}
+    s_t nout() const override { return 0;}
 
     /** \brief Get the operation */
     e_t op() const override { return OP_OUTPUT;}
@@ -106,7 +106,7 @@ namespace casadi {
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                  const std::vector<int>& arg, const std::vector<int>& res) const override;
+                  const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
   };
 
 

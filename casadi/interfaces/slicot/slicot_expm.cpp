@@ -39,7 +39,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_EXPM_SLICOT_EXPORT
+  s_t CASADI_EXPM_SLICOT_EXPORT
   casadi_register_expm_slicot(Expm::Plugin* plugin) {
     plugin->creator = SlicotExpm::creator;
     plugin->name = "slicot";
@@ -76,7 +76,7 @@ namespace casadi {
 
 
   void SlicotExpm::set_work(void* mem, const double**& arg, double**& res,
-                                int*& iw, double*& w) const {
+                                s_t*& iw, double*& w) const {
     auto m = static_cast<SlicotExpmMemory*>(mem);
 
     // Set work in base classes
@@ -94,13 +94,13 @@ namespace casadi {
     return Expm::init_mem(mem);
   }
 
-  r_t SlicotExpm::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t SlicotExpm::eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<SlicotExpmMemory*>(mem);
 
     setup(mem, arg, res, iw, w);
 
     double tol = 1e-8;
-    int ret = slicot_mb05nd(n_, arg[1][0], arg[0], n_, m->A, n_, m->H, n_,
+    s_t ret = slicot_mb05nd(n_, arg[1][0], arg[0], n_, m->A, n_, m->H, n_,
       tol, m->iwork, m->dwork, 2*n_*n_);
     casadi_assert(ret==0, "Slicot mb05nd failed with status " + str(ret) + ".");
     if (res[0]) std::copy(m->A, m->A+n_*n_, res[0]);

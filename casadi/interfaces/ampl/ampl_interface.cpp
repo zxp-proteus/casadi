@@ -32,7 +32,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_NLPSOL_AMPL_EXPORT
+  s_t CASADI_NLPSOL_AMPL_EXPORT
   casadi_register_nlpsol_ampl(Nlpsol::Plugin* plugin) {
     plugin->creator = AmplInterface::creator;
     plugin->name = "ampl";
@@ -93,10 +93,10 @@ namespace casadi {
 
     // Names of the variables, constraints
     vector<string> x_name, g_name;
-    for (int i=0; i<nx_; ++i) x_name.push_back("x[" + str(i) + "]");
-    for (int i=0; i<ng_; ++i) g_name.push_back("g[" + str(i) + "]");
-    int max_x_name = x_name.back().size();
-    int max_g_name = g_name.empty() ? 0 : g_name.back().size();
+    for (s_t i=0; i<nx_; ++i) x_name.push_back("x[" + str(i) + "]");
+    for (s_t i=0; i<ng_; ++i) g_name.push_back("g[" + str(i) + "]");
+    s_t max_x_name = x_name.back().size();
+    s_t max_g_name = g_name.empty() ? 0 : g_name.back().size();
 
     // Calculate the Jacobian, gradient
     Sparsity jac_g = SX::jacobian(g, x).sparsity();
@@ -167,15 +167,15 @@ namespace casadi {
     vector<string> work(F.sz_w());
 
     // Loop over the algorithm
-    for (int k=0; k<F.n_instructions(); ++k) {
+    for (s_t k=0; k<F.n_instructions(); ++k) {
       // Get the atomic operation
       e_t op = F.instruction_id(k);
       // Get the operation indices
-      std::vector<int> o = F.instruction_output(k);
-      int o0=-1, o1=-1, i0=-1, i1=-1;
+      std::vector<s_t> o = F.instruction_output(k);
+      s_t o0=-1, o1=-1, i0=-1, i1=-1;
       if (o.size()>0) o0 = o[0];
       if (o.size()>1) o1 = o[1];
-      std::vector<int> i = F.instruction_input(k);
+      std::vector<s_t> i = F.instruction_input(k);
       if (i.size()>0) i0 = i[0];
       if (i.size()>1) i1 = i[1];
       switch (op) {
@@ -233,17 +233,17 @@ namespace casadi {
     }
 
     // k segments, cumulative column count in jac_g
-    const int *colind = jac_g.colind(), *row = jac_g.row();
+    const s_t *colind = jac_g.colind(), *row = jac_g.row();
     nl_init_ << "k" << (nx_-1) << "\n";
-    for (int i=1; i<nx_; ++i) nl_init_ << colind[i] << "\n";
+    for (s_t i=1; i<nx_; ++i) nl_init_ << colind[i] << "\n";
 
     // J segments, rows in jac_g
     Sparsity sp = jac_g.T();
     colind = sp.colind(), row = sp.row();
-    for (int i=0; i<ng_; ++i) {
+    for (s_t i=0; i<ng_; ++i) {
       nl_init_ << "J" << i << " " << (colind[i+1]-colind[i]) << "\n";
-      for (int k=colind[i]; k<colind[i+1]; ++k) {
-        int r=row[k];
+      for (s_t k=colind[i]; k<colind[i+1]; ++k) {
+        s_t r=row[k];
         nl_init_ << r << " " << 0 << "\n"; // no linear term
       }
     }
@@ -252,8 +252,8 @@ namespace casadi {
     sp = jac_f.T();
     colind = sp.colind(), row = sp.row();
     nl_init_ << "G" << 0 << " " << (colind[0+1]-colind[0]) << "\n";
-    for (int k=colind[0]; k<colind[0+1]; ++k) {
-      int r=row[k];
+    for (s_t k=colind[0]; k<colind[0+1]; ++k) {
+      s_t r=row[k];
       nl_init_ << r << " " << 0 << "\n"; // no linear term
     }
   }
@@ -266,7 +266,7 @@ namespace casadi {
   }
 
   void AmplInterface::set_work(void* mem, const double**& arg, double**& res,
-                                   int*& iw, double*& w) const {
+                                   s_t*& iw, double*& w) const {
     //auto m = static_cast<AmplInterfaceMemory*>(mem);
 
     // Set work in base classes
@@ -288,7 +288,7 @@ namespace casadi {
 
     // Primal intial guess
     nl << "x" << nx_ << "\n";
-    for (int i=0; i<nx_; ++i) {
+    for (s_t i=0; i<nx_; ++i) {
       double x0 = m->x0 ? m->x0[i] : 0;
       nl << i << " " << x0 << "\n";
     }
@@ -296,7 +296,7 @@ namespace casadi {
 
     // Add constraint bounds
     nl << "r\n";
-    for (int i=0; i<ng_; ++i) {
+    for (s_t i=0; i<ng_; ++i) {
       double lbg = m->lbg ? m->lbg[i] : 0;
       double ubg = m->ubg ? m->ubg[i] : 0;
       if (isinf(lbg)) {
@@ -318,7 +318,7 @@ namespace casadi {
 
     // Add variable bounds
     nl << "b\n";
-    for (int i=0; i<nx_; ++i) {
+    for (s_t i=0; i<nx_; ++i) {
       double lbx = m->lbx ? m->lbx[i] : 0;
       double ubx = m->ubx ? m->ubx[i] : 0;
       if (isinf(lbx)) {
@@ -386,7 +386,7 @@ namespace casadi {
 
     // Get the primal solution
     if (m->x) {
-      for (int i=0; i<nx_; ++i) {
+      for (s_t i=0; i<nx_; ++i) {
         istringstream s(sol_lines.at(sol_lines.size()-nx_+i-1));
         s >> m->x[i];
       }
@@ -394,7 +394,7 @@ namespace casadi {
 
     // Get the dual solution
     if (m->lam_g) {
-      for (int i=0; i<ng_; ++i) {
+      for (s_t i=0; i<ng_; ++i) {
         istringstream s(sol_lines.at(sol_lines.size()-ng_-nx_+i-1));
         s >> m->lam_g[i];
         m->lam_g[i] *= -1;

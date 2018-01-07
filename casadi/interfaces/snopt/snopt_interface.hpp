@@ -54,13 +54,13 @@ namespace casadi {
     // Current calculated quantities
     double fk, *gk, *jac_fk, *jac_gk;
 
-    int n_iter; // number of major iterations
+    s_t n_iter; // number of major iterations
 
     std::vector<double> A_data;
 
     // Memory pool
     static std::vector<SnoptMemory*> mempool;
-    int memind;
+    s_t memind;
 
     /// Constructor
     SnoptMemory(const SnoptInterface& self);
@@ -121,7 +121,7 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     // Solve the NLP
     void solve(void* mem) const override;
@@ -129,27 +129,27 @@ namespace casadi {
     /// Exact Hessian?
     bool exact_hessian_;
 
-    std::map<int, std::string> status_;
+    std::map<s_t, std::string> status_;
 
-    std::string formatStatus(int status) const;
+    std::string formatStatus(s_t status) const;
 
-    void userfun(SnoptMemory* m, int* mode, int nnObj, int nnCon, int nnJac, int nnL, int neJac,
+    void userfun(SnoptMemory* m, s_t* mode, s_t nnObj, s_t nnCon, s_t nnJac, s_t nnL, s_t neJac,
                  double* x, double* fObj, double*gObj, double* fCon, double* gCon,
-                 int nState, char* cu, int lencu, int* iu, int leniu, double* ru, int lenru) const;
+                 s_t nState, char* cu, s_t lencu, s_t* iu, s_t leniu, double* ru, s_t lenru) const;
 
-    int nnJac_;
-    int nnObj_;
-    int nnCon_;
+    s_t nnJac_;
+    s_t nnObj_;
+    s_t nnCon_;
 
     IM A_structure_;
 
-    int m_;
-    int iObj_;
+    s_t m_;
+    s_t iObj_;
 
-    static void userfunPtr(int * mode, int* nnObj, int * nnCon, int *nJac, int *nnL, int * neJac,
+    static void userfunPtr(s_t * mode, s_t* nnObj, s_t * nnCon, s_t *nJac, s_t *nnL, s_t * neJac,
                            double *x, double *fObj, double *gObj, double * fCon, double* gCon,
-                           int* nState, char* cu, int* lencu, int* iu, int* leniu,
-                           double* ru, int *lenru);
+                           s_t* nState, char* cu, s_t* lencu, s_t* iu, s_t* leniu,
+                           double* ru, s_t *lenru);
 
     // Matrix A has a linear objective row
     bool jacF_row_;
@@ -160,7 +160,7 @@ namespace casadi {
     static const std::string meta_doc;
 
     /// Warm-start settings
-    int Cold_;
+    s_t Cold_;
 
   private:
       // options

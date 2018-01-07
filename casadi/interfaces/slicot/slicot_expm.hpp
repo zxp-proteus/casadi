@@ -47,7 +47,7 @@ namespace casadi {
 
     double *A, *H;
     double *dwork;
-    int* iwork;
+    s_t* iwork;
 
     /// Constructor
     SlicotExpmMemory() {}
@@ -106,10 +106,10 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     /** \brief  Evaluate numerically */
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// A documentation string
     static const std::string meta_doc;
@@ -117,7 +117,7 @@ namespace casadi {
 
   private:
 
-    int n_;
+    s_t n_;
 
 
   };

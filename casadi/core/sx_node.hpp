@@ -72,7 +72,7 @@ namespace casadi {
     ///@{
     /** \brief  Get value of a constant node */
     virtual double to_double() const;  // only works for constant nodes
-    virtual int to_int() const;  // only works for integer nodes
+    virtual s_t to_int() const;  // only works for integer nodes
     ///@}
 
     // get the name
@@ -85,16 +85,16 @@ namespace casadi {
     virtual e_t op() const=0;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    virtual bool is_equal(const SXNode* node, int depth) const;
+    virtual bool is_equal(const SXNode* node, s_t depth) const;
 
     /** \brief  Number of dependencies */
-    virtual int n_dep() const { return 0;}
+    virtual s_t n_dep() const { return 0;}
 
     /** \brief  get the reference of a child */
-    virtual const SXElem& dep(int i) const;
+    virtual const SXElem& dep(s_t i) const;
 
     /** \brief  get the reference of a child */
-    virtual SXElem& dep(int i);
+    virtual SXElem& dep(s_t i);
 
     /** \brief  Check if smooth */
     virtual bool is_smooth() const { return true; }
@@ -103,10 +103,10 @@ namespace casadi {
     virtual void disp(std::ostream& stream, bool more) const;
 
     /** \brief Find out which nodes can be inlined */
-    void can_inline(std::map<const SXNode*, int>& nodeind) const;
+    void can_inline(std::map<const SXNode*, s_t>& nodeind) const;
 
     /** \brief Print compact */
-    std::string print_compact(std::map<const SXNode*, int>& nodeind,
+    std::string print_compact(std::map<const SXNode*, s_t>& nodeind,
                              std::vector<std::string>& intermed) const;
 
     /** \brief  Print expression */
@@ -119,13 +119,13 @@ namespace casadi {
     void mark() const;
 
     // Depth when checking equalities
-    static int eq_depth_;
+    static s_t eq_depth_;
 
     /** Temporary variables to be used in user algorithms like sorting,
         the user is responsible of making sure that use is thread-safe
         The variable is initialized to zero
     */
-    mutable int temp;
+    mutable s_t temp;
 
     // Reference counter -- counts the number of parents of the node
     e_t count;

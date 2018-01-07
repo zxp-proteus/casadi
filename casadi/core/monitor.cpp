@@ -45,7 +45,7 @@ namespace casadi {
 
   void Monitor::ad_forward(const std::vector<std::vector<MX> >& fseed,
                         std::vector<std::vector<MX> >& fsens) const {
-    for (int d=0; d<fsens.size(); ++d) {
+    for (s_t d=0; d<fsens.size(); ++d) {
       stringstream ss;
       ss << "fwd(" << d << ") of " << comment_;
       fsens[d][0] = fseed[d][0].monitor(ss.str());
@@ -54,26 +54,26 @@ namespace casadi {
 
   void Monitor::ad_reverse(const std::vector<std::vector<MX> >& aseed,
                         std::vector<std::vector<MX> >& asens) const {
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       stringstream ss;
       ss << "adj(" << d << ") of " << comment_;
       asens[d][0] += aseed[d][0].monitor(ss.str());
     }
   }
 
-  r_t Monitor::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Monitor::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     if (arg[0]!=res[0]) {
       copy(arg[0], arg[0]+nnz(), res[0]);
     }
     return 0;
   }
 
-  r_t Monitor::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Monitor::eval(const double** arg, double** res, s_t* iw, double* w) const {
     // Print comment
     uout() << comment_ << ":" << endl;
     uout() << "[";
-    int n = nnz();
-    for (int i=0; i<n; ++i) {
+    s_t n = nnz();
+    for (s_t i=0; i<n; ++i) {
       if (i!=0) uout() << ", ";
       uout() << arg[0][i];
     }
@@ -86,19 +86,19 @@ namespace casadi {
     return 0;
   }
 
-  r_t Monitor::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Monitor::sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     if (arg[0]!=res[0]) {
       copy(arg[0], arg[0]+nnz(), res[0]);
     }
     return 0;
   }
 
-  r_t Monitor::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Monitor::sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     bvec_t *a = arg[0];
     bvec_t *r = res[0];
-    int n = nnz();
+    s_t n = nnz();
     if (a != r) {
-      for (int i=0; i<n; ++i) {
+      for (s_t i=0; i<n; ++i) {
         *a++ |= *r;
         *r++ = 0;
       }
@@ -107,10 +107,10 @@ namespace casadi {
   }
 
   void Monitor::generate(CodeGenerator& g,
-                         const std::vector<int>& arg, const std::vector<int>& res) const {
+                         const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     // Print comment
     g.local("rr", "casadi_real", "*");
-    g.local("i", "int");
+    g.local("i", "s_t");
     g << g.printf(comment_ + "\\n[") << "\n"
       << "  for (i=0, rr=" << g.work(arg[0], dep(0).nnz())
       << "; i!=" << nnz() << "; ++i) {\n"

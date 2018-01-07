@@ -72,7 +72,7 @@ namespace casadi {
     }
 
     // Get offset for each input dimension
-    vector<int> offset;
+    vector<s_t> offset;
     offset.reserve(grid.size()+1);
     offset.push_back(0);
     for (auto&& g : grid) offset.push_back(offset.back()+g.size());
@@ -81,7 +81,7 @@ namespace casadi {
     vector<double> stacked;
     stacked.reserve(offset.back());
     for (auto&& g : grid) stacked.insert(stacked.end(), g.begin(), g.end());
-    int m = values.size()/nel;
+    s_t m = values.size()/nel;
     return Function::create(Interpolant::getPlugin(solver)
                             .creator(name, stacked, offset, values, m), opts);
   }
@@ -89,9 +89,9 @@ namespace casadi {
   Interpolant::
   Interpolant(const std::string& name,
               const std::vector<double>& grid,
-              const std::vector<int>& offset,
+              const std::vector<s_t>& offset,
               const std::vector<double>& values,
-              int m)
+              s_t m)
               : FunctionInternal(name), m_(m), grid_(grid), offset_(offset),  values_(values) {
     // Number of grid points
     ndim_ = offset_.size()-1;
@@ -100,22 +100,22 @@ namespace casadi {
   Interpolant::~Interpolant() {
   }
 
-  Sparsity Interpolant::get_sparsity_in(int i) {
+  Sparsity Interpolant::get_sparsity_in(s_t i) {
     casadi_assert_dev(i==0);
     return Sparsity::dense(ndim_);
   }
 
-  Sparsity Interpolant::get_sparsity_out(int i) {
+  Sparsity Interpolant::get_sparsity_out(s_t i) {
     casadi_assert_dev(i==0);
     return Sparsity::dense(m_);
   }
 
-  std::string Interpolant::get_name_in(int i) {
+  std::string Interpolant::get_name_in(s_t i) {
     casadi_assert_dev(i==0);
     return "x";
   }
 
-  std::string Interpolant::get_name_out(int i) {
+  std::string Interpolant::get_name_out(s_t i) {
     casadi_assert_dev(i==0);
     return "f";
   }

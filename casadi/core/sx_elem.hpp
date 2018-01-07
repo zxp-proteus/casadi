@@ -158,19 +158,19 @@ namespace casadi {
 
     /** \brief Check if a value is always nonnegative (false negatives are allowed) */
     bool is_nonnegative() const;
-    SXElem dep(int ch=0) const;
+    SXElem dep(s_t ch=0) const;
 
     /// Type conversion to double
     explicit operator double() const;
 
-    /// Type conversion to int
-    explicit operator int() const;
+    /// Type conversion to s_t
+    explicit operator s_t() const;
 
     /** \brief Check if the node is the sum of two equal expressions */
     bool is_doubled() const;
 
     /** \brief Get the number of dependencies of a binary SXElem */
-    int n_dep() const;
+    s_t n_dep() const;
 
     /** \brief Returns a number that is unique for a given SXNode.
      * If the SXElem does not point to any node, 0 is returned.
@@ -184,14 +184,14 @@ namespace casadi {
     SXElem inv() const;
 
     /** \brief Check equality up to a given depth */
-    static bool is_equal(const SXElem& x, const SXElem& y, int depth=0);
+    static bool is_equal(const SXElem& x, const SXElem& y, s_t depth=0);
 
     /// \cond INTERNAL
     /// Get the temporary variable
-    int get_temp() const;
+    s_t get_temp() const;
 
     /// Set the temporary variable
-    void set_temp(int t) const;
+    void set_temp(s_t t) const;
 
     /// Check if marked (i.e. temporary is negative)
     bool marked() const;
@@ -201,7 +201,7 @@ namespace casadi {
 
     /** \brief Assign to another expression, if a duplicate.
      * Check for equality up to a given depth */
-    void assignIfDuplicate(const SXElem& scalar, int depth=1);
+    void assignIfDuplicate(const SXElem& scalar, s_t depth=1);
 
     /** \brief Assign the node to something, without invoking the deletion of the node,
      * if the count reaches 0 */
@@ -224,7 +224,7 @@ namespace casadi {
   class CASADI_EXPORT casadi_limits<SXElem>{
   public:
     static bool is_zero(const SXElem& val);
-    static bool is_equal(const SXElem& x, const SXElem& y, int depth);
+    static bool is_equal(const SXElem& x, const SXElem& y, s_t depth);
     static bool is_almost_zero(const SXElem& val, double tol);
     static bool is_one(const SXElem& val);
     static bool is_minus_one(const SXElem& val);
@@ -267,18 +267,18 @@ namespace std {
     static const bool is_specialized = true;
     static casadi::SXElem min() throw();
     static casadi::SXElem max() throw();
-    static const int  digits = 0;
-    static const int  digits10 = 0;
+    static const s_t  digits = 0;
+    static const s_t  digits10 = 0;
     static const bool is_signed = false;
     static const bool is_integer = false;
     static const bool is_exact = false;
-    static const int radix = 0;
+    static const s_t radix = 0;
     static casadi::SXElem epsilon() throw();
     static casadi::SXElem round_error() throw();
-    static const int  min_exponent = 0;
-    static const int  min_exponent10 = 0;
-    static const int  max_exponent = 0;
-    static const int  max_exponent10 = 0;
+    static const s_t  min_exponent = 0;
+    static const s_t  min_exponent10 = 0;
+    static const s_t  max_exponent = 0;
+    static const s_t  max_exponent10 = 0;
 
     static const bool has_infinity = true;
     static const bool has_quiet_NaN = true;

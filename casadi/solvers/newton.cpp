@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_ROOTFINDER_NEWTON_EXPORT
+  s_t CASADI_ROOTFINDER_NEWTON_EXPORT
   casadi_register_rootfinder_newton(Rootfinder::Plugin* plugin) {
     plugin->creator = Newton::creator;
     plugin->name = "newton";
@@ -106,7 +106,7 @@ namespace casadi {
   }
 
  void Newton::set_work(void* mem, const double**& arg, double**& res,
-                       int*& iw, double*& w) const {
+                       s_t*& iw, double*& w) const {
      Rootfinder::set_work(mem, arg, res, iw, w);
      auto m = static_cast<NewtonMemory*>(mem);
      m->x = w; w += n_;
@@ -146,7 +146,7 @@ namespace casadi {
       // Check convergence
       double abstol = 0;
       if (abstol_ != numeric_limits<double>::infinity()) {
-        for (int i=0; i<n_; ++i) {
+        for (s_t i=0; i<n_; ++i) {
           abstol = max(abstol, fabs(m->f[i]));
         }
         if (abstol <= abstol_) {
@@ -162,7 +162,7 @@ namespace casadi {
       // Check convergence again
       double abstolStep=0;
       if (numeric_limits<double>::infinity() != abstolStep_) {
-        for (int i=0; i<n_; ++i) {
+        for (s_t i=0; i<n_; ++i) {
           abstolStep = max(abstolStep, fabs(m->f[i]));
         }
         if (abstolStep <= abstolStep_) {
@@ -201,7 +201,7 @@ namespace casadi {
     stream.unsetf(std::ios::floatfield);
   }
 
-  void Newton::printIteration(std::ostream &stream, int iter,
+  void Newton::printIteration(std::ostream &stream, s_t iter,
                               double abstol, double abstolStep) const {
     stream << setw(5) << iter;
     stream << setw(10) << scientific << setprecision(2) << abstol;

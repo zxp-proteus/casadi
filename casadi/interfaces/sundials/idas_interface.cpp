@@ -34,7 +34,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_INTEGRATOR_IDAS_EXPORT
+  s_t CASADI_INTEGRATOR_IDAS_EXPORT
       casadi_register_integrator_idas(Integrator::Plugin* plugin) {
     plugin->creator = IdasInterface::creator;
     plugin->name = "idas";
@@ -160,7 +160,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::res(double t, N_Vector xz, N_Vector xzdot,
+  s_t IdasInterface::res(double t, N_Vector xz, N_Vector xzdot,
                                 N_Vector rr, void *user_data) {
     try {
       auto m = to_mem(user_data);
@@ -176,7 +176,7 @@ namespace casadi {
       // Subtract state derivative to get residual
       casadi_axpy(s.nx_, -1., NV_DATA_S(xzdot), NV_DATA_S(rr));
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "res failed: " << e.what() << endl;
@@ -184,7 +184,7 @@ namespace casadi {
     }
   }
 
-  void IdasInterface::ehfun(int error_code, const char *module, const char *function,
+  void IdasInterface::ehfun(s_t error_code, const char *module, const char *function,
                                    char *msg, void *eh_data) {
     try {
       //auto m = to_mem(eh_data);
@@ -195,7 +195,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::jtimes(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, N_Vector v,
+  s_t IdasInterface::jtimes(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, N_Vector v,
                                    N_Vector Jv, double cj, void *user_data,
                                    N_Vector tmp1, N_Vector tmp2) {
     try {
@@ -215,7 +215,7 @@ namespace casadi {
       casadi_axpy(s.nx_, -cj, NV_DATA_S(v), NV_DATA_S(Jv));
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "jtimes failed: " << e.what() << endl;
@@ -223,7 +223,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::jtimesB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB,
+  s_t IdasInterface::jtimesB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB,
                                     N_Vector xzdotB, N_Vector resvalB, N_Vector vB, N_Vector JvB,
                                     double cjB, void *user_data,
                                     N_Vector tmp1B, N_Vector tmp2B) {
@@ -247,7 +247,7 @@ namespace casadi {
       casadi_axpy(s.nrx_, cjB, NV_DATA_S(vB), NV_DATA_S(JvB));
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "jtimesB failed: " << e.what() << endl;
@@ -370,7 +370,7 @@ namespace casadi {
 
     // Initialize adjoint sensitivities
     if (nrx_>0) {
-      int interpType = interp_==SD_HERMITE ? IDA_HERMITE : IDA_POLYNOMIAL;
+      s_t interpType = interp_==SD_HERMITE ? IDA_HERMITE : IDA_POLYNOMIAL;
       THROWING(IDAAdjInit, m->mem, steps_per_checkpoint_, interpType);
     }
 
@@ -549,7 +549,7 @@ namespace casadi {
     THROWING(IDAGetNonlinSolvStats, IDAB_mem->IDA_mem, &m->nnitersB, &m->nncfailsB);
   }
 
-  void IdasInterface::idas_error(const char* module, int flag) {
+  void IdasInterface::idas_error(const char* module, s_t flag) {
     // Successfull return or warning
     if (flag>=IDA_SUCCESS) return;
     // Construct error message
@@ -560,7 +560,7 @@ namespace casadi {
     casadi_error(ss.str());
   }
 
-  int IdasInterface::rhsQ(double t, N_Vector xz, N_Vector xzdot, N_Vector rhsQ,
+  s_t IdasInterface::rhsQ(double t, N_Vector xz, N_Vector xzdot, N_Vector rhsQ,
                                  void *user_data) {
     try {
       auto m = to_mem(user_data);
@@ -573,7 +573,7 @@ namespace casadi {
       s.calc_function(m, "quadF");
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "rhsQ failed: " << e.what() << endl;
@@ -581,7 +581,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::resB(double t, N_Vector xz, N_Vector xzdot, N_Vector rxz,
+  s_t IdasInterface::resB(double t, N_Vector xz, N_Vector xzdot, N_Vector rxz,
                                  N_Vector rxzdot, N_Vector rr, void *user_data) {
     try {
       auto m = to_mem(user_data);
@@ -601,7 +601,7 @@ namespace casadi {
       casadi_axpy(s.nrx_, 1., NV_DATA_S(rxzdot), NV_DATA_S(rr));
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "resB failed: " << e.what() << endl;
@@ -609,7 +609,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::rhsQB(double t, N_Vector xz, N_Vector xzdot, N_Vector rxz,
+  s_t IdasInterface::rhsQB(double t, N_Vector xz, N_Vector xzdot, N_Vector rxz,
                                   N_Vector rxzdot, N_Vector rqdot, void *user_data) {
     try {
       auto m = to_mem(user_data);
@@ -628,7 +628,7 @@ namespace casadi {
       casadi_scal(s.nrq_, -1., NV_DATA_S(rqdot));
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "resQB failed: " << e.what() << endl;
@@ -643,7 +643,7 @@ namespace casadi {
     THROWING(IDASetStopTime, m->mem, tf);
   }
 
-  int IdasInterface::psolve(double t, N_Vector xz, N_Vector xzdot, N_Vector rr,
+  s_t IdasInterface::psolve(double t, N_Vector xz, N_Vector xzdot, N_Vector rr,
                                     N_Vector rvec, N_Vector zvec, double cj, double delta,
                                     void *user_data, N_Vector tmp) {
     try {
@@ -654,7 +654,7 @@ namespace casadi {
       double* vx = NV_DATA_S(rvec);
       double* vz = vx + s.nx_;
       double* v_it = m->v1;
-      for (int d=0; d<=s.ns_; ++d) {
+      for (s_t d=0; d<=s.ns_; ++d) {
         casadi_copy(vx + d*s.nx1_, s.nx1_, v_it);
         v_it += s.nx1_;
         casadi_copy(vz + d*s.nz1_, s.nz1_, v_it);
@@ -687,7 +687,7 @@ namespace casadi {
 
           // Subtract m->v2 (reordered) from m->v1
           v_it = m->v1 + s.nx1_ + s.nz1_;
-          for (int d=1; d<=s.ns_; ++d) {
+          for (s_t d=1; d<=s.ns_; ++d) {
             casadi_axpy(s.nx1_, -1., m->v2 + d*s.nx1_, v_it);
             v_it += s.nx1_;
             casadi_axpy(s.nz1_, -1., m->v2 + s.nx_ + d*s.nz1_, v_it);
@@ -702,7 +702,7 @@ namespace casadi {
 
         // Save to output, reordered
         v_it = m->v1 + s.nx1_ + s.nz1_;
-        for (int d=1; d<=s.ns_; ++d) {
+        for (s_t d=1; d<=s.ns_; ++d) {
           casadi_copy(v_it, s.nx1_, vx + d*s.nx1_);
           v_it += s.nx1_;
           casadi_copy(v_it, s.nz1_, vz + d*s.nz1_);
@@ -711,7 +711,7 @@ namespace casadi {
       }
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psolve failed: " << e.what() << endl;
@@ -719,7 +719,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::psolveB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB,
+  s_t IdasInterface::psolveB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB,
                                     N_Vector xzdotB, N_Vector resvalB, N_Vector rvecB,
                                     N_Vector zvecB, double cjB, double deltaB,
                                     void *user_data, N_Vector tmpB) {
@@ -731,7 +731,7 @@ namespace casadi {
       double* vx = NV_DATA_S(rvecB);
       double* vz = vx + s.nrx_;
       double* v_it = m->v1;
-      for (int d=0; d<=s.ns_; ++d) {
+      for (s_t d=0; d<=s.ns_; ++d) {
         casadi_copy(vx + d*s.nrx1_, s.nrx1_, v_it);
         v_it += s.nrx1_;
         casadi_copy(vz + d*s.nrz1_, s.nrz1_, v_it);
@@ -769,7 +769,7 @@ namespace casadi {
 
           // Subtract m->v2 (reordered) from m->v1
           v_it = m->v1 + s.nrx1_ + s.nrz1_;
-          for (int d=1; d<=s.ns_; ++d) {
+          for (s_t d=1; d<=s.ns_; ++d) {
             casadi_axpy(s.nrx1_, -1., m->v2 + d*s.nrx1_, v_it);
             v_it += s.nrx1_;
             casadi_axpy(s.nrz1_, -1., m->v2 + s.nrx_ + d*s.nrz1_, v_it);
@@ -784,7 +784,7 @@ namespace casadi {
 
         // Save to output, reordered
         v_it = m->v1 + s.nrx1_ + s.nrz1_;
-        for (int d=1; d<=s.ns_; ++d) {
+        for (s_t d=1; d<=s.ns_; ++d) {
           casadi_copy(v_it, s.nrx1_, vx + d*s.nrx1_);
           v_it += s.nrx1_;
           casadi_copy(v_it, s.nrz1_, vz + d*s.nrz1_);
@@ -793,7 +793,7 @@ namespace casadi {
       }
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psolveB failed: " << e.what() << endl;
@@ -801,7 +801,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::psetup(double t, N_Vector xz, N_Vector xzdot, N_Vector rr,
+  s_t IdasInterface::psetup(double t, N_Vector xz, N_Vector xzdot, N_Vector rr,
                                    double cj, void* user_data,
                                    N_Vector tmp1, N_Vector tmp2, N_Vector tmp3) {
     try {
@@ -819,7 +819,7 @@ namespace casadi {
       if (s.linsolF_.nfact(m->jac)) casadi_error("Linear solve failed");
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psetup failed: " << e.what() << endl;
@@ -827,7 +827,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::psetupB(double t, N_Vector xz, N_Vector xzdot,
+  s_t IdasInterface::psetupB(double t, N_Vector xz, N_Vector xzdot,
                                     N_Vector rxz, N_Vector rxzdot,
                                     N_Vector rresval, double cj, void *user_data,
                                     N_Vector tmp1B, N_Vector tmp2B, N_Vector tmp3B) {
@@ -849,7 +849,7 @@ namespace casadi {
       if (s.linsolB_.nfact(m->jacB)) casadi_error("'jacB' factorization failed");
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psetupB failed: " << e.what() << endl;
@@ -857,7 +857,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::lsetup(IDAMem IDA_mem, N_Vector xz, N_Vector xzdot, N_Vector resp,
+  s_t IdasInterface::lsetup(IDAMem IDA_mem, N_Vector xz, N_Vector xzdot, N_Vector resp,
                                     N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3) {
     // Current time
     double t = IDA_mem->ida_tn;
@@ -872,7 +872,7 @@ namespace casadi {
     return 0;
   }
 
-  int IdasInterface::lsetupB(IDAMem IDA_mem, N_Vector xzB, N_Vector xzdotB, N_Vector respB,
+  s_t IdasInterface::lsetupB(IDAMem IDA_mem, N_Vector xzB, N_Vector xzdotB, N_Vector respB,
                                      N_Vector vtemp1B, N_Vector vtemp2B, N_Vector vtemp3B) {
     try {
       auto m = to_mem(IDA_mem->ida_lmem);
@@ -892,7 +892,7 @@ namespace casadi {
 
       // Get FORWARD solution from interpolation.
       if (IDAADJ_mem->ia_noInterp==FALSE) {
-        int flag = IDAADJ_mem->ia_getY(IDA_mem, t, IDAADJ_mem->ia_yyTmp, IDAADJ_mem->ia_ypTmp,
+        s_t flag = IDAADJ_mem->ia_getY(IDA_mem, t, IDAADJ_mem->ia_yyTmp, IDAADJ_mem->ia_ypTmp,
                                    NULL, NULL);
         if (flag != IDA_SUCCESS) casadi_error("Could not interpolate forward states");
       }
@@ -901,7 +901,7 @@ namespace casadi {
         xzB, xzdotB, 0, cj, static_cast<void*>(m), vtemp1B, vtemp1B, vtemp3B)) return 1;
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsetupB failed: " << e.what() << endl;
@@ -909,7 +909,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::lsolve(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector xz,
+  s_t IdasInterface::lsolve(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector xz,
                                    N_Vector xzdot, N_Vector rr) {
     try {
       auto m = to_mem(IDA_mem->ida_lmem);
@@ -935,7 +935,7 @@ namespace casadi {
       }
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsolve failed: " << e.what() << endl;
@@ -943,14 +943,14 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::lsolveB(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector xzB,
+  s_t IdasInterface::lsolveB(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector xzB,
                                     N_Vector xzdotB, N_Vector rrB) {
     try {
       auto m = to_mem(IDA_mem->ida_lmem);
       auto& s = m->self;
       IDAadjMem IDAADJ_mem;
       //IDABMem IDAB_mem;
-      int flag;
+      s_t flag;
 
       // Current time
       double t = IDA_mem->ida_tn; // TODO(Joel): is this correct?
@@ -982,7 +982,7 @@ namespace casadi {
         if (cjratio != 1.0) N_VScale(2.0/(1.0 + cjratio), b, b);
       }
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsolveB failed: " << e.what() << endl;

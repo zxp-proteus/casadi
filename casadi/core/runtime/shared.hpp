@@ -32,11 +32,11 @@
 
 namespace casadi {
 template<typename T>
-int einstein_process(const T& A, const T& B, const T& C,
-  const std::vector<int>& dim_a, const std::vector<int>& dim_b, const std::vector<int>& dim_c,
-  const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c,
-  std::vector<int>& iter_dims,
-  std::vector<int>& strides_a, std::vector<int>& strides_b, std::vector<int>& strides_c
+s_t einstein_process(const T& A, const T& B, const T& C,
+  const std::vector<s_t>& dim_a, const std::vector<s_t>& dim_b, const std::vector<s_t>& dim_c,
+  const std::vector<s_t>& a, const std::vector<s_t>& b, const std::vector<s_t>& c,
+  std::vector<s_t>& iter_dims,
+  std::vector<s_t>& strides_a, std::vector<s_t>& strides_b, std::vector<s_t>& strides_c
 ) {
 
     casadi_assert_dev(A.is_vector() && A.is_dense());
@@ -53,11 +53,11 @@ int einstein_process(const T& A, const T& B, const T& C,
 
     casadi_assert_dev(c.size()<=a.size()+b.size());
 
-    std::map<int, int> dim_map;
+    std::map<s_t, s_t> dim_map;
 
     // Check if shared nodes dimensions match up
-    for (int i=0;i<a.size();++i) {
-      int ai = a[i];
+    for (s_t i=0;i<a.size();++i) {
+      s_t ai = a[i];
       if (ai>=0) continue;
       auto al = dim_map.find(ai);
       if (al==dim_map.end()) {
@@ -67,8 +67,8 @@ int einstein_process(const T& A, const T& B, const T& C,
       }
     }
 
-    for (int i=0;i<b.size();++i) {
-      int bi = b[i];
+    for (s_t i=0;i<b.size();++i) {
+      s_t bi = b[i];
       if (bi>=0) continue;
       auto bl = dim_map.find(bi);
       if (bl==dim_map.end()) {
@@ -78,8 +78,8 @@ int einstein_process(const T& A, const T& B, const T& C,
       }
     }
 
-    for (int i=0;i<c.size();++i) {
-      int ci = c[i];
+    for (s_t i=0;i<c.size();++i) {
+      s_t ci = c[i];
       if (ci>=0) continue;
       auto cl = dim_map.find(ci);
       if (cl==dim_map.end()) {
@@ -89,15 +89,15 @@ int einstein_process(const T& A, const T& B, const T& C,
       }
     }
 
-    std::vector< std::pair<int, int> > dim_map_pair;
+    std::vector< std::pair<s_t, s_t> > dim_map_pair;
     for (const auto & i : dim_map) dim_map_pair.push_back(i);
 
     std::sort(dim_map_pair.begin(), dim_map_pair.end(),
-      [](const std::pair<int, int>& a, const std::pair<int, int>& b) { return a.second < b.second;});
+      [](const std::pair<s_t, s_t>& a, const std::pair<s_t, s_t>& b) { return a.second < b.second;});
 
-    std::vector<int> dim_map_keys;
+    std::vector<s_t> dim_map_keys;
     // Compute the total number of iterations needed
-    int n_iter = 1;
+    s_t n_iter = 1;
     for (const auto& e : dim_map_pair) {
       n_iter*= e.second;
       dim_map_keys.push_back(-e.first);
@@ -111,13 +111,13 @@ int einstein_process(const T& A, const T& B, const T& C,
     strides_c.clear();
     strides_c.resize(iter_dims.size()+1);
 
-    std::vector<int> lu;
+    std::vector<s_t> lu;
 
     if (!dim_map_keys.empty()) lu = lookupvector(dim_map_keys);
 
     // Update data pointers to match indices
-    int cumprod = 1;
-    for (int j=0;j<a.size();++j) {
+    s_t cumprod = 1;
+    for (s_t j=0;j<a.size();++j) {
       if (a[j]<0) {
         strides_a[1+lu[-a[j]]] = cumprod;
       } else {
@@ -126,7 +126,7 @@ int einstein_process(const T& A, const T& B, const T& C,
       cumprod*= dim_a[j];
     }
     cumprod = 1;
-    for (int j=0;j<b.size();++j) {
+    for (s_t j=0;j<b.size();++j) {
       if (b[j]<0) {
         strides_b[1+lu[-b[j]]] = cumprod;
       } else {
@@ -135,7 +135,7 @@ int einstein_process(const T& A, const T& B, const T& C,
       cumprod*= dim_b[j];
     }
     cumprod = 1;
-    for (int j=0;j<c.size();++j) {
+    for (s_t j=0;j<c.size();++j) {
       if (c[j]<0) {
         strides_c[1+lu[-c[j]]] = cumprod;
       } else {
@@ -158,20 +158,20 @@ int einstein_process(const T& A, const T& B, const T& C,
   }
 
   template<typename T>
-  void einstein_eval(int n_iter,
-      const std::vector<int>& iter_dims,
-      const std::vector<int>& strides_a, const std::vector<int>& strides_b, const std::vector<int>& strides_c,
+  void einstein_eval(s_t n_iter,
+      const std::vector<s_t>& iter_dims,
+      const std::vector<s_t>& strides_a, const std::vector<s_t>& strides_b, const std::vector<s_t>& strides_c,
       const T* a_in, const T* b_in, T* c_in) {
 
     if (!n_iter) return;
 
-    int iter_dim1 = 1, iter_dim2 = 1, iter_dim3 = 1;
+    s_t iter_dim1 = 1, iter_dim2 = 1, iter_dim3 = 1;
 
-    int n = iter_dims.size();
+    s_t n = iter_dims.size();
 
-    int stridea1=0, strideb1=0, stridec1=0;
-    int stridea2=0, strideb2=0, stridec2=0;
-    int stridea3=0, strideb3=0, stridec3=0;
+    s_t stridea1=0, strideb1=0, stridec1=0;
+    s_t stridea2=0, strideb2=0, stridec2=0;
+    s_t stridea3=0, strideb3=0, stridec3=0;
     if (n>0) {
       iter_dim3 = iter_dims[n-1];
       stridea3 = strides_a[n];
@@ -192,11 +192,11 @@ int einstein_process(const T& A, const T& B, const T& C,
     }
 
 
-    const int* ptr_iter_dims = get_ptr(iter_dims);
+    const s_t* ptr_iter_dims = get_ptr(iter_dims);
 
-    const int *ptr_strides_a = get_ptr(strides_a)+1;
-    const int *ptr_strides_b = get_ptr(strides_b)+1;
-    const int *ptr_strides_c = get_ptr(strides_c)+1;
+    const s_t *ptr_strides_a = get_ptr(strides_a)+1;
+    const s_t *ptr_strides_b = get_ptr(strides_b)+1;
+    const s_t *ptr_strides_c = get_ptr(strides_c)+1;
 
     // Data pointers
     const T* a_perm = a_in+strides_a[0];
@@ -206,7 +206,7 @@ int einstein_process(const T& A, const T& B, const T& C,
     n_iter/= iter_dim1*iter_dim2*iter_dim3;
 
     // Main loop
-    for (int i=0;i<n_iter;++i) {
+    for (s_t i=0;i<n_iter;++i) {
 
       // Data pointers
       const T* a = a_perm;
@@ -214,9 +214,9 @@ int einstein_process(const T& A, const T& B, const T& C,
       T* c = c_perm;
 
       // Construct indices
-      int sub = i;
-      for (int j=0;j<n-3;++j) {
-        int ind = sub % ptr_iter_dims[j];
+      s_t sub = i;
+      for (s_t j=0;j<n-3;++j) {
+        s_t ind = sub % ptr_iter_dims[j];
         a+= ptr_strides_a[j]*ind;
         b+= ptr_strides_b[j]*ind;
         c+= ptr_strides_c[j]*ind;
@@ -226,15 +226,15 @@ int einstein_process(const T& A, const T& B, const T& C,
       const T* a1 = a;
       const T* b1 = b;
       T* c1 = c;
-      for (int i1=0;i1<iter_dim1;++i1) {
+      for (s_t i1=0;i1<iter_dim1;++i1) {
         const T* a2 = a1;
         const T* b2 = b1;
         T* c2 = c1;
-        for (int i2=0;i2<iter_dim2;++i2) {
+        for (s_t i2=0;i2<iter_dim2;++i2) {
           const T* a3 = a2;
           const T* b3 = b2;
           T* c3 = c2;
-          for (int i3=0;i3<iter_dim3;++i3) {
+          for (s_t i3=0;i3<iter_dim3;++i3) {
             // Perform the actual multiplication
             Contraction<T>(*a3, *b3, *c3);
 

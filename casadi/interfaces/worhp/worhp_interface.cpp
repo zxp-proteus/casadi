@@ -34,7 +34,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_NLPSOL_WORHP_EXPORT
+  s_t CASADI_NLPSOL_WORHP_EXPORT
   casadi_register_nlpsol_worhp(Nlpsol::Plugin* plugin) {
     plugin->creator = WorhpInterface::creator;
     plugin->name = "worhp";
@@ -81,7 +81,7 @@ namespace casadi {
     }
 
     // Sort Worhp options
-    int nopts = WorhpGetParamCount();
+    s_t nopts = WorhpGetParamCount();
     for (auto&& op : worhp_opts) {
       if (op.first.compare("qp")==0) {
         qp_opts_ = op.second;
@@ -89,7 +89,7 @@ namespace casadi {
       }
 
       // Get corresponding index using a linear search
-      int ind;
+      s_t ind;
       for (ind=1; ind<=nopts; ++ind) {
         // Get name in WORHP
         const char* name = WorhpGetParamName(ind);
@@ -131,7 +131,7 @@ namespace casadi {
     alloc_w(nx_); // for fetching diagonal entries form Hessian
   }
 
-  void worhp_disp(int mode, const char message[]) {
+  void worhp_disp(s_t mode, const char message[]) {
     if (mode & WORHP_PRINT_MESSAGE) {
       uout() << message << std::endl;
     }
@@ -152,7 +152,7 @@ namespace casadi {
     WorhpPreInit(&m->worhp_o, &m->worhp_w, &m->worhp_p, &m->worhp_c);
 
     // Initialize parameters to default values
-    int status;
+    s_t status;
     InitParams(&status, &m->worhp_p);
 
     // Pass boolean parameters
@@ -243,7 +243,7 @@ namespace casadi {
   }
 
   void WorhpInterface::set_work(void* mem, const double**& arg, double**& res,
-                                int*& iw, double*& w) const {
+                                s_t*& iw, double*& w) const {
     auto m = static_cast<WorhpMemory*>(mem);
 
     // Set work in base classes
@@ -290,18 +290,18 @@ namespace casadi {
     }
 
     if (m->worhp_w.DF.NeedStructure) {
-      for (int i=0; i<nx_; ++i) {
+      for (s_t i=0; i<nx_; ++i) {
         m->worhp_w.DF.row[i] = i + 1; // Index-1 based
       }
     }
 
     if (m->worhp_o.m>0 && m->worhp_w.DG.NeedStructure) {
-      int nz=0;
-      const int* colind = jacg_sp_.colind();
-      const int* row = jacg_sp_.row();
-      for (int c=0; c<nx_; ++c) {
-        for (int el=colind[c]; el<colind[c+1]; ++el) {
-          int r = row[el];
+      s_t nz=0;
+      const s_t* colind = jacg_sp_.colind();
+      const s_t* row = jacg_sp_.row();
+      for (s_t c=0; c<nx_; ++c) {
+        for (s_t el=colind[c]; el<colind[c+1]; ++el) {
+          s_t r = row[el];
           m->worhp_w.DG.col[nz] = c + 1; // Index-1 based
           m->worhp_w.DG.row[nz] = r + 1;
           nz++;
@@ -311,14 +311,14 @@ namespace casadi {
 
     if (m->worhp_w.HM.NeedStructure) {
       // Get the sparsity pattern of the Hessian
-      const int* colind = hesslag_sp_.colind();
-      const int* row = hesslag_sp_.row();
+      const s_t* colind = hesslag_sp_.colind();
+      const s_t* row = hesslag_sp_.row();
 
-      int nz=0;
+      s_t nz=0;
 
       // Strictly lower triangular part of the Hessian (note CCS -> CRS format change)
-      for (int c=0; c<nx_; ++c) {
-        for (int el=colind[c]; el<colind[c+1]; ++el) {
+      for (s_t c=0; c<nx_; ++c) {
+        for (s_t el=colind[c]; el<colind[c+1]; ++el) {
           if (row[el]>c) {
             m->worhp_w.HM.row[nz] = row[el] + 1;
             m->worhp_w.HM.col[nz] = c + 1;
@@ -328,7 +328,7 @@ namespace casadi {
       }
 
       // Diagonal always included
-      for (int r=0; r<nx_; ++r) {
+      for (s_t r=0; r<nx_; ++r) {
         m->worhp_w.HM.row[nz] = r + 1;
         m->worhp_w.HM.col[nz] = r + 1;
         nz++;
@@ -343,7 +343,7 @@ namespace casadi {
     check_inputs(mem);
 
     if (m->lbg && m->ubg) {
-      for (int i=0; i<ng_; ++i) {
+      for (s_t i=0; i<ng_; ++i) {
         casadi_assert(!(m->lbg[i]==-inf && m->ubg[i] == inf),
                         "WorhpInterface::evaluate: Worhp cannot handle the case when both "
                         "LBG and UBG are infinite."
@@ -365,10 +365,10 @@ namespace casadi {
 
     // Replace infinite bounds with m->worhp_p.Infty
     double inf = numeric_limits<double>::infinity();
-    for (int i=0; i<nx_; ++i) if (m->worhp_o.XL[i]==-inf) m->worhp_o.XL[i] = -m->worhp_p.Infty;
-    for (int i=0; i<nx_; ++i) if (m->worhp_o.XU[i]== inf) m->worhp_o.XU[i] =  m->worhp_p.Infty;
-    for (int i=0; i<ng_; ++i) if (m->worhp_o.GL[i]==-inf) m->worhp_o.GL[i] = -m->worhp_p.Infty;
-    for (int i=0; i<ng_; ++i) if (m->worhp_o.GU[i]== inf) m->worhp_o.GU[i] =  m->worhp_p.Infty;
+    for (s_t i=0; i<nx_; ++i) if (m->worhp_o.XL[i]==-inf) m->worhp_o.XL[i] = -m->worhp_p.Infty;
+    for (s_t i=0; i<nx_; ++i) if (m->worhp_o.XU[i]== inf) m->worhp_o.XU[i] =  m->worhp_p.Infty;
+    for (s_t i=0; i<ng_; ++i) if (m->worhp_o.GL[i]==-inf) m->worhp_o.GL[i] = -m->worhp_p.Infty;
+    for (s_t i=0; i<ng_; ++i) if (m->worhp_o.GU[i]== inf) m->worhp_o.GU[i] =  m->worhp_p.Infty;
 
     if (verbose_) casadi_message("WorhpInterface::starting iteration");
 
@@ -411,7 +411,7 @@ namespace casadi {
             // Evaluate the callback function
             fcallback_(m->arg, m->res, m->iw, m->w, 0);
             m->fstats.at("callback_fun").toc();
-            int ret = static_cast<int>(ret_double);
+            s_t ret = static_cast<s_t>(ret_double);
 
             if (ret) m->worhp_c.status = TerminateError;
           }
@@ -471,11 +471,11 @@ namespace casadi {
         casadi_fill(dval, nx_, 0.);
 
         // Remove diagonal
-        const int* colind = hesslag_sp_.colind();
-        const int* row = hesslag_sp_.row();
-        int ind=0;
-        for (int c=0; c<nx_; ++c) {
-          for (int el=colind[c]; el<colind[c+1]; ++el) {
+        const s_t* colind = hesslag_sp_.colind();
+        const s_t* row = hesslag_sp_.row();
+        s_t ind=0;
+        for (s_t c=0; c<nx_; ++c) {
+          for (s_t el=colind[c]; el<colind[c+1]; ++el) {
             if (row[el]==c) {
               dval[c] = m->worhp_w.HM.val[el];
             } else {
@@ -506,7 +506,7 @@ namespace casadi {
     m->return_status = return_codes(m->worhp_c.status);
   }
 
-  const char* WorhpInterface::return_codes(int flag) {
+  const char* WorhpInterface::return_codes(s_t flag) {
     switch (flag) {
     case TerminateSuccess: return "TerminateSuccess";
     case OptimalSolution: return "OptimalSolution";

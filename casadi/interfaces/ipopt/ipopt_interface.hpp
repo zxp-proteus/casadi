@@ -81,16 +81,16 @@ namespace casadi {
     // Stats
     std::vector<double> inf_pr, inf_du, mu, d_norm, regularization_size,
       obj, alpha_pr, alpha_du;
-    std::vector<int> ls_trials;
+    std::vector<s_t> ls_trials;
     const char* return_status;
-    int iter_count;
+    s_t iter_count;
 
     // Meta-data
     std::map<std::string, std::vector<std::string> > var_string_md;
-    std::map<std::string, std::vector<int> > var_integer_md;
+    std::map<std::string, std::vector<s_t> > var_integer_md;
     std::map<std::string, std::vector<double> > var_numeric_md;
     std::map<std::string, std::vector<std::string> > con_string_md;
-    std::map<std::string, std::vector<int> > con_integer_md;
+    std::map<std::string, std::vector<s_t> > con_integer_md;
     std::map<std::string, std::vector<double> > con_numeric_md;
 
     /// Constructor
@@ -148,7 +148,7 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     // Solve the NLP
     void solve(void* mem) const override;
@@ -162,27 +162,27 @@ namespace casadi {
     // Ipopt callback functions
     void finalize_solution(IpoptMemory* m, const double* x, const double* z_L, const double* z_U,
                            const double* g, const double* lambda, double obj_value,
-                           int iter_count) const;
+                           s_t iter_count) const;
     bool get_bounds_info(IpoptMemory* m, double* x_l, double* x_u,
                          double* g_l, double* g_u) const;
     bool get_starting_point(IpoptMemory* m, bool init_x, double* x,
                             bool init_z, double* z_L, double* z_U,
                             bool init_lambda, double* lambda) const;
-    void get_nlp_info(IpoptMemory* m, int& nx, int& ng,
-                      int& nnz_jac_g, int& nnz_h_lag) const;
-    int get_number_of_nonlinear_variables() const;
-    bool get_list_of_nonlinear_variables(int num_nonlin_vars, int* pos_nonlin_vars) const;
+    void get_nlp_info(IpoptMemory* m, s_t& nx, s_t& ng,
+                      s_t& nnz_jac_g, s_t& nnz_h_lag) const;
+    s_t get_number_of_nonlinear_variables() const;
+    bool get_list_of_nonlinear_variables(s_t num_nonlin_vars, s_t* pos_nonlin_vars) const;
     bool intermediate_callback(IpoptMemory* m, const double* x, const double* z_L,
                                const double* z_U, const double* g,
-                               const double* lambda, double obj_value, int iter,
+                               const double* lambda, double obj_value, s_t iter,
                                double inf_pr, double inf_du, double mu, double d_norm,
                                double regularization_size, double alpha_du, double alpha_pr,
-                               int ls_trials, bool full_callback) const;
+                               s_t ls_trials, bool full_callback) const;
     bool get_var_con_metadata(std::map<std::string, std::vector<std::string> >& var_string_md,
-                              std::map<std::string, std::vector<int> >& var_integer_md,
+                              std::map<std::string, std::vector<s_t> >& var_integer_md,
                               std::map<std::string, std::vector<double> >& var_numeric_md,
                               std::map<std::string, std::vector<std::string> >& con_string_md,
-                              std::map<std::string, std::vector<int> >& con_integer_md,
+                              std::map<std::string, std::vector<s_t> >& con_integer_md,
                               std::map<std::string, std::vector<double> >& con_numeric_md) const;
 
     /// A documentation string

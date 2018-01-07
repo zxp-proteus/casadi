@@ -65,10 +65,10 @@ namespace casadi {
     bool called_once;
 
     // Map linear system nonzeros
-    std::vector<int> lin_map;
+    std::vector<s_t> lin_map;
 
     // Sparsity pattern as sparse triplet
-    std::vector<int> row, col, nz_map;
+    std::vector<s_t> row, col, nz_map;
 
     // Nonzero entries
     std::vector<double> nz;
@@ -132,22 +132,22 @@ namespace casadi {
     void free_mem(void *mem) const override { delete static_cast<QpoasesMemory*>(mem);}
 
     /** \brief  Evaluate numerically */
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// A documentation string
     static const std::string meta_doc;
 
     /// qpOASES linear solver initialization
-    static int qpoases_init(void* mem, int dim, int nnz, const int* row, const int* col);
+    static s_t qpoases_init(void* mem, s_t dim, s_t nnz, const s_t* row, const s_t* col);
 
     /// qpOASES linear solver symbolical factorization
-    static int qpoases_sfact(void* mem, const double* vals);
+    static s_t qpoases_sfact(void* mem, const double* vals);
 
     /// qpOASES linear solver numerical factorization
-    static int qpoases_nfact(void* mem, const double* vals, int* neig, int* rank);
+    static s_t qpoases_nfact(void* mem, const double* vals, s_t* neig, s_t* rank);
 
     /// qpOASES linear solver solve
-    static int qpoases_solve(void* mem, int nrhs, double* rhs);
+    static s_t qpoases_solve(void* mem, s_t nrhs, double* rhs);
 
     /// qpOases printing function
     static void qpoases_printf(const char* s);
@@ -166,21 +166,21 @@ namespace casadi {
 
     ///@{
     /// Options
-    int max_nWSR_;
+    s_t max_nWSR_;
     double max_cputime_;
     qpOASES::Options ops_;
     qpOASES::HessianType hess_;
     bool sparse_;
     bool schur_;
-    int max_schur_;
+    s_t max_schur_;
     std::string linsol_plugin_;
     ///@}
 
     /// Throw error
-    static void qpoases_error(const std::string& module, int flag);
+    static void qpoases_error(const std::string& module, s_t flag);
 
     /// Get qpOASES error message
-    static std::string getErrorMessage(int flag);
+    static std::string getErrorMessage(s_t flag);
   };
 
 } // namespace casadi

@@ -108,7 +108,7 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     // Solve the NLP
     void solve(void* mem) const override;
@@ -117,20 +117,20 @@ namespace casadi {
     bool integer_support() const override { return true;}
 
     // KNITRO callback wrapper
-    static int callback(const int evalRequestCode, const int n, const int m, const int nnzJ,
-                        const int nnzH, const double * const x, const double * const lambda,
+    static s_t callback(const s_t evalRequestCode, const s_t n, const s_t m, const s_t nnzJ,
+                        const s_t nnzH, const double * const x, const double * const lambda,
                         double * const obj, double * const c, double * const objGrad,
                         double * const jac, double * const hessian,
                         double * const hessVector, void *userParams);
 
     // KNITRO return codes
-    static const char* return_codes(int flag);
+    static const char* return_codes(s_t flag);
 
     // KNITRO options
     Dict opts_;
 
     // Type of constraints
-    std::vector<int> contype_;
+    std::vector<s_t> contype_;
 
     /// A documentation string
     static const std::string meta_doc;

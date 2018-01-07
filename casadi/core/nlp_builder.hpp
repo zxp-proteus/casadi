@@ -98,7 +98,7 @@ namespace casadi {
     // Destructor
     ~NlImporter();
   private:
-    int read_int();
+    s_t read_int();
     char read_char();
     double read_double();
     short read_short();
@@ -114,12 +114,12 @@ namespace casadi {
     // All variables, including dependent
     std::vector<MX> v_;
     // Number of objectives and constraints
-    int n_var_, n_con_, n_obj_, n_eq_, n_lcon_;
+    s_t n_var_, n_con_, n_obj_, n_eq_, n_lcon_;
     // nonlinear vars in constraints, objectives, both
     // see JuliaOpt/AmplNLWriter.jl/src/nl_write.jl
-    int nlvc_, nlvo_, nlvb_;
+    s_t nlvc_, nlvo_, nlvb_;
     // Number of discrete variables // see JuliaOpt/AmplNLWriter.jl/src/nl_write.jl
-    int nbv_, niv_, nlvbi_, nlvci_, nlvoi_;
+    s_t nbv_, niv_, nlvbi_, nlvci_, nlvoi_;
     // objective sign
     MX sign_;
     // Parse the file

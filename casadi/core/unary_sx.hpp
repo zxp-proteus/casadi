@@ -70,17 +70,17 @@ class UnarySX : public SXNode {
     bool is_op(e_t op) const override { return op_==op; }
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    bool is_equal(const SXNode* node, int depth) const override {
+    bool is_equal(const SXNode* node, s_t depth) const override {
       const UnarySX* n = dynamic_cast<const UnarySX*>(node);
       return n && n->op_ == op_ &&  SXElem::is_equal(n->dep_, dep_, depth-1);
     }
 
     /** \brief  Number of dependencies */
-    int n_dep() const override { return 1;}
+    s_t n_dep() const override { return 1;}
 
     /** \brief  get the reference of a dependency */
-    const SXElem& dep(int i) const override { return dep_; }
-    SXElem& dep(int i) override { return dep_; }
+    const SXElem& dep(s_t i) const override { return dep_; }
+    SXElem& dep(s_t i) override { return dep_; }
 
     /** \brief  Get the operation */
     e_t op() const override { return op_;}

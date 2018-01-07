@@ -51,7 +51,7 @@ namespace casadi {
     ~ConstantMX() override = 0;
 
     // Creator (all values are the same integer)
-    static ConstantMX* create(const Sparsity& sp, int val);
+    static ConstantMX* create(const Sparsity& sp, s_t val);
 
     // Creator (all values are the same floating point value)
     static ConstantMX* create(const Sparsity& sp, double val);
@@ -60,11 +60,11 @@ namespace casadi {
     static ConstantMX* create(const Matrix<double>& val);
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override = 0;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override = 0;
 
     /// Evaluate the function symbolically (SX)
     r_t eval_sx(const SXElem** arg, SXElem** res,
-                         int* iw, SXElem* w) const override = 0;
+                         s_t* iw, SXElem* w) const override = 0;
 
     /** \brief  Evaluate symbolically (MX) */
     void eval_mx(const std::vector<MX>& arg, std::vector<MX>& res) const override;
@@ -78,10 +78,10 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const override;
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief Get the operation */
     e_t op() const override { return OP_CONST;}
@@ -105,7 +105,7 @@ namespace casadi {
     bool is_valid_input() const override;
 
     /** \brief Get the number of symbolic primitives */
-    int n_primitives() const override;
+    s_t n_primitives() const override;
 
     /** \brief Get symbolic primitives */
     void primitives(std::vector<MX>::iterator& it) const override;
@@ -139,21 +139,21 @@ namespace casadi {
     }
 
     /** \brief  Evaluate the function numerically */
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override {
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override {
       std::copy(x_->begin(), x_->end(), res[0]);
       return 0;
     }
 
     /** \brief  Evaluate the function symbolically (SX) */
     r_t eval_sx(const SXElem** arg, SXElem** res,
-                         int* iw, SXElem* w) const override {
+                         s_t* iw, SXElem* w) const override {
       std::copy(x_->begin(), x_->end(), res[0]);
       return 0;
     }
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const override;
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief  Check if a particular integer value */
     bool is_zero() const override;
@@ -168,7 +168,7 @@ namespace casadi {
     Matrix<double> get_DM() const override { return x_;}
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    bool is_equal(const MXNode* node, int depth) const override;
+    bool is_equal(const MXNode* node, s_t depth) const override;
 
     /** \brief  data member */
     Matrix<double> x_;
@@ -199,19 +199,19 @@ namespace casadi {
 
     /** \brief  Evaluate the function numerically */
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override {
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override {
       return 0;
     }
 
     /// Evaluate the function symbolically (SX)
     r_t eval_sx(const SXElem** arg, SXElem** res,
-                         int* iw, SXElem* w) const override {
+                         s_t* iw, SXElem* w) const override {
       return 0;
     }
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                      const std::vector<int>& arg, const std::vector<int>& res) const override {}
+                      const std::vector<s_t>& arg, const std::vector<s_t>& res) const override {}
 
     /// Get the value (only for scalar constant nodes)
     double to_double() const override { return 0;}
@@ -223,10 +223,10 @@ namespace casadi {
     MX get_project(const Sparsity& sp) const override;
 
     /// Get the nonzeros of matrix
-    MX get_nzref(const Sparsity& sp, const std::vector<int>& nz) const override;
+    MX get_nzref(const Sparsity& sp, const std::vector<s_t>& nz) const override;
 
     /// Assign the nonzeros of a matrix to another matrix
-    MX get_nzassign(const MX& y, const std::vector<int>& nz) const override;
+    MX get_nzassign(const MX& y, const std::vector<s_t>& nz) const override;
 
     /// Transpose
     MX get_transpose() const override;
@@ -259,9 +259,9 @@ namespace casadi {
   };
 
   /** \brief  Constant known at compiletime */
-  template<int v>
+  template<s_t v>
   struct CompiletimeConst {
-    static const int value = v;
+    static const s_t value = v;
   };
 
   /// A constant with all entries identical
@@ -280,14 +280,14 @@ namespace casadi {
 
     /** \brief  Evaluate the function numerically */
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const override;
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief  Check if a particular integer value */
     bool is_zero() const override { return v_.value==0;}
@@ -309,10 +309,10 @@ namespace casadi {
     MX get_project(const Sparsity& sp) const override;
 
     /// Get the nonzeros of matrix
-    MX get_nzref(const Sparsity& sp, const std::vector<int>& nz) const override;
+    MX get_nzref(const Sparsity& sp, const std::vector<s_t>& nz) const override;
 
     /// Assign the nonzeros of a matrix to another matrix
-    MX get_nzassign(const MX& y, const std::vector<int>& nz) const override;
+    MX get_nzassign(const MX& y, const std::vector<s_t>& nz) const override;
 
     /// Transpose
     MX get_transpose() const override;
@@ -333,7 +333,7 @@ namespace casadi {
     MX get_vertcat(const std::vector<MX>& x) const override;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    bool is_equal(const MXNode* node, int depth) const override;
+    bool is_equal(const MXNode* node, s_t depth) const override;
 
     /** \brief The actual numerical value */
     Value v_;
@@ -469,21 +469,21 @@ namespace casadi {
   }
 
   template<typename Value>
-  r_t Constant<Value>::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Constant<Value>::eval(const double** arg, double** res, s_t* iw, double* w) const {
     std::fill(res[0], res[0]+nnz(), static_cast<double>(v_.value));
     return 0;
   }
 
   template<typename Value>
-  int Constant<Value>::
-  eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  s_t Constant<Value>::
+  eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     std::fill(res[0], res[0]+nnz(), SXElem(v_.value));
     return 0;
   }
 
   template<typename Value>
   void Constant<Value>::generate(CodeGenerator& g,
-                                 const std::vector<int>& arg, const std::vector<int>& res) const {
+                                 const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     if (nnz()==0) {
       // Quick return
     } else if (nnz()==1) {
@@ -494,10 +494,10 @@ namespace casadi {
   }
 
   template<typename Value>
-  MX Constant<Value>::get_nzref(const Sparsity& sp, const std::vector<int>& nz) const {
+  MX Constant<Value>::get_nzref(const Sparsity& sp, const std::vector<s_t>& nz) const {
     if (v_.value!=0) {
       // Check if any "holes"
-      for (std::vector<int>::const_iterator k=nz.begin(); k!=nz.end(); ++k) {
+      for (std::vector<s_t>::const_iterator k=nz.begin(); k!=nz.end(); ++k) {
         if (*k<0) {
           // Do not simplify
           return MXNode::get_nzref(sp, nz);
@@ -508,7 +508,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  MX Constant<Value>::get_nzassign(const MX& y, const std::vector<int>& nz) const {
+  MX Constant<Value>::get_nzassign(const MX& y, const std::vector<s_t>& nz) const {
     if (y.is_constant() && y->is_zero() && v_.value==0) {
       return y;
     }
@@ -566,7 +566,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  bool Constant<Value>::is_equal(const MXNode* node, int depth) const {
+  bool Constant<Value>::is_equal(const MXNode* node, s_t depth) const {
     return node->is_value(v_.value) && sparsity()==node->sparsity();
   }
 

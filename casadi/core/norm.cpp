@@ -37,17 +37,17 @@ namespace casadi {
     return "||" + arg.at(0) + "||_F";
   }
 
-  r_t NormF::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t NormF::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  r_t NormF::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t NormF::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     eval_gen<SXElem>(arg, res, iw, w);
     return 0;
   }
 
   template<typename T>
-  r_t NormF::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t NormF::eval_gen(const T** arg, T** res, s_t* iw, T* w) const {
     *res[0] = casadi_norm_2(dep().nnz(), arg[0]);
     return 0;
   }
@@ -59,7 +59,7 @@ namespace casadi {
   void NormF::ad_forward(const std::vector<std::vector<MX> >& fseed,
                       std::vector<std::vector<MX> >& fsens) const {
     MX self = shared_from_this<MX>();
-    for (int d=0; d<fsens.size(); ++d) {
+    for (s_t d=0; d<fsens.size(); ++d) {
       fsens[d][0] = dep(0)->get_dot(fseed[d][0]) / self;
     }
   }
@@ -67,13 +67,13 @@ namespace casadi {
   void NormF::ad_reverse(const std::vector<std::vector<MX> >& aseed,
                       std::vector<std::vector<MX> >& asens) const {
     MX self = shared_from_this<MX>();
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       asens[d][0] += (aseed[d][0]/self) * dep(0);
     }
   }
 
   void NormF::generate(CodeGenerator& g,
-                       const std::vector<int>& arg, const std::vector<int>& res) const {
+                       const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     g << g.workel(res[0]) << " = sqrt("
       << g.dot(dep().nnz(), g.work(arg[0], dep(0).nnz()), g.work(arg[0], dep(0).nnz()))
       << ");\n";

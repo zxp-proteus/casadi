@@ -105,16 +105,16 @@ namespace casadi {
   CASADI_EXPORT std::vector<std::string> integrator_out();
 
   /** \brief Get integrator input scheme name by index */
-  CASADI_EXPORT std::string integrator_in(int ind);
+  CASADI_EXPORT std::string integrator_in(s_t ind);
 
   /** \brief Get output scheme name by index */
-  CASADI_EXPORT std::string integrator_out(int ind);
+  CASADI_EXPORT std::string integrator_out(s_t ind);
 
   /** \brief Get the number of integrator inputs */
-  CASADI_EXPORT int integrator_n_in();
+  CASADI_EXPORT s_t integrator_n_in();
 
   /** \brief Get the number of integrator outputs */
-  CASADI_EXPORT int integrator_n_out();
+  CASADI_EXPORT s_t integrator_n_out();
   /** @} */
 
 #ifndef SWIG

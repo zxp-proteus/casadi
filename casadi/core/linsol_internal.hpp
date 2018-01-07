@@ -73,12 +73,12 @@ namespace casadi {
     void free_mem(void *mem) const override { delete static_cast<LinsolMemory*>(mem);}
 
     /// Evaluate SX, possibly transposed
-    virtual void linsol_eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem,
-                               bool tr, int nrhs) const;
+    virtual void linsol_eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem,
+                               bool tr, s_t nrhs) const;
 
 #if 0
     // (Re)factorize the system
-    int factorize(void* mem, const double* A) const;
+    s_t factorize(void* mem, const double* A) const;
 
     // Needs symbolic factorization
     virtual bool needs_sfact(void* mem, const double* A) const;
@@ -94,17 +94,17 @@ namespace casadi {
     virtual r_t nfact(void* mem, const double* A) const;
 
     // Solve numerically
-    virtual r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const;
+    virtual r_t solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const;
 
     /// Number of negative eigenvalues
-    virtual int neig(void* mem, const double* A) const;
+    virtual s_t neig(void* mem, const double* A) const;
 
     /// Matrix rank
-    virtual int rank(void* mem, const double* A) const;
+    virtual s_t rank(void* mem, const double* A) const;
 
     /// Generate C code
     virtual void generate(CodeGenerator& g, const std::string& A, const std::string& x,
-                          int nrhs, bool tr) const;
+                          s_t nrhs, bool tr) const;
 
     // Creator function for internal class
     typedef LinsolInternal* (*Creator)(const std::string& name, const Sparsity& sp);
@@ -122,11 +122,11 @@ namespace casadi {
     const char* plugin_name() const override = 0;
 
     /// Get sparsity pattern
-    int nrow() const { return sp_.size1();}
-    int ncol() const { return sp_.size2();}
-    const int* colind() const { return sp_.colind();}
-    const int* row() const { return sp_.row();}
-    int nnz() const { return sp_.nnz();}
+    s_t nrow() const { return sp_.size1();}
+    s_t ncol() const { return sp_.size2();}
+    const s_t* colind() const { return sp_.colind();}
+    const s_t* row() const { return sp_.row();}
+    s_t nnz() const { return sp_.nnz();}
 
     // Sparsity pattern of the linear system
     Sparsity sp_;

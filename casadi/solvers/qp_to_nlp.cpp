@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_CONIC_NLPSOL_EXPORT
+  s_t CASADI_CONIC_NLPSOL_EXPORT
   casadi_register_conic_nlpsol(Conic::Plugin* plugin) {
     plugin->creator = QpToNlp::creator;
     plugin->name = "nlpsol";
@@ -108,8 +108,8 @@ namespace casadi {
     alloc_w(solver_.nnz_in(NLPSOL_P), true);
   }
 
-  int QpToNlp::
-  eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  s_t QpToNlp::
+  eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     // Inputs
     const double *h_, *g_, *a_, *lba_, *uba_, *lbx_, *ubx_, *x0_;
     // Outputs
@@ -148,7 +148,7 @@ namespace casadi {
     arg1[NLPSOL_P] = w;
 
     // Quadratic term
-    int nh = nnz_in(CONIC_H);
+    s_t nh = nnz_in(CONIC_H);
     if (h_) {
       copy_n(h_, nh, w);
     } else {
@@ -157,7 +157,7 @@ namespace casadi {
     w += nh;
 
     // Linear objective term
-    int ng = nnz_in(CONIC_G);
+    s_t ng = nnz_in(CONIC_G);
     if (g_) {
       copy_n(g_, ng, w);
     } else {
@@ -166,7 +166,7 @@ namespace casadi {
     w += ng;
 
     // Linear constraints
-    int na = nnz_in(CONIC_A);
+    s_t na = nnz_in(CONIC_A);
     if (a_) {
       copy_n(a_, na, w);
     } else {

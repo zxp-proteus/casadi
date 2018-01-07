@@ -30,7 +30,7 @@ using namespace std;
 
 namespace casadi {
 
-  SymbolicMX::SymbolicMX(const std::string& name, int nrow, int ncol) : name_(name) {
+  SymbolicMX::SymbolicMX(const std::string& name, s_t nrow, s_t ncol) : name_(name) {
     set_sparsity(Sparsity::dense(nrow, ncol));
   }
 
@@ -42,11 +42,11 @@ namespace casadi {
     return name_;
   }
 
-  r_t SymbolicMX::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t SymbolicMX::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return 0;
   }
 
-  r_t SymbolicMX::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t SymbolicMX::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return 0;
   }
 
@@ -65,12 +65,12 @@ namespace casadi {
     return name_;
   }
 
-  r_t SymbolicMX::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t SymbolicMX::sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     fill_n(res[0], nnz(), 0);
     return 0;
   }
 
-  r_t SymbolicMX::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t SymbolicMX::sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     fill_n(res[0], nnz(), 0);
     return 0;
   }

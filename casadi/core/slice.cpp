@@ -29,30 +29,30 @@
 using namespace std;
 namespace casadi {
 
-  Slice::Slice() : start(0), stop(std::numeric_limits<int>::max()), step(1) {
+  Slice::Slice() : start(0), stop(std::numeric_limits<s_t>::max()), step(1) {
   }
 
-  Slice::Slice(int i, bool ind1) : start(i-ind1), stop(i-ind1+1), step(1) {
+  Slice::Slice(s_t i, bool ind1) : start(i-ind1), stop(i-ind1+1), step(1) {
     casadi_assert(!(ind1 && i<=0),
                           "Matlab is 1-based, but requested index " +
                           str(i) +  ". Note that negative slices are"
                           " disabled in the Matlab interface. "
                           "Possibly you may want to use 'end'.");
-    if (i==-1) stop = std::numeric_limits<int>::max();
+    if (i==-1) stop = std::numeric_limits<s_t>::max();
   }
 
-  Slice::Slice(int start, int stop, int step) : start(start), stop(stop), step(step) {
+  Slice::Slice(s_t start, s_t stop, s_t step) : start(start), stop(stop), step(step) {
   }
 
-  std::vector<int> Slice::all(int len, bool ind1) const {
-    int start = this->start;
-    if (start==std::numeric_limits<int>::min()) {
+  std::vector<s_t> Slice::all(s_t len, bool ind1) const {
+    s_t start = this->start;
+    if (start==std::numeric_limits<s_t>::min()) {
       start = (step < 0) ? len - 1 : 0;
     } else if (start<0) {
       start+=len;
     }
-    int stop = this->stop;
-    if (stop==std::numeric_limits<int>::max()) {
+    s_t stop = this->stop;
+    if (stop==std::numeric_limits<s_t>::max()) {
       stop = (step < 0) ? -1 : len;
     } else if (stop<0) {
       stop+=len;
@@ -64,14 +64,14 @@ namespace casadi {
     casadi_assert(start>=0,
       "Slice (start=" + str(start) + ", stop=" + str(stop) + ", step=" + str(step)
       + ") out of bounds with start<0.");
-    if ((stop>=start && step<0) || (stop<=start && step>0)) return std::vector<int>();
+    if ((stop>=start && step<0) || (stop<=start && step>0)) return std::vector<s_t>();
 
     return range(start+ind1, stop+ind1, step, len+ind1);
   }
 
   void Slice::disp(std::ostream& stream, bool more) const {
     bool from_beginning = start == 0;
-    bool till_end = stop == std::numeric_limits<int>::max();
+    bool till_end = stop == std::numeric_limits<s_t>::max();
     bool skip_none = step==1;
     if (stop==start+1) {
       stream << start;
@@ -83,30 +83,30 @@ namespace casadi {
     }
   }
 
-  std::vector<int> Slice::all(const Slice& outer, int len) const {
-    std::vector<int> ret;
-    for (int i=outer.start; i!=outer.stop; i+=outer.step) {
-      for (int j=i+start; j!=i+stop; j+=step) {
+  std::vector<s_t> Slice::all(const Slice& outer, s_t len) const {
+    std::vector<s_t> ret;
+    for (s_t i=outer.start; i!=outer.stop; i+=outer.step) {
+      for (s_t j=i+start; j!=i+stop; j+=step) {
         ret.push_back(j);
       }
     }
     return ret;
   }
 
-  bool Slice::is_scalar(int len) const {
-    int start = std::min(this->start, len);
-    int stop = std::min(this->stop, len);
-    int nret = (stop-start)/step + ((stop-start)%step!=0);
+  bool Slice::is_scalar(s_t len) const {
+    s_t start = std::min(this->start, len);
+    s_t stop = std::min(this->stop, len);
+    s_t nret = (stop-start)/step + ((stop-start)%step!=0);
     return nret==1;
   }
 
-  int Slice::scalar(int len) const {
+  s_t Slice::scalar(s_t len) const {
     casadi_assert_dev(is_scalar(len));
     casadi_assert(start >= -len && start < len, "Slice::getScalar: out of bounds");
     return start >= 0 ? start : start+len;
   }
 
-  Slice CASADI_EXPORT to_slice(const std::vector<int>& v, bool ind1) {
+  Slice CASADI_EXPORT to_slice(const std::vector<s_t>& v, bool ind1) {
     Slice r;
     casadi_assert(is_slice(v, ind1), "Cannot be represented as a Slice");
     if (v.size()==0) {
@@ -124,10 +124,10 @@ namespace casadi {
     return r;
   }
 
-  bool CASADI_EXPORT is_slice(const std::vector<int>& v, bool ind1) {
+  bool CASADI_EXPORT is_slice(const std::vector<s_t>& v, bool ind1) {
     // Always false if negative numbers or non-increasing
-    int last_v = -1;
-    for (int i=0; i<v.size(); ++i) {
+    s_t last_v = -1;
+    for (s_t i=0; i<v.size(); ++i) {
       casadi_assert(!(ind1 && v[i]<=0),
         "Matlab is 1-based, but requested index " + str(v[i]) + ". "
         "Note that negative slices are disabled in the Matlab interface. "
@@ -143,12 +143,12 @@ namespace casadi {
     if (v.size()==2) return v[0]!=v[1];
 
     // We can now get the beginning, end and step
-    int start = v[0]-ind1;
-    int step = v[1]-v[0];
-    //int stop = start + step*v.size();
+    s_t start = v[0]-ind1;
+    s_t step = v[1]-v[0];
+    //s_t stop = start + step*v.size();
 
     // Consistency check
-    for (int i=2; i<v.size(); ++i) {
+    for (s_t i=2; i<v.size(); ++i) {
       if (v[i]-ind1!=start+i*step) return false;
     }
 
@@ -156,25 +156,25 @@ namespace casadi {
     return true;
   }
 
-  bool CASADI_EXPORT is_slice2(const std::vector<int>& v) {
+  bool CASADI_EXPORT is_slice2(const std::vector<s_t>& v) {
     // Always true if 1D slice
     if (is_slice(v)) return true;
 
     // Always false if negative numbers or non-increasing
-    int last_v = -1;
-    for (int i=0; i<v.size(); ++i) {
+    s_t last_v = -1;
+    for (s_t i=0; i<v.size(); ++i) {
       if (v[i]<=last_v) return false;
       last_v = v[i];
     }
 
     // Get the slices
-    int start_outer = 0;
-    int step_outer = -1;
-    int start_inner = v.front();
-    int step_inner = v[1]-v[0];
-    int stop_inner = -1;
-    for (int i=2; i<v.size(); ++i) {
-      int predicted_v = start_inner+i*step_inner;
+    s_t start_outer = 0;
+    s_t step_outer = -1;
+    s_t start_inner = v.front();
+    s_t step_inner = v[1]-v[0];
+    s_t stop_inner = -1;
+    for (s_t i=2; i<v.size(); ++i) {
+      s_t predicted_v = start_inner+i*step_inner;
       if (v[i]!=predicted_v) {
         stop_inner = predicted_v;
         step_outer = v[i] - start_inner;
@@ -184,16 +184,16 @@ namespace casadi {
     casadi_assert_dev(stop_inner>=0);
 
     // Get the end of the outer slice
-    int stop_outer = v.back();
+    s_t stop_outer = v.back();
     do {
       if (step_outer>0) stop_outer++;
       else             stop_outer--;
     } while (stop_outer % step_outer!=0);
 
     // Check consistency
-    std::vector<int>::const_iterator it=v.begin();
-    for (int i=start_outer; i!=stop_outer; i+=step_outer) {
-      for (int j=i+start_inner; j!=i+stop_inner; j+=step_inner) {
+    std::vector<s_t>::const_iterator it=v.begin();
+    for (s_t i=start_outer; i!=stop_outer; i+=step_outer) {
+      for (s_t j=i+start_inner; j!=i+stop_inner; j+=step_inner) {
         // False if we've reached the end
         if (it==v.end()) return false;
 
@@ -209,7 +209,7 @@ namespace casadi {
     return true;
   }
 
-  std::pair<Slice, Slice> CASADI_EXPORT to_slice2(const std::vector<int>& v) {
+  std::pair<Slice, Slice> CASADI_EXPORT to_slice2(const std::vector<s_t>& v) {
     casadi_assert(is_slice2(v), "Cannot be represented as a nested Slice");
     Slice inner, outer;
 
@@ -227,8 +227,8 @@ namespace casadi {
     inner.start = v.front();
     inner.step = v[1]-v[0];
     inner.stop = -1;
-    for (int i=2; i<v.size(); ++i) {
-      int predicted_v = inner.start+i*inner.step;
+    for (s_t i=2; i<v.size(); ++i) {
+      s_t predicted_v = inner.start+i*inner.step;
       if (v[i]!=predicted_v) {
         inner.stop = predicted_v;
         outer.step = v[i] - inner.start;

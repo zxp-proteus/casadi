@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_LAPACKQR_EXPORT
+  s_t CASADI_LINSOL_LAPACKQR_EXPORT
   casadi_register_linsol_lapackqr(LinsolInternal::Plugin* plugin) {
     plugin->creator = LapackQr::creator;
     plugin->name = "lapackqr";
@@ -88,15 +88,15 @@ namespace casadi {
     auto m = static_cast<LapackQrMemory*>(mem);
 
     // Dimensions
-    //int nrow = this->nrow();
-    int ncol = this->ncol();
+    //s_t nrow = this->nrow();
+    s_t ncol = this->ncol();
 
     // Get the elements of the matrix, dense format
     casadi_densify(A, sp_, get_ptr(m->mat), false);
 
     // Factorize the matrix
-    int info = -100;
-    int lwork = m->work.size();
+    s_t info = -100;
+    s_t lwork = m->work.size();
     dgeqrf_(&ncol, &ncol, get_ptr(m->mat), &ncol, get_ptr(m->tau),
             get_ptr(m->work), &lwork, &info);
     if (info) {
@@ -106,11 +106,11 @@ namespace casadi {
     return 0;
   }
 
-  r_t LapackQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LapackQr::solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<LapackQrMemory*>(mem);
 
     // Solve up to max_nrhs rhs at a time
-    int offset = 0;
+    s_t offset = 0;
     while (nrhs>0) {
       if (solve_batch(m, A, x+offset, min(max_nrhs_, nrhs), tr)) return 1;
       nrhs-= max_nrhs_;
@@ -119,12 +119,12 @@ namespace casadi {
     return 0;
   }
 
-  int LapackQr::solve_batch(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  s_t LapackQr::solve_batch(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<LapackQrMemory*>(mem);
 
     // Dimensions
-    //int nrow = this->nrow();
-    int ncol = this->ncol();
+    //s_t nrow = this->nrow();
+    s_t ncol = this->ncol();
 
     // Properties of R
     char uploR = 'U';
@@ -136,8 +136,8 @@ namespace casadi {
     // Properties of Q
     char transQ = tr ? 'N' : 'T';
     char sideQ = 'L';
-    int k = m->tau.size(); // minimum of ncol and nrow
-    int lwork = m->work.size();
+    s_t k = m->tau.size(); // minimum of ncol and nrow
+    s_t lwork = m->work.size();
 
     if (tr) {
 
@@ -146,7 +146,7 @@ namespace casadi {
              get_ptr(m->mat), &ncol, x, &ncol);
 
       // Multiply by Q
-      int info = 100;
+      s_t info = 100;
       dormqr_(&sideQ, &transQ, &ncol, &nrhs, &k, get_ptr(m->mat), &ncol, get_ptr(m->tau), x,
               &ncol, get_ptr(m->work), &lwork, &info);
       casadi_assert(info == 0,
@@ -154,7 +154,7 @@ namespace casadi {
     } else {
 
       // Multiply by transpose(Q)
-      int info = 100;
+      s_t info = 100;
       dormqr_(&sideQ, &transQ, &ncol, &nrhs, &k, get_ptr(m->mat), &ncol, get_ptr(m->tau), x,
               &ncol, get_ptr(m->work), &lwork, &info);
       casadi_assert(info == 0,

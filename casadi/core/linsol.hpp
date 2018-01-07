@@ -99,21 +99,21 @@ namespace casadi {
     /** \brief Number of negative eigenvalues
       * Not available for all solvers
       */
-    int neig(const DM& A) const;
+    s_t neig(const DM& A) const;
 
     /** \brief Matrix rank
       * Not available for all solvers
       */
-    int rank(const DM& A) const;
+    s_t rank(const DM& A) const;
 
     #ifndef SWIG
     ///@{
     /// Low-level API
-    r_t sfact(const double* A, int mem=0) const;
-    r_t nfact(const double* A, int mem=0) const;
-    r_t solve(const double* A, double* x, int nrhs=1, bool tr=false, int mem=0) const;
-    int neig(const double* A, int mem=0) const;
-    int rank(const double* A, int mem=0) const;
+    r_t sfact(const double* A, s_t mem=0) const;
+    r_t nfact(const double* A, s_t mem=0) const;
+    r_t solve(const double* A, double* x, s_t nrhs=1, bool tr=false, s_t mem=0) const;
+    s_t neig(const double* A, s_t mem=0) const;
+    s_t rank(const double* A, s_t mem=0) const;
     ///@}
     #endif // SWIG
   };

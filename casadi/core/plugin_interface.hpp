@@ -88,7 +88,7 @@ namespace casadi {
       typename Derived::Creator creator;
       const char* name;
       const char* doc;
-      int version;
+      s_t version;
       typename Derived::Exposed exposed;
       const Options* options;
       // Constructor
@@ -96,7 +96,7 @@ namespace casadi {
     };
 
     // Plugin registration function
-    typedef int (*RegFcn)(Plugin* plugin);
+    typedef s_t (*RegFcn)(Plugin* plugin);
 
     /// Check if a plugin is available or can be loaded
     static bool has_plugin(const std::string& pname, bool verbose=false);
@@ -165,7 +165,7 @@ namespace casadi {
     Plugin plugin;
 
     // Set the fields
-    int flag = regfcn(&plugin);
+    s_t flag = regfcn(&plugin);
     casadi_assert_dev(flag==0);
 
     return plugin;
@@ -249,7 +249,7 @@ namespace casadi {
 
     // Alocate a handle pointer
 #ifndef _WIN32
-    int flag;
+    s_t flag;
     if (global) {
       flag = RTLD_NOW | RTLD_GLOBAL;
     } else {
@@ -265,7 +265,7 @@ namespace casadi {
     std::string searchpath;
 
     // Try getting a handle
-    for (int i=0;i<search_paths.size();++i) {
+    for (s_t i=0;i<search_paths.size();++i) {
       searchpath = search_paths[i];
 #ifdef _WIN32
       SetDllDirectory(TEXT(searchpath.c_str()));

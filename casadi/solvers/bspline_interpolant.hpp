@@ -54,9 +54,9 @@ namespace casadi {
     // Constructor
     BSplineInterpolant(const std::string& name,
                       const std::vector<double>& grid,
-                      const std::vector<int>& offset,
+                      const std::vector<s_t>& offset,
                       const std::vector<double>& values,
-                      int m);
+                      s_t m);
 
     // Destructor
     ~BSplineInterpolant() override;
@@ -70,9 +70,9 @@ namespace casadi {
     /** \brief  Create a new Interpolant */
     static Interpolant* creator(const std::string& name,
                                 const std::vector<double>& grid,
-                                const std::vector<int>& offset,
+                                const std::vector<s_t>& offset,
                                 const std::vector<double>& values,
-                                int m) {
+                                s_t m) {
       return new BSplineInterpolant(name, grid, offset, values, m);
     }
 
@@ -80,7 +80,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /// Evaluate numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     ///@{
     /** \brief Full Jacobian */
@@ -107,7 +107,7 @@ namespace casadi {
     ///@}
 
     /// Degree of the spline
-    std::vector<int> degree_;
+    std::vector<s_t> degree_;
 
     /// Linear solvere
     std::string linear_solver_;

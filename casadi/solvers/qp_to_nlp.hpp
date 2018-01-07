@@ -79,7 +79,7 @@ namespace casadi {
     /** \brief  Initialize */
     void init(const Dict& opts) override;
 
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// A documentation string
     static const std::string meta_doc;

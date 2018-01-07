@@ -49,7 +49,7 @@ Opti::Opti() {
   own(OptiNode::create());
 }
 
-MX Opti::variable(int n, int m, const std::string& attribute) {
+MX Opti::variable(s_t n, s_t m, const std::string& attribute) {
   try {
     return (*this)->variable(n, m, attribute);
   } catch (exception& e) {
@@ -72,7 +72,7 @@ Opti Opti::create(OptiNode* node) {
   return Opti(node);
 }
 
-MX Opti::parameter(int n, int m, const std::string& attribute) {
+MX Opti::parameter(s_t n, s_t m, const std::string& attribute) {
   try {
     return (*this)->parameter(n, m, attribute);
   } catch (exception& e) {
@@ -232,7 +232,7 @@ MX Opti::dual(const MX& m) const {
   }
 }
 
-int Opti::nx() const {
+s_t Opti::nx() const {
   try {
     return (*this)->nx();
   } catch (exception& e) {
@@ -240,7 +240,7 @@ int Opti::nx() const {
   }
 }
 
-int Opti::np() const {
+s_t Opti::np() const {
   try {
     return (*this)->np();
   } catch (exception& e) {
@@ -248,7 +248,7 @@ int Opti::np() const {
   }
 }
 
-int Opti::ng() const {
+s_t Opti::ng() const {
   try {
     return (*this)->ng();
   } catch (exception& e) {
@@ -444,7 +444,7 @@ std::vector<DM> OptiAdvanced::active_values(VariableType type) const {
   }
 }
 
-MX OptiAdvanced::x_lookup(int i) const {
+MX OptiAdvanced::x_lookup(s_t i) const {
   try {
     return (*this)->x_lookup(i);
   } catch (exception& e) {
@@ -452,7 +452,7 @@ MX OptiAdvanced::x_lookup(int i) const {
   }
 }
 
-MX OptiAdvanced::g_lookup(int i) const {
+MX OptiAdvanced::g_lookup(s_t i) const {
   try {
     return (*this)->g_lookup(i);
   } catch (exception& e) {
@@ -460,21 +460,21 @@ MX OptiAdvanced::g_lookup(int i) const {
   }
 }
 
-std::string OptiAdvanced::x_describe(int i) const {
+std::string OptiAdvanced::x_describe(s_t i) const {
   try {
     return (*this)->x_describe(i);
   } catch (exception& e) {
     THROW_ERROR("x_describe", e.what());
   }
 }
-std::string OptiAdvanced::g_describe(int i) const {
+std::string OptiAdvanced::g_describe(s_t i) const {
   try {
     return (*this)->g_describe(i);
   } catch (exception& e) {
     THROW_ERROR("g_describe", e.what());
   }
 }
-std::string OptiAdvanced::describe(const MX& x, int indent) const {
+std::string OptiAdvanced::describe(const MX& x, s_t indent) const {
   try {
     return (*this)->describe(x, indent);
   } catch (exception& e) {
@@ -549,7 +549,7 @@ void OptiAdvanced::assert_empty() const {
   }
 }
 
-int OptiAdvanced::instance_number() const {
+s_t OptiAdvanced::instance_number() const {
   try {
     return (*this)->instance_number();
   } catch (exception& e) {

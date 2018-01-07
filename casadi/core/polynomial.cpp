@@ -56,7 +56,7 @@ namespace casadi {
 
   void Polynomial::disp(std::ostream& stream, bool more) const {
     if (more) {
-      for (int d=0; d<p_.size(); ++d) {
+      for (s_t d=0; d<p_.size(); ++d) {
         if (d==0) {
           stream << p_[d];
         } else if (d==1) {
@@ -70,7 +70,7 @@ namespace casadi {
     }
   }
 
-  int Polynomial::degree() const {
+  s_t Polynomial::degree() const {
     return p_.size()-1;
   }
 
@@ -81,8 +81,8 @@ namespace casadi {
 
   Polynomial Polynomial::operator*(const Polynomial& a) const {
     vector<casadi_real> p_ret(p_.size() + a.p_.size() - 1, 0);
-    for (int d=0; d<p_.size(); ++d) {
-      for (int d_a=0; d_a<a.p_.size(); ++d_a) {
+    for (s_t d=0; d<p_.size(); ++d) {
+      for (s_t d_a=0; d_a<a.p_.size(); ++d_a) {
         p_ret[d+d_a] += p_[d] * a.p_[d_a];
       }
     }
@@ -141,7 +141,7 @@ namespace casadi {
 
   Polynomial Polynomial::derivative() const {
     vector<casadi_real> ret_p(p_.size()-1);
-    for (int k=1; k<p_.size(); ++k) {
+    for (s_t k=1; k<p_.size(); ++k) {
       ret_p[k-1] = k*p_[k];
     }
     return Polynomial(ret_p);
@@ -150,7 +150,7 @@ namespace casadi {
   Polynomial Polynomial::anti_derivative() const {
     vector<casadi_real> ret_p(p_.size()+1);
     ret_p[0] = 0;
-    for (int k=0; k<p_.size(); ++k) {
+    for (s_t k=0; k<p_.size(); ++k) {
       ret_p[k+1] = p_[k]/(k+1);
     }
     return Polynomial(ret_p);

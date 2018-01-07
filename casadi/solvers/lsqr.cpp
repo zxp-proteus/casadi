@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_LSQR_EXPORT
+  s_t CASADI_LINSOL_LSQR_EXPORT
   casadi_register_linsol_lsqr(LinsolInternal::Plugin* plugin) {
     plugin->creator = Lsqr::creator;
     plugin->name = "lsqr";
@@ -96,26 +96,26 @@ namespace casadi {
     }
   }
 
-  int solve_(void* mem, const Sparsity& sp, double* x, bool tr) {
+  s_t solve_(void* mem, const Sparsity& sp, double* x, bool tr) {
     auto m = static_cast<LsqrMemory*>(mem);
 
     const double*A = get_ptr(m->A);
 
-    int m_ = sp.size1();
-    int n_ = sp.size2();
+    s_t m_ = sp.size1();
+    s_t n_ = sp.size2();
 
     double damp = 0;
     double atol=1e-15;
     double btol=1e-15;
     double conlim=1e8;
-    int iter_lim = 10000;
+    s_t iter_lim = 10000;
 
 
     double* w = get_ptr(m->w);
 
-    int itn = 0;
-    int istop = 0;
-    //int nstop = 0;
+    s_t itn = 0;
+    s_t istop = 0;
+    //s_t nstop = 0;
     double ctol = 0;
     if (conlim > 0) ctol = 1/conlim;
     double anorm = 0;
@@ -139,13 +139,13 @@ namespace casadi {
     double beta = casadi_norm_2(m_, u);
 
     if (beta>0) {
-      for (int i=0;i<m_;++i) u[i]*=1/beta;
+      for (s_t i=0;i<m_;++i) u[i]*=1/beta;
       casadi_mv(A, sp, u, v, !tr);
       alpha = casadi_norm_2(n_, v);
     }
 
     if (alpha>0) {
-      for (int i=0;i<n_;++i) v[i]*=1/alpha;
+      for (s_t i=0;i<n_;++i) v[i]*=1/alpha;
       std::copy(v, v+n_, ww);
     }
 
@@ -171,17 +171,17 @@ namespace casadi {
 
     while (itn<iter_lim) {
       itn++;
-      for (int i=0;i<m_;++i) u[i]*=-alpha;
+      for (s_t i=0;i<m_;++i) u[i]*=-alpha;
       casadi_mv(A, sp, v, u, tr);
       beta = casadi_norm_2(m_, u);
 
       if (beta>0) {
-        for (int i=0;i<m_;++i) u[i]*=1/beta;
+        for (s_t i=0;i<m_;++i) u[i]*=1/beta;
         anorm = sqrt(anorm*anorm + alpha*alpha+beta*beta+damp*damp);
-        for (int i=0;i<n_;++i) v[i]*=-beta;
+        for (s_t i=0;i<n_;++i) v[i]*=-beta;
         casadi_mv(A, sp, u, v, !tr);
         alpha = casadi_norm_2(n_, v);
-        if (alpha>0) for (int i=0;i<n_;++i) v[i]*=1/alpha;
+        if (alpha>0) for (s_t i=0;i<n_;++i) v[i]*=1/alpha;
       }
 
       double rhobar1 = sqrt(rhobar*rhobar+damp*damp);
@@ -203,10 +203,10 @@ namespace casadi {
       double t1 = phi / rho;
       double t2 = -theta / rho;
 
-      for (int i=0;i<n_;++i) dk[i]=ww[i]/rho;
+      for (s_t i=0;i<n_;++i) dk[i]=ww[i]/rho;
 
-      for (int i=0; i<n_; ++i) xx[i] += t1*ww[i];
-      for (int i=0; i<n_; ++i) ww[i] = v[i] + t2*ww[i];
+      for (s_t i=0; i<n_; ++i) xx[i] += t1*ww[i];
+      for (s_t i=0; i<n_; ++i) ww[i] = v[i] + t2*ww[i];
 
       double n2dk = casadi_norm_2(n_, dk);
       ddnorm += n2dk*n2dk;
@@ -255,12 +255,12 @@ namespace casadi {
     return 0;
   }
 
-  r_t Lsqr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t Lsqr::solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<LsqrMemory*>(mem);
 
-    int n_ = ncol();
+    s_t n_ = ncol();
 
-    for (int i=0; i<nrhs;++i) {
+    for (s_t i=0; i<nrhs;++i) {
       if (solve_(mem, sp_, x+i*n_, tr)) return 1;
     }
     return 0;

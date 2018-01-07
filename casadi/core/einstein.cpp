@@ -36,8 +36,8 @@ using namespace std;
 namespace casadi {
 
   Einstein::Einstein(const MX& C, const MX& A, const MX& B,
-    const std::vector<int>& dim_c, const std::vector<int>& dim_a, const std::vector<int>& dim_b,
-    const std::vector<int>& c, const std::vector<int>& a, const std::vector<int>& b):
+    const std::vector<s_t>& dim_c, const std::vector<s_t>& dim_a, const std::vector<s_t>& dim_b,
+    const std::vector<s_t>& c, const std::vector<s_t>& a, const std::vector<s_t>& b):
       dim_c_(dim_c), dim_a_(dim_a), dim_b_(dim_b), c_(c), a_(a), b_(b) {
 
     set_dep(C, A, B);
@@ -52,16 +52,16 @@ namespace casadi {
     return "einstein(" + arg.at(0) + "," + arg.at(1) + "," + arg.at(2) + ")";
   }
 
-  r_t Einstein::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Einstein::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  r_t Einstein::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Einstein::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  r_t Einstein::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t Einstein::eval_gen(const T** arg, T** res, s_t* iw, T* w) const {
     if (arg[0]!=res[0]) copy(arg[0], arg[0]+dep(0).nnz(), res[0]);
 
     einstein_eval(n_iter_, iter_dims_, strides_a_, strides_b_, strides_c_, arg[1], arg[2], res[0]);
@@ -70,7 +70,7 @@ namespace casadi {
 
   void Einstein::ad_forward(const std::vector<std::vector<MX> >& fseed,
                                std::vector<std::vector<MX> >& fsens) const {
-    for (int d=0; d<fsens.size(); ++d) {
+    for (s_t d=0; d<fsens.size(); ++d) {
       fsens[d][0] = fseed[d][0]
        + MX::einstein(dep(1), fseed[d][2], dim_a_, dim_b_, dim_c_, a_, b_, c_)
        + MX::einstein(fseed[d][1], dep(2), dim_a_, dim_b_, dim_c_, a_, b_, c_);
@@ -79,7 +79,7 @@ namespace casadi {
 
   void Einstein::ad_reverse(const std::vector<std::vector<MX> >& aseed,
                                std::vector<std::vector<MX> >& asens) const {
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       asens[d][1] += MX::einstein(aseed[d][0], dep(2), dim_c_, dim_b_, dim_a_, c_, b_, a_);
       asens[d][2] += MX::einstein(dep(1), aseed[d][0], dim_a_, dim_c_, dim_b_, a_, c_, b_);
       asens[d][0] += aseed[d][0];
@@ -88,16 +88,16 @@ namespace casadi {
 
 
 
-  r_t Einstein::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Einstein::sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     return eval_gen<bvec_t>(arg, res, iw, w);
   }
 
-  r_t Einstein::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
-    //int* ind = iw;
-    //int cumprod;
+  r_t Einstein::sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
+    //s_t* ind = iw;
+    //s_t cumprod;
 
     // Main loop
-    for (int i=0;i<n_iter_;++i) {
+    for (s_t i=0;i<n_iter_;++i) {
 
       // Data pointers
       bvec_t* a = arg[1]+strides_a_[0];
@@ -105,9 +105,9 @@ namespace casadi {
       bvec_t* c = res[0]+strides_c_[0];
 
       // Construct indices
-      int sub = i;
-      for (int j=0;j<iter_dims_.size();++j) {
-        int ind = sub % iter_dims_[j];
+      s_t sub = i;
+      for (s_t j=0;j<iter_dims_.size();++j) {
+        s_t ind = sub % iter_dims_[j];
         sub/= iter_dims_[j];
         a+= strides_a_[1+j]*ind;
         b+= strides_b_[1+j]*ind;
@@ -127,7 +127,7 @@ namespace casadi {
   }
 
   void Einstein::generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const {
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
 
     // Copy first argument if not inplace
     if (arg[0]!=res[0]) {
@@ -135,7 +135,7 @@ namespace casadi {
     }
 
     // main loop
-    g.local("i", "int");
+    g.local("i", "s_t");
     g << "for (i=0; i<" << n_iter_ << "; ++i) {\n";
 
     // Data pointers
@@ -147,11 +147,11 @@ namespace casadi {
     g << "rr = " << g.work(res[0], dep(0).nnz()) << "+" << strides_c_[0] << ";\n";
 
     // Construct indices
-    for (int j=0; j<iter_dims_.size(); ++j) {
+    for (s_t j=0; j<iter_dims_.size(); ++j) {
       if (j==0) {
-        g.local("k", "int");
+        g.local("k", "s_t");
         g << "k = i;\n";
-        g.local("j", "int");
+        g.local("j", "s_t");
       }
       g << "j = k % " << iter_dims_[j] << ";\n";
       if (j+1<iter_dims_.size()) g << "k /= " << iter_dims_[j] << ";\n";

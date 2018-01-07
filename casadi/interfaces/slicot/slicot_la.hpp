@@ -29,20 +29,20 @@
 namespace casadi {
 
 
-  inline void dense_kron_stride(int n, int m, const double *A, const double *B, double *C,
-      int strideA, int strideB, int strideC) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<n;++j) {
+  inline void dense_kron_stride(s_t n, s_t m, const double *A, const double *B, double *C,
+      s_t strideA, s_t strideB, s_t strideC) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<n;++j) {
         C[strideC*i + j] = -A[strideA*(i/m) + (j/m)]*B[strideB*(i%m) + (j%m)];
       }
     }
   }
 
-  inline void dense_mul_nt_stride(int n, int m, int l, const double *A, const double *B, double *C,
-      int strideA, int strideB, int strideC) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<m;++j) {
-        for (int k=0;k<l;++k) {
+  inline void dense_mul_nt_stride(s_t n, s_t m, s_t l, const double *A, const double *B, double *C,
+      s_t strideA, s_t strideB, s_t strideC) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<m;++j) {
+        for (s_t k=0;k<l;++k) {
           C[strideC*i + j] += A[strideA*i + k]*B[strideB*j + k];
         }
       }
@@ -51,34 +51,34 @@ namespace casadi {
 
   //  A : n-by-l   B: m-by-l
   //  C = A*B'
-  inline void dense_mul_nt(int n, int m, int l, const double *A, const double *B, double *C) {
+  inline void dense_mul_nt(s_t n, s_t m, s_t l, const double *A, const double *B, double *C) {
     dense_mul_nt_stride(n, m, l, A, B, C, n, m, n);
   }
 
-  inline void dense_mul_nn_stride(int n, int m, int l, const double *A, const double *B, double *C,
-      int strideA, int strideB, int strideC) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<m;++j) {
-        for (int k=0;k<l;++k) {
+  inline void dense_mul_nn_stride(s_t n, s_t m, s_t l, const double *A, const double *B, double *C,
+      s_t strideA, s_t strideB, s_t strideC) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<m;++j) {
+        for (s_t k=0;k<l;++k) {
           C[strideC*i + j] += A[strideA*i + k]*B[strideB*k + j];
         }
       }
     }
   }
 
-  inline void dense_copy_stride(int n, int m, const double *A, double *B,
-      int strideA, int strideB) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<m;++j) {
+  inline void dense_copy_stride(s_t n, s_t m, const double *A, double *B,
+      s_t strideA, s_t strideB) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<m;++j) {
         B[strideB*i + j] = A[strideA*i+j];
       }
     }
   }
 
-  inline void dense_copy_t_stride(int n, int m, const double *A, double *B,
-      int strideA, int strideB) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<m;++j) {
+  inline void dense_copy_t_stride(s_t n, s_t m, const double *A, double *B,
+      s_t strideA, s_t strideB) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<m;++j) {
         B[strideB*j + i] = A[strideA*i+j];
       }
     }
@@ -86,16 +86,16 @@ namespace casadi {
 
   //  A : n-by-l   B: l-by-m
   //  C = A*B
-  inline void dense_mul_nn(int n, int m, int l, const double *A, const double *B, double *C) {
+  inline void dense_mul_nn(s_t n, s_t m, s_t l, const double *A, const double *B, double *C) {
     dense_mul_nn_stride(n, m, l, A, B, C, n, l, n);
   }
 
   //  A : n-by-l   B: l-by-m
   //  C = A*B
-  inline void dense_mul_nn2(int n, int m, int l, const double *A, const double *B, double *C) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<m;++j) {
-        for (int k=0;k<l;++k) {
+  inline void dense_mul_nn2(s_t n, s_t m, s_t l, const double *A, const double *B, double *C) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<m;++j) {
+        for (s_t k=0;k<l;++k) {
           C[i + n*j] += A[i + n*k]*B[k + l*j];
         }
       }
@@ -105,10 +105,10 @@ namespace casadi {
 
   //  A : l-by-n   B: l-by-m
   //  C = A'*B
-  inline void dense_mul_tn(int n, int m, int l, const double *A, const double *B, double *C) {
-    for (int i=0;i<n;++i) {
-      for (int j=0;j<m;++j) {
-        for (int k=0;k<l;++k) {
+  inline void dense_mul_tn(s_t n, s_t m, s_t l, const double *A, const double *B, double *C) {
+    for (s_t i=0;i<n;++i) {
+      for (s_t j=0;j<m;++j) {
+        for (s_t k=0;k<l;++k) {
           C[n*i + j] += A[l*k + i]*B[l*k + j];
         }
       }

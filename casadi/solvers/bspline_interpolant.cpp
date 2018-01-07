@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_INTERPOLANT_BSPLINE_EXPORT
+  s_t CASADI_INTERPOLANT_BSPLINE_EXPORT
   casadi_register_interpolant_bspline(Interpolant::Plugin* plugin) {
     plugin->creator = BSplineInterpolant::creator;
     plugin->name = "bspline";
@@ -58,9 +58,9 @@ namespace casadi {
   BSplineInterpolant::
   BSplineInterpolant(const string& name,
                     const std::vector<double>& grid,
-                    const std::vector<int>& offset,
+                    const std::vector<s_t>& offset,
                     const vector<double>& values,
-                    int m)
+                    s_t m)
                     : Interpolant(name, grid, offset, values, m) {
 
   }
@@ -69,24 +69,24 @@ namespace casadi {
   }
 
   std::vector<double> meshgrid(const std::vector< std::vector<double> >& grid) {
-    std::vector<int> cnts(grid.size()+1, 0);
-    std::vector<int> sizes(grid.size(), 0);
-    for (int k=0;k<grid.size();++k) sizes[k]= grid[k].size();
+    std::vector<s_t> cnts(grid.size()+1, 0);
+    std::vector<s_t> sizes(grid.size(), 0);
+    for (s_t k=0;k<grid.size();++k) sizes[k]= grid[k].size();
 
-    int total_iter = 1;
-    for (int k=0;k<grid.size();++k) total_iter*= sizes[k];
+    s_t total_iter = 1;
+    for (s_t k=0;k<grid.size();++k) total_iter*= sizes[k];
 
-    int n_dims = grid.size();
+    s_t n_dims = grid.size();
 
     std::vector<double> ret(total_iter*n_dims);
-    for (int i=0;i<total_iter;++i) {
+    for (s_t i=0;i<total_iter;++i) {
 
-      for (int j=0;j<grid.size();++j) {
+      for (s_t j=0;j<grid.size();++j) {
         ret[i*n_dims+j] = grid[j][cnts[j]];
       }
 
       cnts[0]++;
-      int j = 0;
+      s_t j = 0;
       while (j<n_dims && cnts[j]==sizes[j]) {
         cnts[j] = 0;
         j++;
@@ -98,19 +98,19 @@ namespace casadi {
     return ret;
   }
 
-  std::vector<double> not_a_knot(const std::vector<double>& x, int k) {
+  std::vector<double> not_a_knot(const std::vector<double>& x, s_t k) {
     std::vector<double> ret;
     if (k%2) {
-      int m = (k-1)/2;
+      s_t m = (k-1)/2;
       casadi_assert(x.size()>=2*m+2, "Need more data points");
-      for (int i=0;i<k+1;++i) ret.push_back(x[0]);
-      for (int i=0;i<x.size()-2*m-2;++i) ret.push_back(x[m+1+i]);
-      for (int i=0;i<k+1;++i) ret.push_back(x[x.size()-1]);
+      for (s_t i=0;i<k+1;++i) ret.push_back(x[0]);
+      for (s_t i=0;i<x.size()-2*m-2;++i) ret.push_back(x[m+1+i]);
+      for (s_t i=0;i<k+1;++i) ret.push_back(x[x.size()-1]);
     } else {
       casadi_error("Not implemented");
-      //for (int i=0;i<k+1;++i) ret.push_back(x[0]);
-      //for (int i=0;i<x.size()-2*m-2;++i) ret.push_back(x[m+1+i]);
-      //for (int i=0;i<k+1;++i) ret.push_back(x[x.size()-1]);
+      //for (s_t i=0;i<k+1;++i) ret.push_back(x[0]);
+      //for (s_t i=0;i<x.size()-2*m-2;++i) ret.push_back(x[m+1+i]);
+      //for (s_t i=0;i<k+1;++i) ret.push_back(x[x.size()-1]);
     }
     return ret;
   }
@@ -119,7 +119,7 @@ namespace casadi {
     // Call the base class initializer
     Interpolant::init(opts);
 
-    degree_  = std::vector<int>(offset_.size()-1, 3);
+    degree_  = std::vector<s_t>(offset_.size()-1, 3);
 
     linear_solver_ = "lsqr";
 
@@ -136,7 +136,7 @@ namespace casadi {
 
     std::vector< std::vector<double> > knots;
     std::vector< std::vector<double> > grid;
-    for (int k=0;k<degree_.size();++k) {
+    for (s_t k=0;k<degree_.size();++k) {
       std::vector<double> local_grid(grid_.begin()+offset_[k], grid_.begin()+offset_[k+1]);
       grid.push_back(local_grid);
       knots.push_back(not_a_knot(local_grid, degree_[k]));
@@ -173,7 +173,7 @@ namespace casadi {
   }
 
   r_t BSplineInterpolant::eval(const double** arg, double** res,
-                                int* iw, double* w, void* mem) const {
+                                s_t* iw, double* w, void* mem) const {
     return S_->eval(arg, res, iw, w, mem);
   }
 

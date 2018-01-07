@@ -59,12 +59,12 @@ namespace casadi {
     Control   worhp_c;
 
     // Stats
-    int iter;
-    int iter_sqp;
+    s_t iter;
+    s_t iter_sqp;
     double inf_pr;
     double inf_du;
     double alpha_pr;
-    int return_code;
+    s_t return_code;
     const char* return_status;
 
     bool init_;
@@ -131,19 +131,19 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     // Solve the NLP
     void solve(void* mem) const override;
 
     // Options
     std::map<std::string, bool> bool_opts_;
-    std::map<std::string, int> int_opts_;
+    std::map<std::string, s_t> int_opts_;
     std::map<std::string, double> double_opts_;
     Dict qp_opts_;
 
     // WORHP return codes
-    static const char* return_codes(int flag);
+    static const char* return_codes(s_t flag);
 
     /// A documentation string
     static const std::string meta_doc;

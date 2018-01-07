@@ -3,9 +3,9 @@
 // Householder reflection
 // Ref: Chapter 5, Direct Methods for Sparse Linear Systems by Tim Davis
 template<typename T1>
-T1 casadi_house(T1* x, T1* beta, int n) {
+T1 casadi_house(T1* x, T1* beta, s_t n) {
   // Local variable
-  int i;
+  s_t i;
   // Calculate norm
   T1 x0 = x[0]; // Save x0 (overwritten below)
   T1 sigma=0;
@@ -35,9 +35,9 @@ T1 casadi_house(T1* x, T1* beta, int n) {
   Cf. CasADi issue #2134
  */
 template<typename T1>
-void casadi_qr(const int* sp_a, const T1* nz_a, int* iw, T1* x,
-               const int* sp_v, T1* nz_v, const int* sp_r, T1* nz_r, T1* beta,
-               const int* leftmost, const int* parent, const int* pinv);
+void casadi_qr(const s_t* sp_a, const T1* nz_a, s_t* iw, T1* x,
+               const s_t* sp_v, T1* nz_v, const s_t* sp_r, T1* nz_r, T1* beta,
+               const s_t* leftmost, const s_t* parent, const s_t* pinv);
 
 // SYMBOL "qr_mv"
 // Multiply QR Q matrix from the right with a vector, with Q represented
@@ -46,13 +46,13 @@ void casadi_qr(const int* sp_a, const T1* nz_a, int* iw, T1* x,
 // with Q = (I-beta(1)*v(:,1)*v(:,1)')*...*(I-beta(n)*v(:,n)*v(:,n)')
 // len[x] >= nrow_ext
 template<typename T1>
-void casadi_qr_mv(const int* sp_v, const T1* v, const T1* beta, T1* x,
-                  int tr) {
+void casadi_qr_mv(const s_t* sp_v, const T1* v, const T1* beta, T1* x,
+                  s_t tr) {
   // Extract sparsity
-  int ncol=sp_v[1];
-  const int *colind=sp_v+2, *row=sp_v+2+ncol+1;
+  s_t ncol=sp_v[1];
+  const s_t *colind=sp_v+2, *row=sp_v+2+ncol+1;
   // Local variables
-  int c, c1, k;
+  s_t c, c1, k;
   T1 alpha;
   // Loop over vectors
   for (c1=0; c1<ncol; ++c1) {
@@ -70,12 +70,12 @@ void casadi_qr_mv(const int* sp_v, const T1* v, const T1* beta, T1* x,
 // SYMBOL "qr_trs"
 // Solve for an (optionally transposed) upper triangular matrix R
 template<typename T1>
-void casadi_qr_trs(const int* sp_r, const T1* nz_r, T1* x, int tr) {
+void casadi_qr_trs(const s_t* sp_r, const T1* nz_r, T1* x, s_t tr) {
   // Extract sparsity
-  int ncol=sp_r[1];
-  const int *colind=sp_r+2, *row=sp_r+2+ncol+1;
+  s_t ncol=sp_r[1];
+  const s_t *colind=sp_r+2, *row=sp_r+2+ncol+1;
   // Local variables
-  int r, c, k;
+  s_t r, c, k;
   if (tr) {
     // Forward substitution
     for (c=0; c<ncol; ++c) {
@@ -107,11 +107,11 @@ void casadi_qr_trs(const int* sp_r, const T1* nz_r, T1* x, int tr) {
 // Solve a factorized linear system
 // len[w] >= max(ncol, nrow_ext)
 template<typename T1>
-void casadi_qr_solve(T1* x, int nrhs, int tr,
-                     const int* sp_v, const T1* v, const int* sp_r, const T1* r,
-                     const T1* beta, const int* pinv, T1* w) {
-  int k, c;
-  int nrow_ext = sp_v[0], ncol = sp_v[1];
+void casadi_qr_solve(T1* x, s_t nrhs, s_t tr,
+                     const s_t* sp_v, const T1* v, const s_t* sp_r, const T1* r,
+                     const T1* beta, const s_t* pinv, T1* w) {
+  s_t k, c;
+  s_t nrow_ext = sp_v[0], ncol = sp_v[1];
   for (k=0; k<nrhs; ++k) {
     if (tr) {
       // ('P'Q R)' x = R'Q'P x = b <-> x = P' Q R' \ b

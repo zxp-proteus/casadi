@@ -38,7 +38,7 @@
 
 namespace casadi {
   struct CASADI_LINSOL_LDL_EXPORT LinsolLdlMemory : public LinsolMemory {
-    std::vector<int> iw;
+    std::vector<s_t> iw;
     std::vector<double> l, d, w;
   };
 
@@ -79,13 +79,13 @@ namespace casadi {
     r_t nfact(void* mem, const double* A) const override;
 
     // Solve the linear system
-    r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
+    r_t solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const override;
 
     /// Number of negative eigenvalues
-    int neig(void* mem, const double* A) const override;
+    s_t neig(void* mem, const double* A) const override;
 
     /// Matrix rank
-    int rank(void* mem, const double* A) const override;
+    s_t rank(void* mem, const double* A) const override;
 
     /// A documentation string
     static const std::string meta_doc;
@@ -97,7 +97,7 @@ namespace casadi {
     std::string class_name() const override { return "LinsolLdl";}
 
     // Symbolic factorization
-    std::vector<int> parent_;
+    std::vector<s_t> parent_;
     Sparsity sp_L_;
   };
 

@@ -50,7 +50,7 @@ namespace casadi {
     // Return status
     const char* return_status;
     // Number of iterations
-    int iter;
+    s_t iter;
   };
 
   /** \brief \pluginbrief{Rootfinder,newton}
@@ -100,7 +100,7 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     /// Solve the system of equations and calculate derivatives
     void solve(void* mem) const override;
@@ -110,7 +110,7 @@ namespace casadi {
 
   protected:
     /// Maximum number of Newton iterations
-    int max_iter_;
+    s_t max_iter_;
 
     /// Absolute tolerance that should be met on residual
     double abstol_;
@@ -125,7 +125,7 @@ namespace casadi {
     void printIteration(std::ostream &stream) const;
 
     /// Print iteration
-    void printIteration(std::ostream &stream, int iter,
+    void printIteration(std::ostream &stream, s_t iter,
                         double abstol, double abstolStep) const;
   };
 

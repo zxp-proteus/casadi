@@ -56,10 +56,10 @@ namespace casadi {
     e_t op() const override { return OP_GET_ELEMENTS;}
 
     /// Can the operation be performed inplace (i.e. overwrite the result)
-    int n_inplace() const override { return 1;}
+    s_t n_inplace() const override { return 1;}
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
   };
 
 } // namespace casadi

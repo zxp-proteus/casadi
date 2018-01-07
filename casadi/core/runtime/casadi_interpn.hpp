@@ -1,11 +1,11 @@
 // NOLINT(legal/copyright)
 // SYMBOL "interpn"
 template<typename T1>
-void casadi_interpn(T1* res, int ndim, const T1* grid, const int* offset, const T1* values, const T1* x, const int* lookup_mode, int m, int* iw, T1* w) { // NOLINT(whitespace/line_length)
+void casadi_interpn(T1* res, s_t ndim, const T1* grid, const s_t* offset, const T1* values, const T1* x, const s_t* lookup_mode, s_t m, s_t* iw, T1* w) { // NOLINT(whitespace/line_length)
   // Work vectors
   T1* alpha = w; w += ndim;
-  int* index = iw; iw += ndim;
-  int* corner = iw; iw += ndim;
+  s_t* index = iw; iw += ndim;
+  s_t* corner = iw; iw += ndim;
   // Left index and fraction of interval
   casadi_interpn_weights(ndim, grid, offset, x, alpha, index, lookup_mode);
   // Loop over all corners, add contribution to output

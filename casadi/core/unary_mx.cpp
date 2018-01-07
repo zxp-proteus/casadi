@@ -47,13 +47,13 @@ namespace casadi {
     return casadi_math<double>::print(op_, arg.at(0));
   }
 
-  r_t UnaryMX::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t UnaryMX::eval(const double** arg, double** res, s_t* iw, double* w) const {
     double dummy = numeric_limits<double>::quiet_NaN();
     casadi_math<double>::fun(op_, arg[0], dummy, res[0], nnz());
     return 0;
   }
 
-  r_t UnaryMX::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t UnaryMX::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     SXElem dummy = 0;
     casadi_math<SXElem>::fun(op_, arg[0], dummy, res[0], nnz());
     return 0;
@@ -72,7 +72,7 @@ namespace casadi {
     casadi_math<MX>::der(op_, dep(), dummy, shared_from_this<MX>(), pd);
 
     // Propagate forward seeds
-    for (int d=0; d<fsens.size(); ++d) {
+    for (s_t d=0; d<fsens.size(); ++d) {
       fsens[d][0] = pd[0]*fseed[d][0];
     }
   }
@@ -85,23 +85,23 @@ namespace casadi {
     casadi_math<MX>::der(op_, dep(), dummy, shared_from_this<MX>(), pd);
 
     // Propagate adjoint seeds
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       asens[d][0] += pd[0]*aseed[d][0];
     }
   }
 
-  r_t UnaryMX::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t UnaryMX::sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     copy_fwd(arg[0], res[0], nnz());
     return 0;
   }
 
-  r_t UnaryMX::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t UnaryMX::sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     copy_rev(arg[0], res[0], nnz());
     return 0;
   }
 
   void UnaryMX::generate(CodeGenerator& g,
-                         const std::vector<int>& arg, const std::vector<int>& res) const {
+                         const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     string r, x;
     if (nnz()==1) {
       // Scalar assignment
@@ -111,7 +111,7 @@ namespace casadi {
       // Vector assignment
       g.local("cs", "const casadi_real", "*");
       g.local("rr", "casadi_real", "*");
-      g.local("i", "int");
+      g.local("i", "s_t");
       g << "for (i=0, rr=" << g.work(res[0], nnz()) << ", cs=" << g.work(arg[0], nnz())
         << "; i<" << sparsity().nnz() << "; ++i) ";
       r = "*rr++";

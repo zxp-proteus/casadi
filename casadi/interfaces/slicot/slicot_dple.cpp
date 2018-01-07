@@ -39,7 +39,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_DPLE_SLICOT_EXPORT
+  s_t CASADI_DPLE_SLICOT_EXPORT
   casadi_register_dple_slicot(Dple::Plugin* plugin) {
     plugin->creator = SlicotDple::creator;
     plugin->name = "slicot";
@@ -102,7 +102,7 @@ namespace casadi {
     casadi_assert(const_dim_,
                           "const_dim option set to False: Solver only handles the True case.");
 
-    //for (int k=0;k<K_;k++) {
+    //for (s_t k=0;k<K_;k++) {
     //  casadi_assert(A_[k].isdense(), "Solver requires arguments to be dense.");
     //  casadi_assert(V_[k].isdense(), "Solver requires arguments to be dense.");
     //}
@@ -138,7 +138,7 @@ namespace casadi {
 
 
   void SlicotDple::set_work(void* mem, const double**& arg, double**& res,
-                                int*& iw, double*& w) const {
+                                s_t*& iw, double*& w) const {
     auto m = static_cast<SlicotDpleMemory*>(mem);
 
     // Set work in base classes
@@ -183,15 +183,15 @@ namespace casadi {
     // I+X
     // Solver complexity:  K
     m->dpse_solvers.resize(3);
-    for (int i=0;i<3;++i) {
-      int np = std::pow(2, i);
+    for (s_t i=0;i<3;++i) {
+      s_t np = std::pow(2, i);
 
       Sparsity sp = Sparsity::dense(np, np);
       if (K_>1)
         sp = kron(Sparsity::band(K_, -1)+Sparsity::band(K_, K_-1), sp) + Sparsity::diag(np*K_);
 
       m->dpse_solvers[i].reserve(n_*(n_+1)/2);
-      for (int k=0;k<n_*(n_+1)/2;++k) {
+      for (s_t k=0;k<n_*(n_+1)/2;++k) {
         m->dpse_solvers[i].push_back(Linsol("solver", linear_solver_, sp));
       }
     }
@@ -199,13 +199,13 @@ namespace casadi {
   }
 
   /// \cond INTERNAL
-  inline int SlicotDple::partindex(const SlicotDpleMemory* m,
-      int i, int j, int k, int r, int c) const {
+  inline s_t SlicotDple::partindex(const SlicotDpleMemory* m,
+      s_t i, s_t j, s_t k, s_t r, s_t c) const {
     return k*n_*n_+(m->partition[i]+r)*n_ + m->partition[j]+c;
   }
   /// \endcond
 
-  r_t SlicotDple::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t SlicotDple::eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<SlicotDpleMemory*>(mem);
 
     setup(mem, arg, res, iw, w);
@@ -217,7 +217,7 @@ namespace casadi {
       m->dwork, m->eig_real, m->eig_imag, psd_num_zero_);
 
     if (error_unstable_) {
-      for (int i=0;i<n_;++i) {
+      for (s_t i=0;i<n_;++i) {
         double modulus = sqrt(m->eig_real[i]*m->eig_real[i]+m->eig_imag[i]*m->eig_imag[i]);
         casadi_assert(modulus+eps_unstable_ <= 1,
           "SlicotDple: system is unstable."
@@ -229,10 +229,10 @@ namespace casadi {
     }
 
     // Find a block partition of the T hessenberg form
-    int* p = m->partition;
+    s_t* p = m->partition;
     p[0] = 0;
-    int p_i = 1;
-    int i = 0, j = 0;
+    s_t p_i = 1;
+    s_t i = 0, j = 0;
     while (j<n_) {
       while (i<n_ && m->T[i+n_*j]!=0) i+=1;
       j = i;
@@ -242,14 +242,14 @@ namespace casadi {
 
     // Main loops to loop over blocks of the block-upper triangular A
     // Outer main loop
-    for (int l=0;l<p_i-1;++l) {
+    for (s_t l=0;l<p_i-1;++l) {
 
       // Inner main loop
-      for (int r=0;r<l+1;++r) {
+      for (s_t r=0;r<l+1;++r) {
 
-        int n1 = p[r+1]-p[r];
-        int n2 = p[l+1]-p[l];
-        int np = n1*n2;
+        s_t n1 = p[r+1]-p[r];
+        s_t n2 = p[l+1]-p[l];
+        s_t np = n1*n2;
 
         casadi_assert_dev(n1-1+n2-1>=0);
 
@@ -262,10 +262,10 @@ namespace casadi {
 
         if (K_==1) { // Special case if K==1
           dense_kron_stride(np, n2, T+p[r]*n_ + p[r], T+p[l]*n_ + p[l], A, n_, n_, np);
-          for (int ll=0;ll<np;++ll)
+          for (s_t ll=0;ll<np;++ll)
             A[ll*np+ll]+= 1;
         } else { // Other cases
-          for (int k=0;k<K_-1;++k) {
+          for (s_t k=0;k<K_-1;++k) {
             dense_kron_stride(np, n2,
               T+p[r]*n_ + p[r], T+p[l]*n_ + p[l], A+np*(np+1)*((k+1)%K_), n_, n_, np+1);
             T+= n_*n_;
@@ -282,10 +282,10 @@ namespace casadi {
       }
     }
 
-    for (int d=0;d<nrhs_;++d) {
+    for (s_t d=0;d<nrhs_;++d) {
 
       // V = blocks([mul([sZ[k].T, V[k], sZ[k]]) for k in range(p)])
-      for (int k=0;k<K_;++k) { // K
+      for (s_t k=0;k<K_;++k) { // K
         double * nnKa = m->nnKa+k*n_*n_, * nnKb = m->nnKb+k*n_*n_;
         // n^2 K
 
@@ -302,8 +302,8 @@ namespace casadi {
 
       // Main loops to loop over blocks of the block-upper triangular A
       // Outer main loop
-      for (int l=0;l<p_i-1;++l) { // n
-        int n2 = p[l+1]-p[l];
+      for (s_t l=0;l<p_i-1;++l) { // n
+        s_t n2 = p[l+1]-p[l];
 
         // F serves an an accumulator for intermediate summation results
         // n^2 K
@@ -311,24 +311,24 @@ namespace casadi {
 
         //for i in range(l):
         //  F[i] = [sum(mul(X[i][j][k], A[l][j][k].T) for j in range(l)) for k in range(p) ]
-        for (int k=0;k<K_;++k) {
+        for (s_t k=0;k<K_;++k) {
           double *X = m->X+k*n_*n_, *T = m->T+ k*n_*n_;
-          for (int i=0;i<l;++i) // n^2
-            for (int j=0;j<l;++j) // n^3
+          for (s_t i=0;i<l;++i) // n^2
+            for (s_t j=0;j<l;++j) // n^3
               dense_mul_nt_stride(p[i+1]-p[i], n2, p[j+1]-p[j],
                 X+ p[i]*n_+ p[j], T+p[l]*n_+ p[j], m->F + k*4*n_+4*i, n_, n_, 2);
         }
 
         // Inner main loop
-        for (int r=0;r<l+1;++r) { // n^2
-          int n1 = p[r+1]-p[r];
-          int np = n1*n2;
+        for (s_t r=0;r<l+1;++r) { // n^2
+          s_t n1 = p[r+1]-p[r];
+          s_t np = n1*n2;
 
           // F[r] = [sum(mul(X[r][j][k], A[l][j][k].T) for j in range(l)) for k in range(p) ]
           if (r==l) {
-            for (int k=0;k<K_;++k) { // n^3 K
+            for (s_t k=0;k<K_;++k) { // n^3 K
               double *X = m->X+k*n_*n_, *T = m->T+ k*n_*n_;
-              for (int j=0;j<l;++j) // n^3
+              for (s_t j=0;j<l;++j) // n^3
                 dense_mul_nt_stride(n1, n2, p[j+1]-p[j],
                   X+ p[r]*n_+ p[j], T+p[l]*n_+ p[j], m->F + k*4*n_+4*r, n_, n_, 2);
             }
@@ -338,9 +338,9 @@ namespace casadi {
           // Each entry of FF is na1-by-na2
           // n^2 K
           std::fill(m->FF, m->FF+2*2*K_, 0);
-          for (int k=0;k<K_;++k) { // n^3 K
+          for (s_t k=0;k<K_;++k) { // n^3 K
             double *X = m->X+k*n_*n_, *T = m->T+ k*n_*n_;
-            for (int i=0;i<r;++i) // n^3
+            for (s_t i=0;i<r;++i) // n^3
               dense_mul_nn_stride(n1, n2, p[i+1]-p[i],
                 T+p[r]*n_ + p[i], X+p[i]*n_ + p[l], m->FF+k*4, n_, n_, 2);
           }
@@ -348,19 +348,19 @@ namespace casadi {
           Linsol & solver = m->dpse_solvers[n1-1+n2-1][((l+1)*l)/2+r];
 
           // M <- V
-          for (int k=0;k<K_;++k)
+          for (s_t k=0;k<K_;++k)
             dense_copy_stride(n1, n2, m->nnKb+ k*n_*n_+ p[r]*n_ + p[l], m->B+np*((k+1)%K_), n_, n2);
 
           // M+= [sum(mul(A[r][i][k], F[i][k])  for i in range(r+1)) for k in rang(p)]
-          for (int k=0;k<K_;++k) { // n^3 K
+          for (s_t k=0;k<K_;++k) { // n^3 K
             double *B = m->B + np*((k+1)%K_), *T = m->T+ k*n_*n_;
-            for (int i=0;i<r+1;++i) // n^3
+            for (s_t i=0;i<r+1;++i) // n^3
               dense_mul_nn_stride(n1, n2, p[i+1]-p[i],
                 T+p[r]*n_+ p[i], m->F+k*4*n_+4*i, B, n_, 2, n2);
           }
 
           // M+= [mul(FF[k], A[l][l][k].T) for k in rang(p)]
-          for (int k=0;k<K_;++k) // n^2 K
+          for (s_t k=0;k<K_;++k) // n^2 K
             dense_mul_nt_stride(n1, n2, n2,
               m->FF+k*4, m->T + k*n_*n_+p[l]*n_+ p[l], m->B+np*((k+1)%K_),  2, n_, n2);
 
@@ -371,7 +371,7 @@ namespace casadi {
           // Extract solution and store it in X
           double * sol = m->B;
 
-          for (int k=0;k<K_;++k) {
+          for (s_t k=0;k<K_;++k) {
             double *X = m->X+ k*n_*n_, *S = sol+ n1*n2*k;
             dense_copy_stride(p[r+1]-p[r],   p[l+1]-p[l], S, X+ p[r]*n_ + p[l],  n2, n_);
             dense_copy_t_stride(p[r+1]-p[r], p[l+1]-p[l], S, X+ p[l]*n_ + p[r],  n2, n_);
@@ -384,7 +384,7 @@ namespace casadi {
       }
 
 
-      for (int k=0;k<K_;++k) {
+      for (s_t k=0;k<K_;++k) {
         std::fill(m->nnKa+k*n_*n_, m->nnKa+(k+1)*n_*n_, 0);
         // nnKa[k] <- V[k]*Z[k]'
         // n^3 K
@@ -399,17 +399,17 @@ namespace casadi {
   }
 
 
-  void slicot_periodic_schur(int n, int K, const double* a,
+  void slicot_periodic_schur(s_t n, s_t K, const double* a,
                              double* t,  double * z,
                              double* dwork, double* eig_real,
                              double *eig_imag, double num_zero) {
-    int mem_base = std::max(n+K-2, 4*n);
-    int mem_needed = mem_base+(n-1)*K;
+    s_t mem_base = std::max(n+K-2, 4*n);
+    s_t mem_needed = mem_base+(n-1)*K;
 
     // a is immutable, we need a mutable pointer, so we use available buffer
     std::copy(a, a+n*n*K, z);
 
-    int ret;
+    s_t ret;
 
     ret = slicot_mb03vd(n, K, 1, n, z, n, n, dwork+mem_base, n-1, dwork);
     casadi_assert(ret==0, "mb03vd return code " + str(ret));
@@ -419,7 +419,7 @@ namespace casadi {
     casadi_assert(ret==0, "mb03vy return code " + str(ret));
     // Set numerical zeros to zero
     if (num_zero>0) {
-      for (int k = 0;k<n*n*K;++k) {
+      for (s_t k = 0;k<n*n*K;++k) {
         double &r = t[k];
         if (fabs(r)<num_zero) r = 0.0;
       }

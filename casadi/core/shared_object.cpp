@@ -114,7 +114,7 @@ namespace casadi {
     other = temp;
   }
 
-  int SharedObject::getCount() const {
+  s_t SharedObject::getCount() const {
     return (*this)->getCount();
   }
 
@@ -126,7 +126,7 @@ namespace casadi {
     return reinterpret_cast<size_t>(get());
   }
 
-  WeakRef::WeakRef(int dummy) {
+  WeakRef::WeakRef(s_t dummy) {
     casadi_assert_dev(dummy==0);
   }
 

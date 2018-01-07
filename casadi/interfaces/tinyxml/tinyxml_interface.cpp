@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_XMLFILE_TINYXML_EXPORT
+  s_t CASADI_XMLFILE_TINYXML_EXPORT
   casadi_register_xmlfile_tinyxml(XmlFileInternal::Plugin* plugin) {
     plugin->creator = TinyXmlInterface::creator;
     plugin->name = "tinyxml";
@@ -63,7 +63,7 @@ namespace casadi {
     ret.setName(n->Value());
 
     // Save attributes
-    int type = n->Type();
+    s_t type = n->Type();
     if (type == TiXmlNode::TINYXML_ELEMENT) {
       if (n->ToElement()!=0) {
         for (TiXmlAttribute* pAttrib=n->ToElement()->FirstAttribute();
@@ -79,16 +79,16 @@ namespace casadi {
     }
 
     // Count the number of children
-    int num_children = 0;
+    s_t num_children = 0;
     for (TiXmlNode* child = n->FirstChild(); child != 0; child= child->NextSibling()) {
       num_children++;
     }
     ret.children_.reserve(num_children);
 
     // add children
-    int ch = 0;
+    s_t ch = 0;
     for (TiXmlNode* child = n->FirstChild(); child != 0; child= child->NextSibling(), ++ch) {
-      int childtype = child->Type();
+      s_t childtype = child->Type();
 
       if (childtype == TiXmlNode::TINYXML_ELEMENT) {
         XmlNode newnode = addNode(child);

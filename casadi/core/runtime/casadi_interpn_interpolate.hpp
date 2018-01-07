@@ -1,11 +1,11 @@
 // NOLINT(legal/copyright)
 // SYMBOL "interpn_interpolate"
 template<typename T1>
-void casadi_interpn_interpolate(T1* res, int ndim, const int* offset, const T1* values, const T1* alpha, const int* index, const int* corner, T1* coeff, int m) { // NOLINT(whitespace/line_length)
+void casadi_interpn_interpolate(T1* res, s_t ndim, const s_t* offset, const T1* values, const T1* alpha, const s_t* index, const s_t* corner, T1* coeff, s_t m) { // NOLINT(whitespace/line_length)
   // Get weight and value for corner
   T1 c=1;
-  int ld=1; // leading dimension
-  int i;
+  s_t ld=1; // leading dimension
+  s_t i;
   for (i=0; i<ndim; ++i) {
     if (coeff) *coeff++ = c;
     if (corner[i]) {

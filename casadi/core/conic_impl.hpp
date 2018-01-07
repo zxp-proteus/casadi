@@ -57,14 +57,14 @@ namespace casadi {
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override;
-    Sparsity get_sparsity_out(int i) override;
+    Sparsity get_sparsity_in(s_t i) override;
+    Sparsity get_sparsity_out(s_t i) override;
     /// @}
 
     ///@{
     /** \brief Names of function input and outputs */
-    std::string get_name_in(int i) override { return conic_in(i);}
-    std::string get_name_out(int i) override { return conic_out(i);}
+    std::string get_name_in(s_t i) override { return conic_in(i);}
+    std::string get_name_out(s_t i) override { return conic_out(i);}
     /// @}
 
     ///@{
@@ -100,7 +100,7 @@ namespace casadi {
     static std::string shortname() { return "conic";}
 
     /** \brief Get default input value */
-    double get_default_in(int ind) const override;
+    double get_default_in(s_t ind) const override;
 
     /// Can discrete variables be treated
     virtual bool integer_support() const { return false;}
@@ -116,10 +116,10 @@ namespace casadi {
     Sparsity H_, A_;
 
     /// Number of decision variables
-    int nx_;
+    s_t nx_;
 
     /// The number of constraints (counting both equality and inequality) == A.size1()
-    int na_;
+    s_t na_;
   };
 
 

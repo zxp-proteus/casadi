@@ -46,7 +46,7 @@ namespace casadi {
   void BSplineCommon::init(const Dict& opts) {
     casadi::FunctionInternal::init(opts);
 
-    lookup_mode_ = std::vector<int>(degree_.size(), 0);
+    lookup_mode_ = std::vector<s_t>(degree_.size(), 0);
 
     std::vector<std::string> lookup_mode;
 
@@ -59,7 +59,7 @@ namespace casadi {
 
     if (!lookup_mode.empty()) {
       casadi_assert_dev(lookup_mode.size()==offset_.size()-1);
-      for (int i=0;i<offset_.size()-1;++i) {
+      for (s_t i=0;i<offset_.size()-1;++i) {
         if (lookup_mode[i]=="linear") {
           lookup_mode_[i] = 0;
         } else if (lookup_mode[i]=="exact") {
@@ -75,9 +75,9 @@ namespace casadi {
       }
     }
 
-    int n_dims = degree_.size();
+    s_t n_dims = degree_.size();
 
-    int k;
+    s_t k;
     for (k=0;k<n_dims-1;++k) {
       alloc_w(degree_[k]+1, true); // boor
     }
@@ -90,12 +90,12 @@ namespace casadi {
 
     coeffs_dims_.resize(n_dims+1);
     coeffs_dims_[0] = m_;
-    for (int i=0;i<n_dims;++i) coeffs_dims_[i+1] = offset_[i+1]-offset_[i]-degree_[i]-1;
+    for (s_t i=0;i<n_dims;++i) coeffs_dims_[i+1] = offset_[i+1]-offset_[i]-degree_[i]-1;
 
     // Prepare strides
     strides_.resize(n_dims);
     strides_[0] = m_;
-    for (int i=0;i<n_dims-1;++i) {
+    for (s_t i=0;i<n_dims-1;++i) {
       strides_[i+1] = strides_[i]*coeffs_dims_[i+1];
     }
 
@@ -103,7 +103,7 @@ namespace casadi {
 
 
   void BSplineCommon::from_knots(const std::vector< std::vector<double> >& knots,
-    std::vector<int>& offset, std::vector<double>& stacked) {
+    std::vector<s_t>& offset, std::vector<double>& stacked) {
 
     // Get offset for each input dimension
     offset.clear();
@@ -120,25 +120,25 @@ namespace casadi {
 
   Function BSpline::create(const std::string &name,
     const std::vector< std::vector<double> >& knots,
-    const vector<double>& coeffs, const vector<int>& degree, int m, const Dict& opts) {
+    const vector<double>& coeffs, const vector<s_t>& degree, s_t m, const Dict& opts) {
 
-      vector<int> offset;
+      vector<s_t> offset;
       vector<double> stacked;
       BSplineCommon::from_knots(knots, offset, stacked);
       return Function::create(new BSpline(name, stacked, offset, coeffs, degree, m), opts);
     }
 
     BSplineCommon::BSplineCommon(const std::string &name, const std::vector<double>& knots,
-      const std::vector<int>& offset, const vector<int>& degree, int m) :
+      const std::vector<s_t>& offset, const vector<s_t>& degree, s_t m) :
         casadi::FunctionInternal(name), knots_(knots), offset_(offset), degree_(degree), m_(m) {
 
       coeffs_size_= m;
-      for (int i=0;i<degree_.size();++i) coeffs_size_*= offset_[i+1]-offset_[i]-degree_[i]-1;
+      for (s_t i=0;i<degree_.size();++i) coeffs_size_*= offset_[i+1]-offset_[i]-degree_[i]-1;
     }
 
     BSpline::BSpline(const std::string &name, const std::vector<double>& knots,
-        const std::vector<int>& offset, const vector<double>& coeffs, const vector<int>& degree,
-        int m) :
+        const std::vector<s_t>& offset, const vector<double>& coeffs, const vector<s_t>& degree,
+        s_t m) :
         casadi::BSplineCommon(name, knots, offset, degree, m), coeffs_(coeffs) {}
 
     void BSpline::init(const Dict& opts) {
@@ -149,7 +149,7 @@ namespace casadi {
         "got " + str(coeffs_.size()) + " instead.");
     }
 
-    r_t BSpline::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+    r_t BSpline::eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
       if (!res[0]) return 0;
 
       casadi_fill(res[0], m_, 0.0);
@@ -160,7 +160,7 @@ namespace casadi {
     }
 
     void BSpline::codegen_body(CodeGenerator& g) const {
-      int n_dims = offset_.size()-1;
+      s_t n_dims = offset_.size()-1;
 
       g.add_auxiliary(CodeGenerator::AUX_ND_BOOR_EVAL);
       g.add_auxiliary(CodeGenerator::AUX_FILL);
@@ -173,7 +173,7 @@ namespace casadi {
         <<  g.constant(lookup_mode_) << ", 0, iw, w);\n";
     }
 
-    Function BSpline::get_forward(int nfwd, const std::string& name,
+    Function BSpline::get_forward(s_t nfwd, const std::string& name,
                   const std::vector<std::string>& inames,
                   const std::vector<std::string>& onames,
                   const Dict& opts) const {
@@ -182,7 +182,7 @@ namespace casadi {
 
       std::vector<MX> seed = MX::sym("seed", degree_.size(), 1, nfwd);
       std::vector<MX> sens;
-      for (int i=0;i<nfwd;++i) {
+      for (s_t i=0;i<nfwd;++i) {
         sens.push_back(mtimes(J, seed[i]));
       }
 
@@ -190,7 +190,7 @@ namespace casadi {
       return Function(name, {x, dummy, horzcat(seed)}, {horzcat(sens)}, opts);
     }
 
-    Function BSpline::get_reverse(int nadj, const std::string& name,
+    Function BSpline::get_reverse(s_t nadj, const std::string& name,
                   const std::vector<std::string>& inames,
                   const std::vector<std::string>& onames,
                   const Dict& opts) const {
@@ -200,7 +200,7 @@ namespace casadi {
 
       std::vector<MX> seed = MX::sym("seed", m_, 1, nadj);
       std::vector<MX> sens;
-      for (int i=0;i<nadj;++i) {
+      for (s_t i=0;i<nadj;++i) {
         sens.push_back(mtimes(JT, seed[i]));
       }
 
@@ -211,14 +211,14 @@ namespace casadi {
 
     MX BSpline::jac(const MX& x) const {
 
-      int n_dims = degree_.size();
+      s_t n_dims = degree_.size();
       std::vector<MX> parts;
 
       // Loop over dimensions
-      for (int k=0;k<n_dims;++k) {
+      for (s_t k=0;k<n_dims;++k) {
         std::vector< std::vector<double> > knots;
-        std::vector< int> degree;
-        for (int i=0;i<degree_.size();++i) {
+        std::vector< s_t> degree;
+        for (s_t i=0;i<degree_.size();++i) {
           if (i==k) {
             knots.push_back(
               std::vector<double>(get_ptr(knots_)+offset_[i]+1, get_ptr(knots_)+offset_[i+1]-1));
@@ -236,12 +236,12 @@ namespace casadi {
       return horzcat(parts);
     }
 
-    std::vector<double> BSpline::derivative_coeff(int i) const {
-      int n_dims = degree_.size();
+    std::vector<double> BSpline::derivative_coeff(s_t i) const {
+      s_t n_dims = degree_.size();
 
       std::vector<double> coeffs;
-      int n_knots = offset_[i+1]-offset_[i];
-      int n = n_knots-degree_[i]-1;
+      s_t n_knots = offset_[i+1]-offset_[i];
+      s_t n = n_knots-degree_[i]-1;
       DM knots = std::vector<double>(get_ptr(knots_)+offset_[i], get_ptr(knots_)+offset_[i+1]);
       DM delta_knots = knots(range(1+degree_[i], n_knots-1))
            - knots(range(1, n_knots-degree_[i]-1));
@@ -251,11 +251,11 @@ namespace casadi {
       DM T = DM(sp_diag, -delta_knots_inv) + DM(sp_band, delta_knots_inv);
       T = densify(T);
 
-      std::vector<int> ai(n_dims+1);
-      for (int j=0;j<n_dims+1;++j) ai[j] = -j-1;
-      std::vector<int> bi = std::vector<int>{-n_dims-2, -i-2};
-      std::vector<int> ci = ai; ci[i+1] = {-n_dims-2};
-      std::vector<int> coeffs_dims_new = coeffs_dims_;
+      std::vector<s_t> ai(n_dims+1);
+      for (s_t j=0;j<n_dims+1;++j) ai[j] = -j-1;
+      std::vector<s_t> bi = std::vector<s_t>{-n_dims-2, -i-2};
+      std::vector<s_t> ci = ai; ci[i+1] = {-n_dims-2};
+      std::vector<s_t> coeffs_dims_new = coeffs_dims_;
       coeffs_dims_new[i+1] = T.size1();
 
       DM r = einstein(DM(coeffs_), vec(T*degree_[i]), coeffs_dims_, {T.size1(), T.size2()},
@@ -274,31 +274,31 @@ namespace casadi {
       return Function(name, {x, dummy}, {jac(x)}, opts);
     }
 
-    Sparsity BSplineDual::get_sparsity_in(int i) {
+    Sparsity BSplineDual::get_sparsity_in(s_t i) {
       if (reverse_) return Sparsity::dense(m_, N_);
       return Sparsity::dense(coeffs_size_);
     }
-    Sparsity BSplineDual::get_sparsity_out(int i) {
+    Sparsity BSplineDual::get_sparsity_out(s_t i) {
       if (reverse_) return Sparsity::dense(coeffs_size_);
       return Sparsity::dense(m_, N_);
     }
 
     Function BSplineDual::create(const std::string &name,
         const std::vector< std::vector<double> >& knots,
-        const vector<double>& x, const vector<int>& degree, int m, bool reverse, const Dict& opts) {
+        const vector<double>& x, const vector<s_t>& degree, s_t m, bool reverse, const Dict& opts) {
 
-      vector<int> offset;
+      vector<s_t> offset;
       vector<double> stacked;
       BSplineCommon::from_knots(knots, offset, stacked);
       return Function::create(new BSplineDual(name, stacked, offset, x, degree, m, reverse), opts);
     }
 
     BSplineDual::BSplineDual(const std::string &name, const std::vector<double>& knots,
-        const std::vector<int>& offset, const vector<double>& x, const vector<int>& degree, int m,
+        const std::vector<s_t>& offset, const vector<double>& x, const vector<s_t>& degree, s_t m,
         bool reverse) :
         casadi::BSplineCommon(name, knots, offset, degree, m), x_(x), reverse_(reverse) {
 
-      int n_dims = degree_.size();
+      s_t n_dims = degree_.size();
       N_ = x_.size()/n_dims;
       casadi_assert_dev(N_*n_dims==x_.size());
     }
@@ -307,13 +307,13 @@ namespace casadi {
       BSplineCommon::init(opts);
     }
 
-    r_t BSplineDual::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+    r_t BSplineDual::eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
       if (!res[0]) return 0;
       casadi_fill(res[0], reverse_? coeffs_size_: m_*N_, 0.0);
 
-      int n_dims = degree_.size();
+      s_t n_dims = degree_.size();
 
-      for (int i=0;i<N_;++i) {
+      for (s_t i=0;i<N_;++i) {
         casadi_nd_boor_eval(res[0]+(reverse_? 0 : i*m_), n_dims, get_ptr(knots_), get_ptr(offset_),
         get_ptr(degree_), get_ptr(strides_), arg[0]+(reverse_? i*m_ : 0), m_, get_ptr(x_)+i*n_dims,
         get_ptr(lookup_mode_), reverse_, iw, w);
@@ -322,7 +322,7 @@ namespace casadi {
     }
 
     void BSplineDual::codegen_body(CodeGenerator& g) const {
-      int n_dims = offset_.size()-1;
+      s_t n_dims = offset_.size()-1;
 
       g.add_auxiliary(CodeGenerator::AUX_ND_BOOR_EVAL);
       g.add_auxiliary(CodeGenerator::AUX_FILL);
@@ -330,7 +330,7 @@ namespace casadi {
                 g.fill("res[0]", reverse_? coeffs_size_: m_*N_, "0.0") << "\n";
 
       // Input and output buffers
-      g << "  if (res[0]) for (int i=0;i<" << N_ << ";++i) CASADI_PREFIX(nd_boor_eval)(res[0]"
+      g << "  if (res[0]) for (s_t i=0;i<" << N_ << ";++i) CASADI_PREFIX(nd_boor_eval)(res[0]"
         << (reverse_? "" : "+i*" + str(m_)) << "," << n_dims << "," << g.constant(knots_)
         << "," << g.constant(offset_) << "," <<  g.constant(degree_)
         << "," << g.constant(strides_) << ",arg[0]" << (reverse_? "i*" + str(m_) : "")
@@ -338,7 +338,7 @@ namespace casadi {
         << ", 0, iw, w);\n";
     }
 
-    Function BSplineDual::get_forward(int nfwd, const std::string& name,
+    Function BSplineDual::get_forward(s_t nfwd, const std::string& name,
                   const std::vector<std::string>& inames,
                   const std::vector<std::string>& onames,
                   const Dict& opts) const {
@@ -348,7 +348,7 @@ namespace casadi {
       std::vector<MX> seed = MX::sym("seed", sparsity_in_.at(0), nfwd);
       std::vector<MX> sens;
       Function self = shared_from_this<Function>();
-      for (int i=0;i<nfwd;++i) {
+      for (s_t i=0;i<nfwd;++i) {
         sens.push_back(self(seed[i])[0]);
       }
       Function ret = Function(name, {C, dummy, horzcat(seed)}, {horzcat(sens)}, inames, onames);
@@ -356,7 +356,7 @@ namespace casadi {
 
     }
 
-    Function BSplineDual::get_reverse(int nadj, const std::string& name,
+    Function BSplineDual::get_reverse(s_t nadj, const std::string& name,
                   const std::vector<std::string>& inames,
                   const std::vector<std::string>& onames,
                   const Dict& opts) const {
@@ -367,7 +367,7 @@ namespace casadi {
       std::vector<MX> sens;
       Function rev = Function::create(new BSplineDual(name, knots_, offset_, x_,
                                                       degree_, m_, !reverse_), opts);
-      for (int i=0;i<nadj;++i) {
+      for (s_t i=0;i<nadj;++i) {
         sens.push_back(rev(seed[i])[0]);
       }
       Function ret = Function(name, {C, dummy, horzcat(seed)}, {horzcat(sens)}, inames, onames);
@@ -375,28 +375,28 @@ namespace casadi {
 
     }
 
-    void nd_boor_eval_sp(bvec_t* ret, int n_dims, const double* all_knots, const int* offset,
-        const int* all_degree, const int* strides, const bvec_t* c, int m, const double* all_x,
-        const int* lookup_mode, int reverse, int* iw, bvec_t* w) {
-      int* boor_offset = iw; iw+=n_dims+1;
-      int* starts = iw; iw+=n_dims;
-      int* index = iw; iw+=n_dims;
-      int* coeff_offset = iw;
+    void nd_boor_eval_sp(bvec_t* ret, s_t n_dims, const double* all_knots, const s_t* offset,
+        const s_t* all_degree, const s_t* strides, const bvec_t* c, s_t m, const double* all_x,
+        const s_t* lookup_mode, s_t reverse, s_t* iw, bvec_t* w) {
+      s_t* boor_offset = iw; iw+=n_dims+1;
+      s_t* starts = iw; iw+=n_dims;
+      s_t* index = iw; iw+=n_dims;
+      s_t* coeff_offset = iw;
 
       boor_offset[0] = 0;
       coeff_offset[n_dims] = 0;
 
-      int n_iter = 1;
-      for (int k=0;k<n_dims;++k) {
-        int degree = all_degree[k];
+      s_t n_iter = 1;
+      for (s_t k=0;k<n_dims;++k) {
+        s_t degree = all_degree[k];
         const double* knots = all_knots + offset[k];
-        int n_knots = offset[k+1]-offset[k];
-        int n_b = n_knots-degree-1;
+        s_t n_knots = offset[k+1]-offset[k];
+        s_t n_b = n_knots-degree-1;
 
         double x = all_x[k];
-        int L = casadi_low(x, knots+degree, n_knots-2*degree, lookup_mode[k]);
+        s_t L = casadi_low(x, knots+degree, n_knots-2*degree, lookup_mode[k]);
 
-        int start = L;
+        s_t start = L;
         if (start>n_b-degree-1) start = n_b-degree-1;
 
         starts[k] = start;
@@ -407,14 +407,14 @@ namespace casadi {
       casadi_fill(index, n_dims, 0);
 
       // Prepare offset
-      for (int pivot=n_dims-1;pivot>=0;--pivot) {
+      for (s_t pivot=n_dims-1;pivot>=0;--pivot) {
         coeff_offset[pivot] = starts[pivot]*strides[pivot]+coeff_offset[pivot+1];
       }
 
-      for (int k=0;k<n_iter;++k) {
+      for (s_t k=0;k<n_iter;++k) {
 
         // accumulate result
-        for (int i=0;i<m;++i) {
+        for (s_t i=0;i<m;++i) {
           if (reverse) {
             ret[coeff_offset[0]+i] |= c[i];
           } else {
@@ -424,7 +424,7 @@ namespace casadi {
 
         // Increment index
         index[0]++;
-        int pivot = 0;
+        s_t pivot = 0;
 
         // Handle index overflow
         {
@@ -449,13 +449,13 @@ namespace casadi {
       }
     }
 
-    int BSplineDual::
-    sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+    s_t BSplineDual::
+    sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
       if (!res[0]) return 0;
       casadi_fill(res[0], reverse_? coeffs_size_: m_*N_, bvec_t(0));
 
-      int n_dims = degree_.size();
-      for (int i=0;i<N_;++i) {
+      s_t n_dims = degree_.size();
+      for (s_t i=0;i<N_;++i) {
         nd_boor_eval_sp(res[0]+(reverse_? 0 : i*m_), n_dims, get_ptr(knots_), get_ptr(offset_),
           get_ptr(degree_), get_ptr(strides_), arg[0]+(reverse_? i*m_ : 0), m_,
           get_ptr(x_)+i*n_dims, get_ptr(lookup_mode_), reverse_, iw, w);
@@ -463,11 +463,11 @@ namespace casadi {
       return 0;
     }
 
-    int BSplineDual::
-    sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+    s_t BSplineDual::
+    sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
       if (!res[0]) return 0;
-      int n_dims = degree_.size();
-      for (int i=0;i<N_;++i) {
+      s_t n_dims = degree_.size();
+      for (s_t i=0;i<N_;++i) {
         nd_boor_eval_sp(arg[0]+(!reverse_? 0 : i*m_), n_dims, get_ptr(knots_), get_ptr(offset_),
           get_ptr(degree_), get_ptr(strides_), res[0]+(!reverse_? i*m_ : 0), m_,
           get_ptr(x_)+i*n_dims, get_ptr(lookup_mode_), !reverse_, iw, w);

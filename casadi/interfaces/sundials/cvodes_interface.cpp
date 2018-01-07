@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_INTEGRATOR_CVODES_EXPORT
+  s_t CASADI_INTEGRATOR_CVODES_EXPORT
   casadi_register_integrator_cvodes(Integrator::Plugin* plugin) {
     plugin->creator = CvodesInterface::creator;
     plugin->name = "cvodes";
@@ -168,7 +168,7 @@ namespace casadi {
       cv_mem->cv_setupNonNull = TRUE;
     } else {
       // Iterative scheme
-      int pretype = use_precon_ ? PREC_LEFT : PREC_NONE;
+      s_t pretype = use_precon_ ? PREC_LEFT : PREC_NONE;
       switch (newton_scheme_) {
       case SD_DIRECT: casadi_assert_dev(0);
       case SD_GMRES: THROWING(CVSpgmr, m->mem, pretype, max_krylov_); break;
@@ -196,7 +196,7 @@ namespace casadi {
 
     // Initialize adjoint sensitivities
     if (nrx_>0) {
-      int interpType = interp_==SD_HERMITE ? CV_HERMITE : CV_POLYNOMIAL;
+      s_t interpType = interp_==SD_HERMITE ? CV_HERMITE : CV_POLYNOMIAL;
       THROWING(CVodeAdjInit, m->mem, steps_per_checkpoint_, interpType);
     }
 
@@ -204,7 +204,7 @@ namespace casadi {
     return 0;
   }
 
-  int CvodesInterface::rhs(double t, N_Vector x, N_Vector xdot, void *user_data) {
+  s_t CvodesInterface::rhs(double t, N_Vector x, N_Vector xdot, void *user_data) {
     try {
       casadi_assert_dev(user_data);
       auto m = to_mem(user_data);
@@ -215,7 +215,7 @@ namespace casadi {
       m->res[0] = NV_DATA_S(xdot);
       s.calc_function(m, "odeF");
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "rhs failed: " << e.what() << endl;
@@ -316,7 +316,7 @@ namespace casadi {
         cvB_mem->cv_mem->cv_setupNonNull = TRUE;
       } else {
         // Iterative scheme
-        int pretype = use_precon_ ? PREC_LEFT : PREC_NONE;
+        s_t pretype = use_precon_ ? PREC_LEFT : PREC_NONE;
         switch (newton_scheme_) {
         case SD_DIRECT: casadi_assert_dev(0);
         case SD_GMRES: THROWING(CVSpgmrB, m->mem, m->whichB, pretype, max_krylov_); break;
@@ -368,7 +368,7 @@ namespace casadi {
     THROWING(CVodeGetNonlinSolvStats, cvB_mem->cv_mem, &m->nnitersB, &m->nncfailsB);
   }
 
-  void CvodesInterface::cvodes_error(const char* module, int flag) {
+  void CvodesInterface::cvodes_error(const char* module, s_t flag) {
     // Successfull return or warning
     if (flag>=CV_SUCCESS) return;
     // Construct error message
@@ -379,7 +379,7 @@ namespace casadi {
     casadi_error(ss.str());
   }
 
-  void CvodesInterface::ehfun(int error_code, const char *module, const char *function,
+  void CvodesInterface::ehfun(s_t error_code, const char *module, const char *function,
                               char *msg, void *user_data) {
     try {
       casadi_assert_dev(user_data);
@@ -393,7 +393,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::rhsQ(double t, N_Vector x, N_Vector qdot, void *user_data) {
+  s_t CvodesInterface::rhsQ(double t, N_Vector x, N_Vector qdot, void *user_data) {
     try {
       auto m = to_mem(user_data);
       auto& s = m->self;
@@ -403,7 +403,7 @@ namespace casadi {
       m->res[0] = NV_DATA_S(qdot);
       s.calc_function(m, "quadF");
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "rhsQ failed: " << e.what() << endl;
@@ -411,7 +411,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::rhsB(double t, N_Vector x, N_Vector rx, N_Vector rxdot,
+  s_t CvodesInterface::rhsB(double t, N_Vector x, N_Vector rx, N_Vector rxdot,
                             void *user_data) {
     try {
       casadi_assert_dev(user_data);
@@ -429,7 +429,7 @@ namespace casadi {
       casadi_scal(s.nrx_, -1., NV_DATA_S(rxdot));
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "rhsB failed: " << e.what() << endl;
@@ -437,7 +437,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::rhsQB(double t, N_Vector x, N_Vector rx,
+  s_t CvodesInterface::rhsQB(double t, N_Vector x, N_Vector rx,
                              N_Vector rqdot, void *user_data) {
     try {
       casadi_assert_dev(user_data);
@@ -455,7 +455,7 @@ namespace casadi {
       casadi_scal(s.nrq_, -1., NV_DATA_S(rqdot));
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "rhsQB failed: " << e.what() << endl;
@@ -463,7 +463,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::jtimes(N_Vector v, N_Vector Jv, double t, N_Vector x,
+  s_t CvodesInterface::jtimes(N_Vector v, N_Vector Jv, double t, N_Vector x,
                               N_Vector xdot, void *user_data, N_Vector tmp) {
     try {
       auto m = to_mem(user_data);
@@ -475,7 +475,7 @@ namespace casadi {
       m->res[0] = NV_DATA_S(Jv);
       s.calc_function(m, "jtimesF");
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "jtimes failed: " << e.what() << endl;
@@ -483,7 +483,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::jtimesB(N_Vector v, N_Vector Jv, double t, N_Vector x,
+  s_t CvodesInterface::jtimesB(N_Vector v, N_Vector Jv, double t, N_Vector x,
                                N_Vector rx, N_Vector rxdot, void *user_data ,
                                N_Vector tmpB) {
     try {
@@ -498,7 +498,7 @@ namespace casadi {
       m->res[0] = NV_DATA_S(Jv);
       s.calc_function(m, "jtimesB");
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "jtimes failed: " << e.what() << endl;
@@ -512,8 +512,8 @@ namespace casadi {
     THROWING(CVodeSetStopTime, m->mem, tf);
   }
 
-  int CvodesInterface::psolve(double t, N_Vector x, N_Vector xdot, N_Vector r,
-                              N_Vector z, double gamma, double delta, int lr,
+  s_t CvodesInterface::psolve(double t, N_Vector x, N_Vector xdot, N_Vector r,
+                              N_Vector z, double gamma, double delta, s_t lr,
                               void *user_data, N_Vector tmp) {
     try {
       auto m = to_mem(user_data);
@@ -553,7 +553,7 @@ namespace casadi {
       }
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psolve failed: " << e.what() << endl;
@@ -561,9 +561,9 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::psolveB(double t, N_Vector x, N_Vector xB, N_Vector xdotB,
+  s_t CvodesInterface::psolveB(double t, N_Vector x, N_Vector xB, N_Vector xdotB,
                                N_Vector rvecB, N_Vector zvecB, double gammaB,
-                               double deltaB, int lr, void *user_data, N_Vector tmpB) {
+                               double deltaB, s_t lr, void *user_data, N_Vector tmpB) {
     try {
       auto m = to_mem(user_data);
       auto& s = m->self;
@@ -606,7 +606,7 @@ namespace casadi {
       }
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psolveB failed: " << e.what() << endl;
@@ -614,7 +614,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::psetup(double t, N_Vector x, N_Vector xdot, booleantype jok,
+  s_t CvodesInterface::psetup(double t, N_Vector x, N_Vector xdot, booleantype jok,
                               booleantype *jcurPtr, double gamma, void *user_data,
                               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3) {
     try {
@@ -637,7 +637,7 @@ namespace casadi {
       if (s.linsolF_.nfact(m->jac)) casadi_error("'jacF' factorization failed");
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psetup failed: " << e.what() << endl;
@@ -645,7 +645,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::psetupB(double t, N_Vector x, N_Vector rx, N_Vector rxdot,
+  s_t CvodesInterface::psetupB(double t, N_Vector x, N_Vector rx, N_Vector rxdot,
                                booleantype jokB, booleantype *jcurPtrB, double gammaB,
                                void *user_data, N_Vector tmp1B, N_Vector tmp2B,
                                N_Vector tmp3B) {
@@ -670,7 +670,7 @@ namespace casadi {
       if (s.linsolB_.nfact(m->jacB)) casadi_error("'jacB' factorization failed");
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "psetupB failed: " << e.what() << endl;
@@ -678,7 +678,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::lsetup(CVodeMem cv_mem, int convfail, N_Vector x, N_Vector xdot,
+  s_t CvodesInterface::lsetup(CVodeMem cv_mem, s_t convfail, N_Vector x, N_Vector xdot,
                               booleantype *jcurPtr,
                               N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3) {
     try {
@@ -696,7 +696,7 @@ namespace casadi {
                  gamma, static_cast<void*>(m), vtemp1, vtemp2, vtemp3)) return 1;
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsetup failed: " << e.what() << endl;
@@ -704,7 +704,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::lsetupB(CVodeMem cv_mem, int convfail, N_Vector x, N_Vector xdot,
+  s_t CvodesInterface::lsetupB(CVodeMem cv_mem, s_t convfail, N_Vector x, N_Vector xdot,
                                booleantype *jcurPtr,
                                N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3) {
     try {
@@ -712,7 +712,7 @@ namespace casadi {
       CVadjMem ca_mem;
       //CVodeBMem cvB_mem;
 
-      int flag;
+      s_t flag;
 
       // Current time
       double t = cv_mem->cv_tn; // TODO(Joel): is this correct?
@@ -732,7 +732,7 @@ namespace casadi {
                   gamma, static_cast<void*>(m), vtemp1, vtemp2, vtemp3)) return 1;
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsetupB failed: " << e.what() << endl;
@@ -740,7 +740,7 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::lsolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
+  s_t CvodesInterface::lsolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
                               N_Vector x, N_Vector xdot) {
     try {
       auto m = to_mem(cv_mem->cv_lmem);
@@ -756,14 +756,14 @@ namespace casadi {
       double delta = 0.0;
 
       // Left/right preconditioner
-      int lr = 1;
+      s_t lr = 1;
 
       // Call the preconditioner solve function (which solves the linear system)
       if (psolve(t, x, xdot, b, b, gamma, delta,
                  lr, static_cast<void*>(m), 0)) return 1;
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsolve failed: " << e.what() << endl;
@@ -771,14 +771,14 @@ namespace casadi {
     }
   }
 
-  int CvodesInterface::lsolveB(CVodeMem cv_mem, N_Vector b, N_Vector weight,
+  s_t CvodesInterface::lsolveB(CVodeMem cv_mem, N_Vector b, N_Vector weight,
                                N_Vector x, N_Vector xdot) {
     try {
       auto m = to_mem(cv_mem->cv_lmem);
       CVadjMem ca_mem;
       //CVodeBMem cvB_mem;
 
-      int flag;
+      s_t flag;
 
       // Current time
       double t = cv_mem->cv_tn; // TODO(Joel): is this correct?
@@ -799,14 +799,14 @@ namespace casadi {
       double delta = 0.0;
 
       // Left/right preconditioner
-      int lr = 1;
+      s_t lr = 1;
 
       // Call the preconditioner solve function (which solves the linear system)
       if (psolveB(t, ca_mem->ca_ytmp, x, xdot, b, b, gamma, delta, lr,
                   static_cast<void*>(m), 0)) return 1;
 
       return 0;
-    } catch(int flag) { // recoverable error
+    } catch(s_t flag) { // recoverable error
       return flag;
     } catch(exception& e) { // non-recoverable error
       uerr() << "lsolveB failed: " << e.what() << endl;

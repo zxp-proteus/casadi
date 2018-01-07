@@ -32,13 +32,13 @@
 using namespace std;
 
 namespace casadi {
-  std::vector<int> range(int start, int stop, int step, int len) {
+  std::vector<s_t> range(s_t start, s_t stop, s_t step, s_t len) {
     start = std::min(start, len);
     stop = std::min(stop, len);
-    int nret = (stop-start)/step + ((stop-start)%step!=0);
-    std::vector<int> ret(nret);
-    int ind = start;
-    for (std::vector<int>::iterator it=ret.begin(); it!=ret.end(); ++it) {
+    s_t nret = (stop-start)/step + ((stop-start)%step!=0);
+    std::vector<s_t> ret(nret);
+    s_t ind = start;
+    for (std::vector<s_t>::iterator it=ret.begin(); it!=ret.end(); ++it) {
       *it = ind;
       ind += step;
     }
@@ -50,28 +50,28 @@ namespace casadi {
 
     double margin = (v[v.size()-1]-v[0])*1e-14;
 
-    for (int i=2;i<v.size();++i) {
+    for (s_t i=2;i<v.size();++i) {
       double ref = v[0]+(i*(v[v.size()-1]-v[0]))/(v.size()-1);
       if (abs(ref-v[i])>margin) return false;
     }
     return true;
   }
 
-  std::vector<int> range(int stop) {
+  std::vector<s_t> range(s_t stop) {
     return range(0, stop);
   }
 
-  std::vector<int> complement(const std::vector<int> &v, int size) {
+  std::vector<s_t> complement(const std::vector<s_t> &v, s_t size) {
     casadi_assert(in_range(v, size),
                           "complement: out of bounds. Some elements in v fall out of [0, size[");
-    std::vector<int> lookup(size, 0);
-    std::vector<int> ret;
+    std::vector<s_t> lookup(size, 0);
+    std::vector<s_t> ret;
 
-    for (int i=0;i<v.size();i++) {
+    for (s_t i=0;i<v.size();i++) {
       lookup[v[i]] = 1;
     }
 
-    for (int i=0;i<size;i++) {
+    for (s_t i=0;i<size;i++) {
       if (lookup[i]==0) ret.push_back(i);
     }
 
@@ -79,18 +79,18 @@ namespace casadi {
 
   }
 
-  std::vector<int> lookupvector(const std::vector<int> &v, int size) {
+  std::vector<s_t> lookupvector(const std::vector<s_t> &v, s_t size) {
     casadi_assert(in_range(v, size),
                           "lookupvector: out of bounds. Some elements in v fall out of [0, size[");
-    std::vector<int> lookup(size, -1);
+    std::vector<s_t> lookup(size, -1);
 
-    for (int i=0;i<v.size();i++) {
+    for (s_t i=0;i<v.size();i++) {
       lookup[v[i]] = i;
     }
     return lookup;
   }
 
-  std::vector<int> lookupvector(const std::vector<int> &v) {
+  std::vector<s_t> lookupvector(const std::vector<s_t> &v) {
     casadi_assert_dev(!has_negative(v));
     return lookupvector(v, (*std::max_element(v.begin(), v.end()))+1);
   }
@@ -114,7 +114,7 @@ namespace casadi {
 
   std::string join(const std::vector<std::string>& l, const std::string& delim) {
     std::stringstream ss;
-    for (int i=0;i<l.size();++i) {
+    for (s_t i=0;i<l.size();++i) {
       if (i>0) ss << delim;
       ss << l[i];
     }

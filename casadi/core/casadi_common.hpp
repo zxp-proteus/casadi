@@ -40,8 +40,6 @@
 #include <algorithm>
 #include <iterator>
 
-#include "casadi_logger.hpp"
-
 #ifdef SWIG
 #define SWIG_IF_ELSE(is_swig, not_swig) is_swig
 #define SWIG_OUTPUT(arg) OUTPUT
@@ -60,7 +58,14 @@
 #define SWIG_IND1 false
 #endif // SWIG
 
+
 namespace casadi {
+
+  typedef unsigned int e_t;
+  typedef int r_t;
+  typedef signed long long int s_t;
+  typedef unsigned long long int u_t;
+  typedef int i_t;
 
   /// Forward declarations
   class SXElem;
@@ -126,7 +131,7 @@ namespace casadi {
 
   // Number of directions we can deal with at a time
   // the size of bvec_t in bits (CHAR_BIT is the number of bits per byte, usually 8)
-  const int bvec_size = CHAR_BIT*sizeof(bvec_t);
+  const i_t bvec_size = CHAR_BIT*sizeof(bvec_t);
 
   // Make sure that the integer datatype is indeed smaller or equal to the double
   //assert(sizeof(bvec_t) <= sizeof(double)); // doesn't work - very strange
@@ -134,20 +139,15 @@ namespace casadi {
   ///@{
   /** \brief  Function pointer types for the C API */
   typedef void (*signal_t)(void);
-  typedef int (*getint_t)(void);
-  typedef const char* (*name_t)(int i);
-  typedef const int* (*sparsity_t)(int i);
+  typedef s_t (*getint_t)(void);
+  typedef const char* (*name_t)(s_t i);
+  typedef const s_t* (*sparsity_t)(s_t i);
   typedef void* (*alloc_mem_t)(void);
-  typedef int (*init_mem_t)(void* mem);
+  typedef s_t (*init_mem_t)(void* mem);
   typedef void (*free_mem_t)(void* mem);
-  typedef int (*work_t)(int* sz_arg, int* sz_res, int* sz_iw, int* sz_w);
-  typedef int (*eval_t)(const double** arg, double** res, int* iw, double* w, void* mem);
+  typedef s_t (*work_t)(s_t* sz_arg, s_t* sz_res, s_t* sz_iw, s_t* sz_w);
+  typedef s_t (*eval_t)(const double** arg, double** res, s_t* iw, double* w, void* mem);
   ///@}
-
-  typedef unsigned int e_t;
-  typedef int r_t;
-  typedef signed long long s_t;
-  typedef unsigned long long u_t;
 
   /// String representation, any type
   template<typename T>
@@ -250,7 +250,7 @@ namespace casadi {
   std::string str(const std::vector<T>& v, bool more) {
     std::stringstream ss;
     ss << "[";
-    for (int i=0; i<v.size(); ++i) {
+    for (s_t i=0; i<v.size(); ++i) {
       if (i!=0) ss << ", ";
       ss << v[i];
     }
@@ -262,7 +262,7 @@ namespace casadi {
   std::string str(const std::set<T>& v, bool more) {
     std::stringstream ss;
     ss << "{";
-    int cnt = 0;
+    s_t cnt = 0;
     for (const auto& e : v) {
       if (cnt++!=0) ss << ", ";
       ss << e;
@@ -282,7 +282,7 @@ namespace casadi {
   std::string str(const std::map<T1, T2>& p, bool more) {
     std::stringstream ss;
     ss << "{";
-    int count = 0;
+    s_t count = 0;
     for (auto& e : p) {
       ss << e.first << ": " << e.second;
       if (++count < p.size()) ss << ", ";
@@ -295,7 +295,7 @@ namespace casadi {
   std::string str(const std::map<std::string, T2>& p, bool more) {
     std::stringstream ss;
     ss << "{";
-    int count = 0;
+    s_t count = 0;
     for (auto& e : p) {
       ss << "\"" << e.first << "\": " << e.second;
       if (++count < p.size()) ss << ", ";
@@ -306,5 +306,7 @@ namespace casadi {
 #endif // SWIG
 
 } // namespace casadi
+
+#include "casadi_logger.hpp"
 
 #endif // CASADI_COMMON_HPP

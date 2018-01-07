@@ -65,9 +65,9 @@ namespace casadi {
     if (verbose_) casadi_message("Reading file \"" + filename + "\"");
 
     // Read the header of the NL-file (first 10 lines)
-    const int header_sz = 10;
+    const s_t header_sz = 10;
     vector<string> header(header_sz);
-    for (int k=0; k<header_sz; ++k) {
+    for (s_t k=0; k<header_sz; ++k) {
       getline(s_, header[k]);
     }
 
@@ -127,32 +127,32 @@ namespace casadi {
 
     //D. M. Gay and M. Hill, 'Hooking Your Solver to AMPL' October, 1997.
     // continuous in an objective and in a constraint
-    for (int j=0; j<nlvb_-nlvbi_; ++j) nlp_.discrete.push_back(false);
+    for (s_t j=0; j<nlvb_-nlvbi_; ++j) nlp_.discrete.push_back(false);
 
     // integer in an objective and in a constraint
-    for (int j=0; j<nlvbi_; ++j) nlp_.discrete.push_back(true);
+    for (s_t j=0; j<nlvbi_; ++j) nlp_.discrete.push_back(true);
 
     // continuous just in constraints
-    for (int j=0; j<nlvc_ - (nlvb_ + nlvci_); ++j) nlp_.discrete.push_back(false);
+    for (s_t j=0; j<nlvc_ - (nlvb_ + nlvci_); ++j) nlp_.discrete.push_back(false);
 
     // integer just in constraints
-    for (int j=0; j<nlvci_; ++j) nlp_.discrete.push_back(true);
+    for (s_t j=0; j<nlvci_; ++j) nlp_.discrete.push_back(true);
 
     // continuous just in objectives
-    for (int j=0; j<nlvo_ - (nlvc_ + nlvoi_); ++j) nlp_.discrete.push_back(false);
+    for (s_t j=0; j<nlvo_ - (nlvc_ + nlvoi_); ++j) nlp_.discrete.push_back(false);
 
     // integer just in objectives
-    for (int j=0; j < nlvoi_; ++j) nlp_.discrete.push_back(true);
+    for (s_t j=0; j < nlvoi_; ++j) nlp_.discrete.push_back(true);
 
     // linear
-    int max_nlvc_nlvo = (nlvc_ < nlvo_) ? nlvo_ : nlvc_;
-    for (int j=0; j<n_var_-(max_nlvc_nlvo+niv_+nbv_); ++j) nlp_.discrete.push_back(false);
+    s_t max_nlvc_nlvo = (nlvc_ < nlvo_) ? nlvo_ : nlvc_;
+    for (s_t j=0; j<n_var_-(max_nlvc_nlvo+niv_+nbv_); ++j) nlp_.discrete.push_back(false);
 
     // binary
-    for (int j = 0; j<nbv_; ++j) nlp_.discrete.push_back(true);
+    for (s_t j = 0; j<nbv_; ++j) nlp_.discrete.push_back(true);
 
     // other integer
-    for (int j = 0; j<niv_; ++j) nlp_.discrete.push_back(true);
+    for (s_t j = 0; j<niv_; ++j) nlp_.discrete.push_back(true);
 
     casadi_assert(nlp_.discrete.size()==n_var_,
       "Number of variables in the header don't match");
@@ -212,7 +212,7 @@ namespace casadi {
     char inst = read_char();
 
     // Temporaries
-    int i;
+    s_t i;
     double d;
 
     // Error message
@@ -347,11 +347,11 @@ namespace casadi {
         case 11: case 12: case 54: case 59: case 60: case 61: case 70: case 71: case 74:
         {
           // Number of elements in the sum
-          int n = read_int();
+          s_t n = read_int();
 
           // Collect the arguments
           vector<MX> args(n);
-          for (int k=0; k<n; ++k) {
+          for (s_t k=0; k<n; ++k) {
             args[k] = expr();
           }
 
@@ -414,8 +414,8 @@ namespace casadi {
 
   void NlImporter::V_segment() {
     // Read header
-    int i = read_int();
-    int j = read_int();
+    s_t i = read_int();
+    s_t j = read_int();
     read_int();
 
     // Make sure that v is long enough
@@ -427,9 +427,9 @@ namespace casadi {
     v_.at(i) = 0;
 
     // Add the linear terms
-    for (int jj=0; jj<j; ++jj) {
+    for (s_t jj=0; jj<j; ++jj) {
       // Linear term
-      int pl = read_int();
+      s_t pl = read_int();
       double cl = read_double();
 
       // Add to variable definition (assuming it has already been defined)
@@ -441,10 +441,10 @@ namespace casadi {
     v_.at(i) += expr();
   }
 
-  int NlImporter::read_int() {
-    int i;
+  s_t NlImporter::read_int() {
+    s_t i;
     if (binary_) {
-      s_.read(reinterpret_cast<char *>(&i), sizeof(int));
+      s_.read(reinterpret_cast<char *>(&i), sizeof(s_t));
     } else {
       s_ >> i;
     }
@@ -493,7 +493,7 @@ namespace casadi {
 
   void NlImporter::C_segment() {
     // Get the number
-    int i = read_int();
+    s_t i = read_int();
 
     // Parse and save expression
     nlp_.g.at(i) = expr();
@@ -508,7 +508,7 @@ namespace casadi {
     read_int(); // i
 
     // Should the objective be maximized
-    int sigma= read_int();
+    s_t sigma= read_int();
     sign_ = sigma!=0 ? -1 : 1;
 
     // Parse and save expression
@@ -517,12 +517,12 @@ namespace casadi {
 
   void NlImporter::d_segment() {
     // Read the number of guesses supplied
-    int m = read_int();
+    s_t m = read_int();
 
     // Process initial guess for the fual variables
-    for (int i=0; i<m; ++i) {
+    for (s_t i=0; i<m; ++i) {
       // Offset and value
-      int offset = read_int();
+      s_t offset = read_int();
       double d = read_double();
 
       // Save initial guess
@@ -532,12 +532,12 @@ namespace casadi {
 
   void NlImporter::x_segment() {
     // Read the number of guesses supplied
-    int m = read_int();
+    s_t m = read_int();
 
     // Process initial guess
-    for (int i=0; i<m; ++i) {
+    for (s_t i=0; i<m; ++i) {
       // Offset and value
-      int offset = read_int();
+      s_t offset = read_int();
       double d = read_double();
 
       // Save initial guess
@@ -547,7 +547,7 @@ namespace casadi {
 
   void NlImporter::r_segment() {
     // For all constraints
-    for (int i=0; i<n_con_; ++i) {
+    for (s_t i=0; i<n_con_; ++i) {
 
       // Read constraint type
       char c_type = read_char();
@@ -604,7 +604,7 @@ namespace casadi {
 
   void NlImporter::b_segment() {
     // For all variable
-    for (int i=0; i<n_var_; ++i) {
+    for (s_t i=0; i<n_var_; ++i) {
 
       // Read constraint type
       char c_type = read_char();
@@ -651,28 +651,28 @@ namespace casadi {
 
   void NlImporter::k_segment() {
     // Get row offsets
-    vector<int> rowind(n_var_+1);
+    vector<s_t> rowind(n_var_+1);
 
     // Get the number of offsets
-    int k = read_int();
+    s_t k = read_int();
     casadi_assert_dev(k==n_var_-1);
 
     // Get the row offsets
     rowind[0]=0;
-    for (int i=0; i<k; ++i) {
+    for (s_t i=0; i<k; ++i) {
       rowind[i+1] = read_int();
     }
   }
 
   void NlImporter::J_segment() {
     // Get constraint number and number of terms
-    int i = read_int();
-    int k = read_int();
+    s_t i = read_int();
+    s_t k = read_int();
 
     // Get terms
-    for (int kk=0; kk<k; ++kk) {
+    for (s_t kk=0; kk<k; ++kk) {
       // Get the term
-      int j = read_int();
+      s_t j = read_int();
       double c = read_double();
 
       // Add to constraints
@@ -683,12 +683,12 @@ namespace casadi {
   void NlImporter::G_segment() {
     // Get objective number and number of terms
     read_int(); // i
-    int k = read_int();
+    s_t k = read_int();
 
     // Get terms
-    for (int kk=0; kk<k; ++kk) {
+    for (s_t kk=0; kk<k; ++kk) {
       // Get the term
-      int j = read_int();
+      s_t j = read_int();
       double c = read_double();
 
       // Add to objective

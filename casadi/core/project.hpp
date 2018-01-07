@@ -48,13 +48,13 @@ namespace casadi {
 
     /// Evaluate the function (template)
     template<typename T>
-    r_t eval_gen(const T** arg, T** res, int* iw, T* w) const;
+    r_t eval_gen(const T** arg, T** res, s_t* iw, T* w) const;
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const override;
 
     /** \brief  Evaluate symbolically (MX) */
     void eval_mx(const std::vector<MX>& arg, std::vector<MX>& res) const override;
@@ -69,13 +69,13 @@ namespace casadi {
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                  const std::vector<int>& arg, const std::vector<int>& res) const override;
+                  const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief Get the operation */
     e_t op() const override { return OP_PROJECT;}

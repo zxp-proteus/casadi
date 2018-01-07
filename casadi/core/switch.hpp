@@ -57,23 +57,23 @@ namespace casadi {
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override;
-    Sparsity get_sparsity_out(int i) override;
+    Sparsity get_sparsity_in(s_t i) override;
+    Sparsity get_sparsity_out(s_t i) override;
     /// @}
 
     /** \brief  Initialize */
     void init(const Dict& opts) override;
 
     /** \brief  Evaluate numerically, work vectors given */
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /** \brief  evaluate symbolically while also propagating directional derivatives */
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem) const override;
 
     ///@{
     /** \brief Generate a function that calculates \a nfwd forward derivatives */
-    bool has_forward(int nfwd) const override { return true;}
-    Function get_forward(int nfwd, const std::string& name,
+    bool has_forward(s_t nfwd) const override { return true;}
+    Function get_forward(s_t nfwd, const std::string& name,
                          const std::vector<std::string>& inames,
                          const std::vector<std::string>& onames,
                          const Dict& opts) const override;
@@ -81,8 +81,8 @@ namespace casadi {
 
     ///@{
     /** \brief Generate a function that calculates \a nadj adjoint derivatives */
-    bool has_reverse(int nadj) const override { return true;}
-    Function get_reverse(int nadj, const std::string& name,
+    bool has_reverse(s_t nadj) const override { return true;}
+    Function get_reverse(s_t nadj, const std::string& name,
                          const std::vector<std::string>& inames,
                          const std::vector<std::string>& onames,
                          const Dict& opts) const override;

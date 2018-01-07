@@ -68,11 +68,11 @@ namespace casadi {
     MX();
 
     /** \brief Create a sparse matrix with all structural zeros */
-    MX(int nrow, int ncol);
+    MX(s_t nrow, s_t ncol);
 
 #ifndef SWIG
     /** \brief Create a sparse matrix with all structural zeros */
-    explicit MX(const std::pair<int, int>& rc);
+    explicit MX(const std::pair<s_t, s_t>& rc);
 #endif // SWIG
 
     /** \brief Create a sparse matrix from a sparsity pattern.
@@ -136,16 +136,16 @@ namespace casadi {
 
     /** \brief Erase a submatrix (leaving structural zeros in its place)
         Erase rows and/or columns of a matrix */
-    void erase(const std::vector<int>& rr, const std::vector<int>& cc, bool ind1=false);
+    void erase(const std::vector<s_t>& rr, const std::vector<s_t>& cc, bool ind1=false);
 
     /** \brief Erase a submatrix (leaving structural zeros in its place)
         Erase elements of a matrix */
-    void erase(const std::vector<int>& rr, bool ind1=false);
+    void erase(const std::vector<s_t>& rr, bool ind1=false);
 
     /** \brief Enlarge matrix
         Make the matrix larger by inserting empty rows and columns, keeping the existing non-zeros */
-    void enlarge(int nrow, int ncol,
-                 const std::vector<int>& rr, const std::vector<int>& cc, bool ind1=false);
+    void enlarge(s_t nrow, s_t ncol,
+                 const std::vector<s_t>& rr, const std::vector<s_t>& cc, bool ind1=false);
 
     MX operator-() const;
 
@@ -162,16 +162,16 @@ namespace casadi {
 #endif // SWIG
 
     /** \brief Get the nth dependency as MX */
-    MX dep(int ch=0) const;
+    MX dep(s_t ch=0) const;
 
     /** \brief  Number of outputs */
-    int n_out() const;
+    s_t n_out() const;
 
     /** \brief  Get an output */
-    MX get_output(int oind) const;
+    MX get_output(s_t oind) const;
 
     /** \brief Get the number of dependencies of a binary SXElem */
-    int n_dep() const;
+    s_t n_dep() const;
 
     /// Get the name.
     std::string name() const;
@@ -198,7 +198,7 @@ namespace casadi {
     bool is_output() const;
 
     /// Get the index of evaluation output - only valid when is_output() is true
-    int which_output() const;
+    s_t which_output() const;
 
     /// Is it a certain operation
     bool is_op(e_t op) const;
@@ -219,7 +219,7 @@ namespace casadi {
 
     /** \brief Get the number of primitives for MXFunction inputs/outputs
     */
-    int n_primitives() const;
+    s_t n_primitives() const;
 
     /** \brief Get primitives */
     std::vector<MX> primitives() const;
@@ -275,10 +275,10 @@ namespace casadi {
 
     /// \cond INTERNAL
     /// Get the temporary variable
-    int get_temp() const;
+    s_t get_temp() const;
 
     /// Set the temporary variable
-    void set_temp(int t) const;
+    void set_temp(s_t t) const;
     /// \endcond
 
     ///@{
@@ -290,19 +290,19 @@ namespace casadi {
     ///@{
     /** \brief  create a matrix with all inf */
     static MX inf(const Sparsity& sp);
-    static MX inf(int nrow=1, int ncol=1);
-    static MX inf(const std::pair<int, int>& rc);
+    static MX inf(s_t nrow=1, s_t ncol=1);
+    static MX inf(const std::pair<s_t, s_t>& rc);
     ///@}
 
     ///@{
     /** \brief  create a matrix with all nan */
     static MX nan(const Sparsity& sp);
-    static MX nan(int nrow=1, int ncol=1);
-    static MX nan(const std::pair<int, int>& rc);
+    static MX nan(s_t nrow=1, s_t ncol=1);
+    static MX nan(const std::pair<s_t, s_t>& rc);
     ///@}
 
     /** \brief  Identity matrix */
-    static MX eye(int ncol);
+    static MX eye(s_t ncol);
 
 #ifndef SWIG
     /// Get a const pointer to the node
@@ -312,22 +312,22 @@ namespace casadi {
     ///@{
     /// Get a submatrix, single argument
     void get(MX& SWIG_OUTPUT(m), bool ind1, const Slice& rr) const;
-    void get(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<int>& rr) const;
+    void get(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<s_t>& rr) const;
     void get(MX& SWIG_OUTPUT(m), bool ind1, const Sparsity& sp) const;
     ///@}
 
     /// Get a submatrix, two arguments
     ///@{
     void get(MX& SWIG_OUTPUT(m), bool ind1, const Slice& rr, const Slice& cc) const;
-    void get(MX& SWIG_OUTPUT(m), bool ind1, const Slice& rr, const Matrix<int>& cc) const;
-    void get(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<int>& rr, const Slice& cc) const;
-    void get(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<int>& rr, const Matrix<int>& cc) const;
+    void get(MX& SWIG_OUTPUT(m), bool ind1, const Slice& rr, const Matrix<s_t>& cc) const;
+    void get(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<s_t>& rr, const Slice& cc) const;
+    void get(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<s_t>& rr, const Matrix<s_t>& cc) const;
     ///@}
 
     ///@{
     /// Set a submatrix, single argument
     void set(const MX& m, bool ind1, const Slice& rr);
-    void set(const MX& m, bool ind1, const Matrix<int>& rr);
+    void set(const MX& m, bool ind1, const Matrix<s_t>& rr);
     void set(const MX& m, bool ind1, const Sparsity& sp);
     ///@}
 
@@ -335,21 +335,21 @@ namespace casadi {
     /// Set a submatrix, two arguments
     ///@}
     void set(const MX& m, bool ind1, const Slice& rr, const Slice& cc);
-    void set(const MX& m, bool ind1, const Slice& rr, const Matrix<int>& cc);
-    void set(const MX& m, bool ind1, const Matrix<int>& rr, const Slice& cc);
-    void set(const MX& m, bool ind1, const Matrix<int>& rr, const Matrix<int>& cc);
+    void set(const MX& m, bool ind1, const Slice& rr, const Matrix<s_t>& cc);
+    void set(const MX& m, bool ind1, const Matrix<s_t>& rr, const Slice& cc);
+    void set(const MX& m, bool ind1, const Matrix<s_t>& rr, const Matrix<s_t>& cc);
     ///@}
 
     ///@{
     /// Get a set of nonzeros
     void get_nz(MX& SWIG_OUTPUT(m), bool ind1, const Slice& kk) const;
-    void get_nz(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<int>& kk) const;
+    void get_nz(MX& SWIG_OUTPUT(m), bool ind1, const Matrix<s_t>& kk) const;
     ///@}
 
     ///@{
     /// Set a set of nonzeros
     void set_nz(const MX& m, bool ind1, const Slice& kk);
-    void set_nz(const MX& m, bool ind1, const Matrix<int>& kk);
+    void set_nz(const MX& m, bool ind1, const Matrix<s_t>& kk);
     ///@}
 
     ///@{
@@ -368,19 +368,19 @@ namespace casadi {
 
     */
     static MX einstein(const MX& A, const MX& B, const MX& C,
-      const std::vector<int>& dim_a, const std::vector<int>& dim_b, const std::vector<int>& dim_c,
-      const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c);
+      const std::vector<s_t>& dim_a, const std::vector<s_t>& dim_b, const std::vector<s_t>& dim_c,
+      const std::vector<s_t>& a, const std::vector<s_t>& b, const std::vector<s_t>& c);
 
     static MX einstein(const MX& A, const MX& B,
-      const std::vector<int>& dim_a, const std::vector<int>& dim_b, const std::vector<int>& dim_c,
-      const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c);
+      const std::vector<s_t>& dim_a, const std::vector<s_t>& dim_b, const std::vector<s_t>& dim_c,
+      const std::vector<s_t>& a, const std::vector<s_t>& b, const std::vector<s_t>& c);
     ///@}
 
 #ifndef SWIG
     /// \cond CLUTTER
     ///@{
     /// Functions called by friend functions defined for GenericExpression
-    static bool is_equal(const MX& x, const MX& y, int depth=0);
+    static bool is_equal(const MX& x, const MX& y, s_t depth=0);
     static MX mmin(const MX &x);
     static MX mmax(const MX &x);
     ///@}
@@ -390,17 +390,17 @@ namespace casadi {
     static MX horzcat(const std::vector<MX>& x);
     static MX diagcat(const std::vector<MX>& x);
     static MX vertcat(const std::vector<MX>& x);
-    static std::vector<MX> horzsplit(const MX& x, const std::vector<int>& offset);
-    static std::vector<MX> diagsplit(const MX& x, const std::vector<int>& offset1,
-                                     const std::vector<int>& offset2);
-    static std::vector<MX> vertsplit(const MX& x, const std::vector<int>& offset);
+    static std::vector<MX> horzsplit(const MX& x, const std::vector<s_t>& offset);
+    static std::vector<MX> diagsplit(const MX& x, const std::vector<s_t>& offset1,
+                                     const std::vector<s_t>& offset2);
+    static std::vector<MX> vertsplit(const MX& x, const std::vector<s_t>& offset);
     static MX blockcat(const std::vector< std::vector<MX > > &v);
     static MX mtimes(const MX& x, const MX& y);
     static MX mac(const MX& x, const MX& y, const MX& z);
-    static MX reshape(const MX& x, int nrow, int ncol);
+    static MX reshape(const MX& x, s_t nrow, s_t ncol);
     static MX reshape(const MX& x, const Sparsity& sp);
     static MX kron(const MX& x, const MX& b);
-    static MX repmat(const MX& x, int n, int m=1);
+    static MX repmat(const MX& x, s_t n, s_t m=1);
     ///@}
 
     ///@{
@@ -419,7 +419,7 @@ namespace casadi {
             const std::vector<std::vector<MX> > &v,
             const Dict& opts = Dict());
     static std::vector<bool> which_depends(const MX &expr, const MX &var,
-        int order=1, bool tr=false);
+        s_t order=1, bool tr=false);
     static MX substitute(const MX& ex, const MX& v, const MX& vdef);
     static std::vector<MX> substitute(const std::vector<MX> &ex,
                                          const std::vector<MX> &v,
@@ -436,7 +436,7 @@ namespace casadi {
                const Dict& dict = Dict());
     static MX expm_const(const MX& A, const MX& t);
     static MX expm(const MX& A);
-    static int n_nodes(const MX& x);
+    static s_t n_nodes(const MX& x);
     static std::string print_operator(const MX& x, const std::vector<std::string>& args);
     static void shared(std::vector<MX>& ex, std::vector<MX>& v,
                               std::vector<MX>& vdef, const std::string& v_prefix,
@@ -463,7 +463,7 @@ namespace casadi {
     static MX det(const MX& x);
     static std::vector<MX> symvar(const MX& x);
     static MX nullspace(const MX& A);
-    static MX repsum(const MX& x, int n, int m=1);
+    static MX repsum(const MX& x, s_t n, s_t m=1);
     static MX densify(const MX& x, const MX& val=0);
     static MX _bilin(const MX& A, const MX& x, const MX& y);
     static MX _rank1(const MX& A, const MX& alpha, const MX& x, const MX& y);
@@ -580,13 +580,13 @@ namespace casadi {
     MX T() const;
 
     /** \brief Get an IM representation of a GetNonzeros or SetNonzeros node */
-    Matrix<int> mapping() const;
+    Matrix<s_t> mapping() const;
 
     /** \brief Set or reset the depth to which equalities are being checked for simplifications */
-    static void set_max_depth(int eq_depth=1);
+    static void set_max_depth(s_t eq_depth=1);
 
     /** \brief Get the depth to which equalities are being checked for simplifications */
-    static int get_max_depth();
+    static s_t get_max_depth();
 
     /// Check if a particular cast is allowed
     static bool test_cast(const SharedObjectInternal* ptr);
@@ -602,7 +602,7 @@ namespace casadi {
 
 #ifndef SWIG
     /// Construct constant matrix with a given sparsity and values
-    MX(const Sparsity& sp, int val, bool dummy);
+    MX(const Sparsity& sp, s_t val, bool dummy);
     MX(const Sparsity& sp, double val, bool dummy);
 
     // Create matrix symbolic primitive
@@ -614,7 +614,7 @@ namespace casadi {
     MX(MXNode* node, bool dummy1, bool dummy2, bool dummy3, bool dummy4);
 
     // Depth when checking equalities
-    static int eq_depth_;
+    static s_t eq_depth_;
 
 #endif // SWIG
   };

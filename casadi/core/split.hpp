@@ -41,42 +41,42 @@ namespace casadi {
   class CASADI_EXPORT Split : public MultipleOutput {
   public:
     /// Constructor
-    Split(const MX& x, const std::vector<int>& offset);
+    Split(const MX& x, const std::vector<s_t>& offset);
 
     /// Destructor
     ~Split() override = 0;
 
     /** \brief  Number of outputs */
-    int nout() const override { return output_sparsity_.size(); }
+    s_t nout() const override { return output_sparsity_.size(); }
 
     /** \brief  Get the sparsity of output oind */
-    const Sparsity& sparsity(int oind) const override { return output_sparsity_.at(oind);}
+    const Sparsity& sparsity(s_t oind) const override { return output_sparsity_.at(oind);}
 
     /// Evaluate the function (template)
     template<typename T>
-    r_t eval_gen(const T** arg, T** res, int* iw, T* w) const;
+    r_t eval_gen(const T** arg, T** res, s_t* iw, T* w) const;
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const override;
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const override;
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** Obtain information about node */
     Dict info() const override;
 
     // Sparsity pattern of the outputs
-    std::vector<int> offset_;
+    std::vector<s_t> offset_;
     std::vector<Sparsity> output_sparsity_;
   };
 
@@ -88,7 +88,7 @@ namespace casadi {
   public:
 
     /// Constructor
-    Horzsplit(const MX& x, const std::vector<int>& offset);
+    Horzsplit(const MX& x, const std::vector<s_t>& offset);
 
     /// Destructor
     ~Horzsplit() override {}
@@ -123,7 +123,7 @@ namespace casadi {
   public:
 
     /// Constructor
-    Diagsplit(const MX& x, const std::vector<int>& offset1, const std::vector<int>& offset2);
+    Diagsplit(const MX& x, const std::vector<s_t>& offset1, const std::vector<s_t>& offset2);
 
     /// Destructor
     ~Diagsplit() override {}
@@ -157,7 +157,7 @@ namespace casadi {
   public:
 
     /// Constructor
-    Vertsplit(const MX& x, const std::vector<int>& offset);
+    Vertsplit(const MX& x, const std::vector<s_t>& offset);
 
     /// Destructor
     ~Vertsplit() override {}

@@ -51,7 +51,7 @@ namespace casadi {
   template <typename Scalar> inline std::string matrixName()
   { return std::string("Matrix<") + typeid(Scalar).name() + std::string(">");}
   template<> inline std::string matrixName<double>() { return "DM"; }
-  template<> inline std::string matrixName<int>() { return "IM"; }
+  template<> inline std::string matrixName<s_t>() { return "IM"; }
   ///@}
 /// \endcond
 
@@ -99,11 +99,11 @@ namespace casadi {
 #endif // SWIG
 
     /** \brief Create a sparse matrix with all structural zeros */
-    Matrix(int nrow, int ncol);
+    Matrix(s_t nrow, s_t ncol);
 
 #ifndef SWIG
     /** \brief Create a sparse matrix with all structural zeros */
-    explicit Matrix(const std::pair<int, int>& rc);
+    explicit Matrix(const std::pair<s_t, s_t>& rc);
 
     /** \brief  Access functions of the node */
     std::vector<Scalar>* operator->() { return &nonzeros_;}
@@ -195,7 +195,7 @@ namespace casadi {
 #endif // SWIG
 
     /// Returns true if the matrix has a non-zero at location rr, cc
-    bool has_nz(int rr, int cc) const { return sparsity().has_nz(rr, cc); }
+    bool has_nz(s_t rr, s_t cc) const { return sparsity().has_nz(rr, cc); }
 
     /// Returns the truth value of a Matrix
     bool __nonzero__() const;
@@ -203,7 +203,7 @@ namespace casadi {
     ///@{
     /// Get a submatrix, single argument
     void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Slice& rr) const;
-    void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Matrix<int>& rr) const;
+    void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Matrix<s_t>& rr) const;
     void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Sparsity& sp) const;
     ///@}
 
@@ -212,38 +212,38 @@ namespace casadi {
     void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1,
                 const Slice& rr, const Slice& cc) const;
     void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1,
-                const Slice& rr, const Matrix<int>& cc) const;
+                const Slice& rr, const Matrix<s_t>& cc) const;
     void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1,
-                const Matrix<int>& rr, const Slice& cc) const;
+                const Matrix<s_t>& rr, const Slice& cc) const;
     void get(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1,
-                const Matrix<int>& rr, const Matrix<int>& cc) const;
+                const Matrix<s_t>& rr, const Matrix<s_t>& cc) const;
     ///@}
 
     ///@{
     /// Set a submatrix, single argument
     void set(const Matrix<Scalar>& m, bool ind1, const Slice& rr);
-    void set(const Matrix<Scalar>& m, bool ind1, const Matrix<int>& rr);
+    void set(const Matrix<Scalar>& m, bool ind1, const Matrix<s_t>& rr);
     void set(const Matrix<Scalar>& m, bool ind1, const Sparsity& sp);
     ///@}
 
     ///@{
     /// Set a submatrix, two arguments
     void set(const Matrix<Scalar>& m, bool ind1, const Slice& rr, const Slice& cc);
-    void set(const Matrix<Scalar>& m, bool ind1, const Slice& rr, const Matrix<int>& cc);
-    void set(const Matrix<Scalar>& m, bool ind1, const Matrix<int>& rr, const Slice& cc);
-    void set(const Matrix<Scalar>& m, bool ind1, const Matrix<int>& rr, const Matrix<int>& cc);
+    void set(const Matrix<Scalar>& m, bool ind1, const Slice& rr, const Matrix<s_t>& cc);
+    void set(const Matrix<Scalar>& m, bool ind1, const Matrix<s_t>& rr, const Slice& cc);
+    void set(const Matrix<Scalar>& m, bool ind1, const Matrix<s_t>& rr, const Matrix<s_t>& cc);
     ///@}
 
     ///@{
     /// Get a set of nonzeros
     void get_nz(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Slice& k) const;
-    void get_nz(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Matrix<int>& k) const;
+    void get_nz(Matrix<Scalar>& SWIG_OUTPUT(m), bool ind1, const Matrix<s_t>& k) const;
     ///@}
 
     ///@{
     /// Set a set of nonzeros
     void set_nz(const Matrix<Scalar>& m, bool ind1, const Slice& k);
-    void set_nz(const Matrix<Scalar>& m, bool ind1, const Matrix<int>& k);
+    void set_nz(const Matrix<Scalar>& m, bool ind1, const Matrix<s_t>& k);
     ///@}
 
     Matrix<Scalar> operator+() const;
@@ -267,7 +267,7 @@ namespace casadi {
     /// \cond CLUTTER
     ///@{
     /// Functions called by friend functions defined for GenericExpression
-    static bool is_equal(const Matrix<Scalar> &x, const Matrix<Scalar> &y, int depth=0);
+    static bool is_equal(const Matrix<Scalar> &x, const Matrix<Scalar> &y, s_t depth=0);
     static Matrix<Scalar> mmin(const Matrix<Scalar> &x);
     static Matrix<Scalar> mmax(const Matrix<Scalar> &x);
     ///@}
@@ -304,7 +304,7 @@ namespace casadi {
     static Matrix<Scalar> inv(const Matrix<Scalar> &A,
                                   const std::string& lsolver, const Dict& opts);
 
-    static int n_nodes(const Matrix<Scalar> &x);
+    static s_t n_nodes(const Matrix<Scalar> &x);
     static std::string print_operator(const Matrix<Scalar> &x,
                                       const std::vector<std::string>& args);
     static void shared(std::vector<Matrix<Scalar> >& ex,
@@ -351,12 +351,12 @@ namespace casadi {
     static Matrix<Scalar> densify(const Matrix<Scalar> &x);
     static Matrix<Scalar> einstein(const Matrix<Scalar>& A, const Matrix<Scalar>& B,
       const Matrix<Scalar>& C,
-      const std::vector<int>& dim_a, const std::vector<int>& dim_b, const std::vector<int>& dim_c,
-      const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c);
+      const std::vector<s_t>& dim_a, const std::vector<s_t>& dim_b, const std::vector<s_t>& dim_c,
+      const std::vector<s_t>& a, const std::vector<s_t>& b, const std::vector<s_t>& c);
 
     static Matrix<Scalar> einstein(const Matrix<Scalar>& A, const Matrix<Scalar>& B,
-      const std::vector<int>& dim_a, const std::vector<int>& dim_b, const std::vector<int>& dim_c,
-      const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c);
+      const std::vector<s_t>& dim_a, const std::vector<s_t>& dim_b, const std::vector<s_t>& dim_c,
+      const std::vector<s_t>& a, const std::vector<s_t>& b, const std::vector<s_t>& c);
     ///@}
 
     ///@{
@@ -365,16 +365,16 @@ namespace casadi {
     static Matrix<Scalar> horzcat(const std::vector<Matrix<Scalar> > &v);
     static std::vector<Matrix<Scalar> >
       horzsplit(const Matrix<Scalar>& x,
-                const std::vector<int>& offset);
+                const std::vector<s_t>& offset);
     static Matrix<Scalar> vertcat(const std::vector<Matrix<Scalar> > &v);
     static std::vector< Matrix<Scalar> >
       vertsplit(const Matrix<Scalar>& x,
-                const std::vector<int>& offset);
+                const std::vector<s_t>& offset);
     static std::vector< Matrix<Scalar> >
       diagsplit(const Matrix<Scalar>& x,
-                const std::vector<int>& offset1,
-                const std::vector<int>& offset2);
-    static Matrix<Scalar> reshape(const Matrix<Scalar> &x, int nrow, int ncol);
+                const std::vector<s_t>& offset1,
+                const std::vector<s_t>& offset2);
+    static Matrix<Scalar> reshape(const Matrix<Scalar> &x, s_t nrow, s_t ncol);
     static Matrix<Scalar> reshape(const Matrix<Scalar> &x, const Sparsity& sp);
     static Matrix<Scalar> kron(const Matrix<Scalar> &x, const Matrix<Scalar>& y);
     static Matrix<Scalar> mtimes(const Matrix<Scalar> &x, const Matrix<Scalar> &y);
@@ -399,10 +399,10 @@ namespace casadi {
     static Matrix<Scalar> ramp(const Matrix<Scalar> &x);
     static Matrix<Scalar> gauss_quadrature(const Matrix<Scalar> &f,
                                              const Matrix<Scalar> &x, const Matrix<Scalar> &a,
-                                             const Matrix<Scalar> &b, int order=5);
+                                             const Matrix<Scalar> &b, s_t order=5);
     static Matrix<Scalar> gauss_quadrature(const Matrix<Scalar> &f,
                                              const Matrix<Scalar> &x, const Matrix<Scalar> &a,
-                                             const Matrix<Scalar> &b, int order,
+                                             const Matrix<Scalar> &b, s_t order,
                                              const Matrix<Scalar>& w);
     static std::vector<std::vector<Matrix<Scalar> > >
     forward(const std::vector<Matrix<Scalar> > &ex,
@@ -415,29 +415,29 @@ namespace casadi {
             const std::vector<std::vector<Matrix<Scalar> > > &v,
             const Dict& opts = Dict());
     static std::vector<bool> which_depends(const Matrix<Scalar> &expr, const Matrix<Scalar> &var,
-        int order=1, bool tr=false);
+        s_t order=1, bool tr=false);
     static Matrix<Scalar> taylor(const Matrix<Scalar>& ex, const Matrix<Scalar>& x,
-                                   const Matrix<Scalar>& a, int order);
+                                   const Matrix<Scalar>& a, s_t order);
     static Matrix<Scalar> mtaylor(const Matrix<Scalar>& ex, const Matrix<Scalar>& x,
-                                    const Matrix<Scalar>& a, int order);
+                                    const Matrix<Scalar>& a, s_t order);
     static Matrix<Scalar> mtaylor(const Matrix<Scalar>& ex,
-                                    const Matrix<Scalar>& x, const Matrix<Scalar>& a, int order,
-                                    const std::vector<int>& order_contributions);
+                                    const Matrix<Scalar>& x, const Matrix<Scalar>& a, s_t order,
+                                    const std::vector<s_t>& order_contributions);
     static Matrix<Scalar> poly_coeff(const Matrix<Scalar>& ex, const Matrix<Scalar>&x);
     static Matrix<Scalar> poly_roots(const Matrix<Scalar>& p);
     static Matrix<Scalar> eig_symbolic(const Matrix<Scalar>& m);
     static void qr_sparse(const Matrix<Scalar>& A, Matrix<Scalar>& V, Matrix<Scalar>& R,
-                          Matrix<Scalar>& beta, std::vector<int>& pinv);
+                          Matrix<Scalar>& beta, std::vector<s_t>& pinv);
     static Matrix<Scalar> qr_solve(const Matrix<Scalar>& b, const Matrix<Scalar>& v,
                                    const Matrix<Scalar>& r, const Matrix<Scalar>& beta,
-                                   const std::vector<int>& pinv, bool tr=false);
+                                   const std::vector<s_t>& pinv, bool tr=false);
     static void qr(const Matrix<Scalar>& A, Matrix<Scalar>& Q, Matrix<Scalar>& R);
     static void ldl(const Matrix<Scalar>& A, Matrix<Scalar>& L, Matrix<Scalar>& D);
     static Matrix<Scalar> all(const Matrix<Scalar>& x);
     static Matrix<Scalar> any(const Matrix<Scalar>& x);
     static Matrix<Scalar> adj(const Matrix<Scalar>& x);
-    static Matrix<Scalar> minor(const Matrix<Scalar>& x, int i, int j);
-    static Matrix<Scalar> cofactor(const Matrix<Scalar>& A, int i, int j);
+    static Matrix<Scalar> minor(const Matrix<Scalar>& x, s_t i, s_t j);
+    static Matrix<Scalar> cofactor(const Matrix<Scalar>& A, s_t i, s_t j);
     static Matrix<Scalar> chol(const Matrix<Scalar>& A);
     static Matrix<Scalar> norm_inf_mul(const Matrix<Scalar>& x, const Matrix<Scalar> &y);
     static Matrix<Scalar> diagcat(const std::vector< Matrix<Scalar> > &A);
@@ -463,13 +463,13 @@ namespace casadi {
 
     /** \brief Get the (i,j) minor matrix
      */
-    friend inline Matrix<Scalar> minor(const Matrix<Scalar> &x, int i, int j) {
+    friend inline Matrix<Scalar> minor(const Matrix<Scalar> &x, s_t i, s_t j) {
       return Matrix<Scalar>::minor(x, i, j);
     }
 
     /** \brief Get the (i,j) cofactor matrix
     */
-    friend inline Matrix<Scalar> cofactor(const Matrix<Scalar> &x, int i, int j) {
+    friend inline Matrix<Scalar> cofactor(const Matrix<Scalar> &x, s_t i, s_t j) {
       return Matrix<Scalar>::cofactor(x, i, j);
     }
 
@@ -487,14 +487,14 @@ namespace casadi {
      * See T. Davis: Direct Methods for Sparse Linear Systems
      */
     friend inline void qr_sparse(const Matrix<Scalar>& A, Matrix<Scalar>& V, Matrix<Scalar>& R,
-                                 Matrix<Scalar>& beta, std::vector<int>& pinv) {
+                                 Matrix<Scalar>& beta, std::vector<s_t>& pinv) {
       return Matrix<Scalar>::qr_sparse(A, V, R, beta, pinv);
     }
 
     friend inline Matrix<Scalar>
     qr_solve(const Matrix<Scalar>& b, const Matrix<Scalar>& v,
              const Matrix<Scalar>& r, const Matrix<Scalar>& beta,
-             const std::vector<int>& pinv, bool tr=false) {
+             const std::vector<s_t>& pinv, bool tr=false) {
         return Matrix<Scalar>::qr_solve(b, v, r, beta, pinv, tr);
     }
 
@@ -642,13 +642,13 @@ namespace casadi {
     friend inline Matrix<Scalar>
       gauss_quadrature(const Matrix<Scalar> &f, const Matrix<Scalar> &x,
                        const Matrix<Scalar> &a, const Matrix<Scalar> &b,
-                       int order=5) {
+                       s_t order=5) {
       return Matrix<Scalar>::gauss_quadrature(f, x, a, b, order);
     }
     friend inline Matrix<Scalar>
       gauss_quadrature(const Matrix<Scalar> &f, const Matrix<Scalar> &x,
                        const Matrix<Scalar> &a, const Matrix<Scalar> &b,
-                       int order, const Matrix<Scalar>& w) {
+                       s_t order, const Matrix<Scalar>& w) {
       return Matrix<Scalar>::gauss_quadrature(f, x, a, b, order, w);
     }
     ///@}
@@ -669,7 +669,7 @@ namespace casadi {
      * \verbatim >>   x \endverbatim
      */
     friend inline Matrix<Scalar> taylor(const Matrix<Scalar>& ex, const Matrix<Scalar>& x,
-                                          const Matrix<Scalar>& a, int order=1) {
+                                          const Matrix<Scalar>& a, s_t order=1) {
       return Matrix<Scalar>::taylor(ex, x, a, order);
     }
     friend inline Matrix<Scalar> taylor(const Matrix<Scalar>& ex, const Matrix<Scalar>& x) {
@@ -685,7 +685,7 @@ namespace casadi {
      *
      */
     friend inline Matrix<Scalar> mtaylor(const Matrix<Scalar>& ex, const Matrix<Scalar>& x,
-                                           const Matrix<Scalar>& a, int order=1) {
+                                           const Matrix<Scalar>& a, s_t order=1) {
       return Matrix<Scalar>::mtaylor(ex, x, a, order);
     }
 
@@ -716,8 +716,8 @@ namespace casadi {
      *
      */
     friend inline Matrix<Scalar> mtaylor(const Matrix<Scalar>& ex, const Matrix<Scalar>& x,
-                                           const Matrix<Scalar>& a, int order,
-                                           const std::vector<int>& order_contributions) {
+                                           const Matrix<Scalar>& a, s_t order,
+                                           const std::vector<s_t>& order_contributions) {
       return Matrix<Scalar>::mtaylor(ex, x, a, order, order_contributions);
     }
 
@@ -751,10 +751,10 @@ namespace casadi {
 #endif
 
     /** \brief Set or reset the depth to which equalities are being checked for simplifications */
-    static void set_max_depth(int eq_depth=1);
+    static void set_max_depth(s_t eq_depth=1);
 
     /** \brief Get the depth to which equalities are being checked for simplifications */
-    static int get_max_depth();
+    static s_t get_max_depth();
 
     /** \brief Get function input */
     static std::vector<Matrix<Scalar> > get_input(const Function& f);
@@ -788,27 +788,27 @@ namespace casadi {
     void print_sparse(std::ostream &stream, bool truncate=true) const;
 
     void clear();
-    void resize(int nrow, int ncol);
-    void reserve(int nnz);
-    void reserve(int nnz, int ncol);
+    void resize(s_t nrow, s_t ncol);
+    void reserve(s_t nnz);
+    void reserve(s_t nnz, s_t ncol);
 
     /** \brief Erase a submatrix (leaving structural zeros in its place)
         Erase rows and/or columns of a matrix */
-    void erase(const std::vector<int>& rr, const std::vector<int>& cc, bool ind1=false);
+    void erase(const std::vector<s_t>& rr, const std::vector<s_t>& cc, bool ind1=false);
 
     /** \brief Erase a submatrix (leaving structural zeros in its place)
         Erase elements of a matrix */
-    void erase(const std::vector<int>& rr, bool ind1=false);
+    void erase(const std::vector<s_t>& rr, bool ind1=false);
 
     /** \brief Remove columns and rows
         Remove/delete rows and/or columns of a matrix */
-    void remove(const std::vector<int>& rr, const std::vector<int>& cc);
+    void remove(const std::vector<s_t>& rr, const std::vector<s_t>& cc);
 
     /** \brief Enlarge matrix
         Make the matrix larger by inserting empty rows and columns,
         keeping the existing non-zeros */
-    void enlarge(int nrow, int ncol,
-                 const std::vector<int>& rr, const std::vector<int>& cc, bool ind1=false);
+    void enlarge(s_t nrow, s_t ncol,
+                 const std::vector<s_t>& rr, const std::vector<s_t>& cc, bool ind1=false);
 
 #ifndef SWIG
     ///@{
@@ -837,30 +837,30 @@ namespace casadi {
      * Default matrix size is max(col) x max(row)
      */
     ///@{
-    static Matrix<Scalar> triplet(const std::vector<int>& row, const std::vector<int>& col,
+    static Matrix<Scalar> triplet(const std::vector<s_t>& row, const std::vector<s_t>& col,
                                     const Matrix<Scalar>& d);
-    static Matrix<Scalar> triplet(const std::vector<int>& row, const std::vector<int>& col,
-                                    const Matrix<Scalar>& d, int nrow, int ncol);
-    static Matrix<Scalar> triplet(const std::vector<int>& row, const std::vector<int>& col,
-                                    const Matrix<Scalar>& d, const std::pair<int, int>& rc);
+    static Matrix<Scalar> triplet(const std::vector<s_t>& row, const std::vector<s_t>& col,
+                                    const Matrix<Scalar>& d, s_t nrow, s_t ncol);
+    static Matrix<Scalar> triplet(const std::vector<s_t>& row, const std::vector<s_t>& col,
+                                    const Matrix<Scalar>& d, const std::pair<s_t, s_t>& rc);
     ///@}
 
     ///@{
     /** \brief  create a matrix with all inf */
     static Matrix<Scalar> inf(const Sparsity& sp);
-    static Matrix<Scalar> inf(int nrow=1, int ncol=1);
-    static Matrix<Scalar> inf(const std::pair<int, int>& rc);
+    static Matrix<Scalar> inf(s_t nrow=1, s_t ncol=1);
+    static Matrix<Scalar> inf(const std::pair<s_t, s_t>& rc);
     ///@}
 
     ///@{
     /** \brief  create a matrix with all nan */
     static Matrix<Scalar> nan(const Sparsity& sp);
-    static Matrix<Scalar> nan(int nrow=1, int ncol=1);
-    static Matrix<Scalar> nan(const std::pair<int, int>& rc);
+    static Matrix<Scalar> nan(s_t nrow=1, s_t ncol=1);
+    static Matrix<Scalar> nan(const std::pair<s_t, s_t>& rc);
     ///@}
 
     /** \brief  create an n-by-n identity matrix */
-    static Matrix<Scalar> eye(int ncol);
+    static Matrix<Scalar> eye(s_t ncol);
 
     /** \brief Returns a number that is unique for a given symbolic scalar
      *
@@ -947,8 +947,8 @@ namespace casadi {
     /** \brief Type conversion to double */
     explicit operator double() const;
 
-    /** \brief Type conversion to int */
-    explicit operator int() const;
+    /** \brief Type conversion to s_t */
+    explicit operator s_t() const;
 
 #ifndef SWIG
     /** \brief Type conversion to a vector */
@@ -961,32 +961,32 @@ namespace casadi {
 
     /** \brief Get expressions of the children of the expression
         Only defined if symbolic scalar.
-        Wraps SXElem SXElem::dep(int ch=0) const.
+        Wraps SXElem SXElem::dep(s_t ch=0) const.
      */
-    Matrix<Scalar> dep(int ch=0) const;
+    Matrix<Scalar> dep(s_t ch=0) const;
 
     /** \brief Get the number of dependencies of a binary SXElem
         Only defined if symbolic scalar.
     */
-    int n_dep() const;
+    s_t n_dep() const;
 
     // @{
     /// Set the 'precision, width & scientific' used in printing and serializing to streams
-    static void set_precision(int precision);
-    static void set_width(int width);
+    static void set_precision(s_t precision);
+    static void set_width(s_t width);
     static void set_scientific(bool scientific);
     // @}
 
     /// Seed the random number generator
-    static void rng(int seed);
+    static void rng(s_t seed);
 
     ///@{
     /** \brief Create a matrix with uniformly distributed random numbers */
-    static Matrix<Scalar> rand(int nrow=1, int ncol=1) { // NOLINT(runtime/threadsafe_fn)
+    static Matrix<Scalar> rand(s_t nrow=1, s_t ncol=1) { // NOLINT(runtime/threadsafe_fn)
       return rand(Sparsity::dense(nrow, ncol)); // NOLINT(runtime/threadsafe_fn)
     }
     static Matrix<Scalar> rand(const Sparsity& sp); // NOLINT(runtime/threadsafe_fn)
-    static Matrix<Scalar> rand(const std::pair<int, int>& rc) { // NOLINT(runtime/threadsafe_fn)
+    static Matrix<Scalar> rand(const std::pair<s_t, s_t>& rc) { // NOLINT(runtime/threadsafe_fn)
       return rand(rc.first, rc.second); // NOLINT(runtime/threadsafe_fn)
     }
     ///@}
@@ -1032,8 +1032,8 @@ namespace casadi {
     std::vector<Scalar> nonzeros_;
 
     /// Precision used in streams
-    static int stream_precision_;
-    static int stream_width_;
+    static s_t stream_precision_;
+    static s_t stream_width_;
     static bool stream_scientific_;
 
     /// Random number generator
@@ -1044,7 +1044,7 @@ namespace casadi {
 
   ///@{
   /// Readability typedefs
-  typedef Matrix<int> IM;
+  typedef Matrix<s_t> IM;
   typedef Matrix<double> DM;
   typedef std::vector<DM> DMVector;
   typedef std::vector<DMVector> DMVectorVector;
@@ -1072,13 +1072,13 @@ namespace casadi {
   template<typename A>
   Matrix<Scalar>::operator std::vector<A>() const {
     // Get sparsity pattern
-    int size1 = this->size1(), size2 = this->size2();
-    const int *colind = this->colind(), *row = this->row();
+    s_t size1 = this->size1(), size2 = this->size2();
+    const s_t *colind = this->colind(), *row = this->row();
     // Copy the nonzeros
     auto it = nonzeros().begin();
     std::vector<A> ret(numel(), 0);
-    for (int cc=0; cc<size2; ++cc) {
-      for (int el=colind[cc]; el<colind[cc+1]; ++el) {
+    for (s_t cc=0; cc<size2; ++cc) {
+      for (s_t el=colind[cc]; el<colind[cc+1]; ++el) {
         ret[row[el] + cc*size1] = static_cast<A>(*it++);
       }
     }

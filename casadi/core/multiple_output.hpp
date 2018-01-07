@@ -52,13 +52,13 @@ namespace casadi {
     ~MultipleOutput() override;
 
     /** \brief  Number of outputs */
-    int nout() const override=0;
+    s_t nout() const override=0;
 
     /** \brief  Get an output */
-    MX get_output(int oind) const override;
+    MX get_output(s_t oind) const override;
 
     /** \brief  Get the sparsity of output oind */
-    const Sparsity& sparsity(int oind) const override=0;
+    const Sparsity& sparsity(s_t oind) const override=0;
 
     /** \brief  Check if a multiple output node */
     bool has_output() const override {return true;}
@@ -69,7 +69,7 @@ namespace casadi {
   public:
 
     /** \brief  Constructor */
-    OutputNode(const MX& parent, int oind);
+    OutputNode(const MX& parent, s_t oind);
 
     /** \brief  Destructor */
     ~OutputNode() override;
@@ -81,7 +81,7 @@ namespace casadi {
     bool is_output() const override {return true;}
 
     /** \brief  Get function output */
-    int which_output() const override { return oind_;}
+    s_t which_output() const override { return oind_;}
 
     /** \brief Get the operation */
     e_t op() const override { return -1;}
@@ -96,7 +96,7 @@ namespace casadi {
     Dict info() const override { return {{"oind", oind_}}; }
 
     /** \brief  Output index */
-    int oind_;
+    s_t oind_;
   };
 
 } // namespace casadi

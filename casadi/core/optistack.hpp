@@ -104,7 +104,7 @@ public:
   * \param[in] m number of columnss (default 1)
   * \param[in] attribute: 'full' (default) or 'symmetric'
   */
-  MX variable(int n=1, int m=1, const std::string& attribute="full");
+  MX variable(s_t n=1, s_t m=1, const std::string& attribute="full");
 
   /** \brief Create a parameter (symbol); fixed during optimization
   *
@@ -116,7 +116,7 @@ public:
   * \param[in] m number of columnss (default 1)
   * \param[in] attribute: 'full' (default) or 'symmetric'
   */
-  MX parameter(int n=1, int m=1, const std::string& attribute="full");
+  MX parameter(s_t n=1, s_t m=1, const std::string& attribute="full");
 
   /** \brief Set objective
   *
@@ -231,13 +231,13 @@ public:
   MX dual(const MX& m) const;
 
   /// Number of (scalarised) decision variables
-  int nx() const;
+  s_t nx() const;
 
   /// Number of (scalarised) parameters
-  int np() const;
+  s_t np() const;
 
   /// Number of (scalarised) constraints
-  int ng() const;
+  s_t ng() const;
 
   /// Get all (scalarised) decision variables as a symbolic column vector
   MX x() const;
@@ -362,8 +362,8 @@ public:
 
   struct IndexAbstraction {
     IndexAbstraction() : start(0), stop(0) {}
-    int start;
-    int stop;
+    s_t start;
+    s_t stop;
   };
   struct MetaCon : IndexAbstraction {
     MetaCon() :  n(1), flipped(false) {}
@@ -372,7 +372,7 @@ public:
     ConstraintType type;
     MX lb;
     MX ub;
-    int n;
+    s_t n;
     bool flipped;
     MX dual_canon;
     MX dual;
@@ -380,11 +380,11 @@ public:
   };
   struct MetaVar : IndexAbstraction {
     std::string attribute;
-    int n;
-    int m;
+    s_t n;
+    s_t m;
     VariableType type;
-    int count;
-    int i;
+    s_t count;
+    s_t i;
     Dict extra;
   };
 
@@ -396,7 +396,7 @@ public:
   OptiCallback(const OptiCallback& obj) {
     casadi_error("Callback objects cannot be copied");
   }
-  virtual void call(int i) {
+  virtual void call(s_t i) {
     uout() << "This is a simple callback at iteration" << i << std::endl;
   }
   virtual ~OptiCallback() {}
@@ -449,12 +449,12 @@ public:
   std::vector<MX> active_symvar(VariableType type) const;
   std::vector<DM> active_values(VariableType type) const;
 
-  MX x_lookup(int i) const;
-  MX g_lookup(int i) const;
+  MX x_lookup(s_t i) const;
+  MX g_lookup(s_t i) const;
 
-  std::string x_describe(int i) const;
-  std::string g_describe(int i) const;
-  std::string describe(const MX& x, int indent=0) const;
+  std::string x_describe(s_t i) const;
+  std::string g_describe(s_t i) const;
+  std::string describe(const MX& x, s_t indent=0) const;
 
   void solve_prepare();
   DMDict solve_actual(const DMDict& args);
@@ -488,7 +488,7 @@ public:
   void assert_solved() const;
   void assert_baked() const;
 
-  int instance_number() const;
+  s_t instance_number() const;
 
 protected:
   OptiAdvanced() {}

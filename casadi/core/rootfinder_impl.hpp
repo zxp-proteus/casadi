@@ -63,14 +63,14 @@ namespace casadi {
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override { return oracle_.sparsity_in(i);}
-    Sparsity get_sparsity_out(int i) override { return oracle_.sparsity_out(i);}
+    Sparsity get_sparsity_in(s_t i) override { return oracle_.sparsity_in(i);}
+    Sparsity get_sparsity_out(s_t i) override { return oracle_.sparsity_out(i);}
     /// @}
 
     ///@{
     /** \brief Names of function input and outputs */
-    std::string get_name_in(int i) override { return oracle_.name_in(i);}
-    std::string get_name_out(int i) override { return oracle_.name_out(i);}
+    std::string get_name_in(s_t i) override { return oracle_.name_in(i);}
+    std::string get_name_out(s_t i) override { return oracle_.name_out(i);}
     /// @}
 
     ///@{
@@ -87,19 +87,19 @@ namespace casadi {
 
     /** \brief Set the (persistent) work vectors */
     void set_work(void* mem, const double**& arg, double**& res,
-                          int*& iw, double*& w) const override;
+                          s_t*& iw, double*& w) const override;
 
     // Evaluate numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     // Solve the NLP
     virtual void solve(void* mem) const = 0;
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const override;
 
     ///@{
     /// Is the class able to propagate seeds through the algorithm?
@@ -112,8 +112,8 @@ namespace casadi {
 
     ///@{
     /** \brief Generate a function that calculates \a nfwd forward derivatives */
-    bool has_forward(int nfwd) const override { return true;}
-    Function get_forward(int nfwd, const std::string& name,
+    bool has_forward(s_t nfwd) const override { return true;}
+    Function get_forward(s_t nfwd, const std::string& name,
                          const std::vector<std::string>& inames,
                          const std::vector<std::string>& onames,
                          const Dict& opts) const override;
@@ -121,8 +121,8 @@ namespace casadi {
 
     ///@{
     /** \brief Generate a function that calculates \a nadj adjoint derivatives */
-    bool has_reverse(int nadj) const override { return true;}
-    Function get_reverse(int nadj, const std::string& name,
+    bool has_reverse(s_t nadj) const override { return true;}
+    Function get_reverse(s_t nadj, const std::string& name,
                          const std::vector<std::string>& inames,
                          const std::vector<std::string>& onames,
                          const Dict& opts) const override;
@@ -141,17 +141,17 @@ namespace casadi {
                          bool always_inline, bool never_inline) const;
 
     /// Number of equations
-    int n_;
+    s_t n_;
 
     /// Linear solver
     Linsol linsol_;
     Sparsity sp_jac_;
 
     /// Constraints on decision variables
-    std::vector<int> u_c_;
+    std::vector<s_t> u_c_;
 
     /// Indices of the input and output that correspond to the actual root-finding
-    int iin_, iout_;
+    s_t iin_, iout_;
 
     // Creator function for internal class
     typedef Rootfinder* (*Creator)(const std::string& name, const Function& oracle);

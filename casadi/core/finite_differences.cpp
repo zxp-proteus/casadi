@@ -29,7 +29,7 @@ using namespace std;
 
 namespace casadi {
 
-  FiniteDiff::FiniteDiff(const std::string& name, int n)
+  FiniteDiff::FiniteDiff(const std::string& name, s_t n)
     : FunctionInternal(name), n_(n) {
   }
 
@@ -126,8 +126,8 @@ namespace casadi {
     alloc(derivative_of_);
   }
 
-  Sparsity FiniteDiff::get_sparsity_in(int i) {
-    int n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out();
+  Sparsity FiniteDiff::get_sparsity_in(s_t i) {
+    s_t n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out();
     if (i<n_in) {
       // Non-differentiated input
       return derivative_of_.sparsity_in(i);
@@ -140,11 +140,11 @@ namespace casadi {
     }
   }
 
-  Sparsity FiniteDiff::get_sparsity_out(int i) {
+  Sparsity FiniteDiff::get_sparsity_out(s_t i) {
     return repmat(derivative_of_.sparsity_out(i), 1, n_);
   }
 
-  double FiniteDiff::get_default_in(int ind) const {
+  double FiniteDiff::get_default_in(s_t ind) const {
     if (ind<derivative_of_.n_in()) {
       return derivative_of_.default_in(ind);
     } else {
@@ -160,8 +160,8 @@ namespace casadi {
     return derivative_of_.n_out();
   }
 
-  std::string FiniteDiff::get_name_in(int i) {
-    int n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out();
+  std::string FiniteDiff::get_name_in(s_t i) {
+    s_t n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out();
     if (i<n_in) {
       return derivative_of_.name_in(i);
     } else if (i<n_in+n_out) {
@@ -171,11 +171,11 @@ namespace casadi {
     }
   }
 
-  std::string FiniteDiff::get_name_out(int i) {
+  std::string FiniteDiff::get_name_out(s_t i) {
     return "fwd_" + derivative_of_.name_out(i);
   }
 
-  Function CentralDiff::get_forward(int nfwd, const std::string& name,
+  Function CentralDiff::get_forward(s_t nfwd, const std::string& name,
                                    const std::vector<std::string>& inames,
                                    const std::vector<std::string>& onames,
                                    const Dict& opts) const {
@@ -194,9 +194,9 @@ namespace casadi {
     return Function::create(new CentralDiff(name, nfwd), opts);
   }
 
-  r_t FiniteDiff::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t FiniteDiff::eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     // Shorthands
-    int n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out(), n_pert = this->n_pert();
+    s_t n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out(), n_pert = this->n_pert();
 
     // Non-differentiated input
     const double** x0 = arg;
@@ -204,8 +204,8 @@ namespace casadi {
 
     // Non-differentiated output
     double* y0 = w;
-    for (int j=0; j<n_out; ++j) {
-      const int nnz = derivative_of_.nnz_out(j);
+    for (s_t j=0; j<n_out; ++j) {
+      const s_t nnz = derivative_of_.nnz_out(j);
       casadi_copy(*arg++, nnz, w);
       w += nnz;
     }
@@ -225,36 +225,36 @@ namespace casadi {
     // Perturbed function values
     double** yk = res;
     res += n_pert;
-    for (int j=0; j<n_pert; ++j) {
+    for (s_t j=0; j<n_pert; ++j) {
       yk[j] = w, w += n_y_;
     }
 
     // Setup arg and z for evaluation
     double *z = w;
-    for (int j=0; j<n_in; ++j) {
+    for (s_t j=0; j<n_in; ++j) {
       arg[j] = w;
       w += derivative_of_.nnz_in(j);
     }
 
     // Setup res and y for evaluation
     double *y = w;
-    for (int j=0; j<n_out; ++j) {
+    for (s_t j=0; j<n_out; ++j) {
       res[j] = w;
       w += derivative_of_.nnz_out(j);
     }
 
     // For all sensitivity directions
-    for (int i=0; i<n_; ++i) {
+    for (s_t i=0; i<n_; ++i) {
       // Initial stepsize
       double h = h_;
       // Perform finite difference algorithm with different step sizes
-      for (int iter=0; iter<1+h_iter_; ++iter) {
+      for (s_t iter=0; iter<1+h_iter_; ++iter) {
         // Calculate perturbed function values
-        for (int k=0; k<n_pert; ++k) {
+        for (s_t k=0; k<n_pert; ++k) {
           // Perturb inputs
-          int off = 0;
-          for (int j=0; j<n_in; ++j) {
-            int nnz = derivative_of_.nnz_in(j);
+          s_t off = 0;
+          for (s_t j=0; j<n_in; ++j) {
+            s_t nnz = derivative_of_.nnz_in(j);
             casadi_copy(x0[j], nnz, z + off);
             //cout << "k = " << k << ": pert(k, h) = " << pert(k, h) << endl;
             if (seed[j]) casadi_axpy(nnz, pert(k, h), seed[j] + i*nnz, z + off);
@@ -282,9 +282,9 @@ namespace casadi {
       }
 
       // Gather sensitivities
-      int off = 0;
-      for (int j=0; j<n_out; ++j) {
-        int nnz = derivative_of_.nnz_out(j);
+      s_t off = 0;
+      for (s_t j=0; j<n_out; ++j) {
+        s_t nnz = derivative_of_.nnz_out(j);
         if (sens[j]) casadi_copy(J + off, nnz, sens[j] + i*nnz);
         off += nnz;
       }
@@ -307,7 +307,7 @@ namespace casadi {
 
   void FiniteDiff::codegen_body(CodeGenerator& g) const {
     // Shorthands
-    int n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out(), n_pert = this->n_pert();
+    s_t n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out(), n_pert = this->n_pert();
 
     g.comment("Non-differentiated input");
     g.local("x0", "const casadi_real", "**");
@@ -316,8 +316,8 @@ namespace casadi {
     g.comment("Non-differentiated output");
     g.local("y0", "casadi_real", "*");
     g << "y0 = w;\n";
-    for (int j=0; j<n_out; ++j) {
-      const int nnz = derivative_of_.nnz_out(j);
+    for (s_t j=0; j<n_out; ++j) {
+      const s_t nnz = derivative_of_.nnz_out(j);
       g << g.copy("*arg++", nnz, "w") << " w += " << nnz << ";\n";
     }
 
@@ -336,25 +336,25 @@ namespace casadi {
     g.comment("Perturbed function value");
     g.local("yk", "casadi_real", "**");
     g << "yk = res, res += " << n_pert << ";\n";
-    g.local("j", "int");
+    g.local("j", "s_t");
     g << "for (j=0; j<" << n_pert << "; ++j) yk[j] = w, w += " << n_y_ << ";\n";
 
     g.comment("Setup arg and z for evaluation");
     g.local("z", "casadi_real", "*");
     g << "z = w;\n";
-    for (int j=0; j<n_in; ++j) {
+    for (s_t j=0; j<n_in; ++j) {
       g << "arg[" << j << "] = w, w += " << derivative_of_.nnz_in(j) << ";\n";
     }
 
     g.comment("Setup res and y for evaluation");
     g.local("y", "casadi_real", "*");
     g << "y = w;\n";
-    for (int j=0; j<n_out; ++j) {
+    for (s_t j=0; j<n_out; ++j) {
       g << "res[" << j << "] = w, w += " << derivative_of_.nnz_out(j) << ";\n";
     }
 
     g.comment("For all sensitivity directions");
-    g.local("i", "int");
+    g.local("i", "s_t");
     g << "for (i=0; i<" << n_ << "; ++i) {\n";
 
     g.comment("Initial stepsize");
@@ -362,17 +362,17 @@ namespace casadi {
     g << "h = " << h_ << ";\n";
 
     g.comment("Perform finite difference algorithm with different step sizes");
-    g.local("iter", "int");
+    g.local("iter", "s_t");
     g << "for (iter=0; iter<" << 1+h_iter_ << "; ++iter) {\n";
 
     g.comment("Calculate perturbed function values");
-    g.local("k", "int");
+    g.local("k", "s_t");
     g << "for (k=0; k<" << n_pert << "; ++k) {\n";
 
     g.comment("Perturb inputs");
-    int off=0;
-    for (int j=0; j<n_in; ++j) {
-      int nnz = derivative_of_.nnz_in(j);
+    s_t off=0;
+    for (s_t j=0; j<n_in; ++j) {
+      s_t nnz = derivative_of_.nnz_in(j);
       string s = "seed[" + str(j) + "]";
       g << g.copy("x0[" + str(j) + "]", nnz, "z+" + str(off)) << "\n"
         << "if ("+s+") " << g.axpy(nnz, pert("k"),
@@ -417,8 +417,8 @@ namespace casadi {
 
     g.comment("Gather sensitivities");
     off = 0;
-    for (int j=0; j<n_out; ++j) {
-      int nnz = derivative_of_.nnz_out(j);
+    for (s_t j=0; j<n_out; ++j) {
+      s_t nnz = derivative_of_.nnz_out(j);
       string s = "sens[" + str(j) + "]";
       g << "if (" << s << ") " << g.copy("J+" + str(off), nnz, s + "+i*" + str(nnz)) << "\n";
       off += nnz;
@@ -432,9 +432,9 @@ namespace casadi {
     return len + "*" + sign + "*" + str(h_);
   }
 
-  double Smoothing::pert(int k, double h) const {
-    int sign = 2*(k/2)-1;
-    int len = k%2+1;
+  double Smoothing::pert(s_t k, double h) const {
+    s_t sign = 2*(k/2)-1;
+    s_t len = k%2+1;
     return len*sign*h;
   }
 
@@ -442,14 +442,14 @@ namespace casadi {
     return casadi_smoothing_diff(yk, y0, J, h, n_y_, &m_);
   }
 
-  Function ForwardDiff::get_forward(int nfwd, const std::string& name,
+  Function ForwardDiff::get_forward(s_t nfwd, const std::string& name,
                                    const std::vector<std::string>& inames,
                                    const std::vector<std::string>& onames,
                                    const Dict& opts) const {
     return Function::create(new ForwardDiff(name, nfwd), opts);
   }
 
-  Function Smoothing::get_forward(int nfwd, const std::string& name,
+  Function Smoothing::get_forward(s_t nfwd, const std::string& name,
                                    const std::vector<std::string>& inames,
                                    const std::vector<std::string>& onames,
                                    const Dict& opts) const {

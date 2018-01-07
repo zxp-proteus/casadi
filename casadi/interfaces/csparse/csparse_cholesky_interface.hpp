@@ -96,7 +96,7 @@ namespace casadi {
     r_t nfact(void* mem, const double* A) const override;
 
     // Solve the linear system
-    r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
+    r_t solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const override;
 
     /// A documentation string
     static const std::string meta_doc;

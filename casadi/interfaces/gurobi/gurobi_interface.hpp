@@ -100,7 +100,7 @@ namespace casadi {
     void free_mem(void *mem) const override { delete static_cast<GurobiMemory*>(mem);}
 
     /// Solve the QP
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// Can discrete variables be treated
     bool integer_support() const override { return true;}

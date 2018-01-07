@@ -39,21 +39,21 @@ namespace casadi {
     set_dep(ind, x);
   }
 
-  int GetElements::
-  eval(const double** arg, double** res, int* iw, double* w) const {
+  s_t GetElements::
+  eval(const double** arg, double** res, s_t* iw, double* w) const {
     // Get input and output arguments
     const double* ind = arg[0];
     const double* x = arg[1];
     double* ret = res[0];
     // Dimensions
-    int nnz = dep(0).nnz();
-    int max_ind = dep(1).nnz();
+    s_t nnz = dep(0).nnz();
+    s_t max_ind = dep(1).nnz();
     // If not in-place, copy
     if (ind != ret) casadi_copy(ind, nnz, ret);
     // Get elements
-    for (int i=0; i<nnz; ++i) {
+    for (s_t i=0; i<nnz; ++i) {
       // Get index
-      int index = static_cast<int>(*ret);
+      s_t index = static_cast<s_t>(*ret);
       // Make assignment if in bounds, else NaN
       *ret++ = index>=0 && index<max_ind ? x[index] : nan;
     }

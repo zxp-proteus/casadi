@@ -51,7 +51,7 @@ namespace casadi {
   }
 
   template<bool Tr>
-  r_t Solve<Tr>::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Solve<Tr>::eval(const double** arg, double** res, s_t* iw, double* w) const {
     if (arg[0]!=res[0]) copy(arg[0], arg[0]+dep(0).nnz(), res[0]);
     if (linsol_.sfact(arg[1])) return 1;
     if (linsol_.nfact(arg[1])) return 1;
@@ -60,7 +60,7 @@ namespace casadi {
   }
 
   template<bool Tr>
-  r_t Solve<Tr>::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Solve<Tr>::eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     linsol_->linsol_eval_sx(arg, res, iw, w, linsol_->memory(0), Tr, dep(0).size2());
     return 0;
   }
@@ -79,19 +79,19 @@ namespace casadi {
                           std::vector<std::vector<MX> >& fsens) const {
     // Nondifferentiated inputs and outputs
     vector<MX> arg(n_dep());
-    for (int i=0; i<arg.size(); ++i) arg[i] = dep(i);
+    for (s_t i=0; i<arg.size(); ++i) arg[i] = dep(i);
     vector<MX> res(nout());
-    for (int i=0; i<res.size(); ++i) res[i] = get_output(i);
+    for (s_t i=0; i<res.size(); ++i) res[i] = get_output(i);
 
     // Number of derivatives
-    int nfwd = fseed.size();
+    s_t nfwd = fseed.size();
     const MX& A = arg[1];
     const MX& X = res[0];
 
     // Solve for all directions at once
     std::vector<MX> rhs(nfwd);
-    std::vector<int> col_offset(nfwd+1, 0);
-    for (int d=0; d<nfwd; ++d) {
+    std::vector<s_t> col_offset(nfwd+1, 0);
+    for (s_t d=0; d<nfwd; ++d) {
       const MX& B_hat = fseed[d][0];
       const MX& A_hat = fseed[d][1];
       rhs[d] = Tr ? B_hat - mtimes(A_hat.T(), X) : B_hat - mtimes(A_hat, X);
@@ -101,7 +101,7 @@ namespace casadi {
 
     // Fetch result
     fsens.resize(nfwd);
-    for (int d=0; d<nfwd; ++d) {
+    for (s_t d=0; d<nfwd; ++d) {
       fsens[d].resize(1);
       fsens[d][0] = rhs[d];
     }
@@ -112,19 +112,19 @@ namespace casadi {
                           std::vector<std::vector<MX> >& asens) const {
     // Nondifferentiated inputs and outputs
     vector<MX> arg(n_dep());
-    for (int i=0; i<arg.size(); ++i) arg[i] = dep(i);
+    for (s_t i=0; i<arg.size(); ++i) arg[i] = dep(i);
     vector<MX> res(nout());
-    for (int i=0; i<res.size(); ++i) res[i] = get_output(i);
+    for (s_t i=0; i<res.size(); ++i) res[i] = get_output(i);
 
     // Number of derivatives
-    int nadj = aseed.size();
+    s_t nadj = aseed.size();
     const MX& A = arg[1];
     const MX& X = res[0];
 
     // Solve for all directions at once
     std::vector<MX> rhs(nadj);
-    std::vector<int> col_offset(nadj+1, 0);
-    for (int d=0; d<nadj; ++d) {
+    std::vector<s_t> col_offset(nadj+1, 0);
+    for (s_t d=0; d<nadj; ++d) {
       rhs[d] = aseed[d][0];
       col_offset[d+1] = col_offset[d] + rhs[d].size2();
     }
@@ -132,7 +132,7 @@ namespace casadi {
 
     // Collect sensitivities
     asens.resize(nadj);
-    for (int d=0; d<nadj; ++d) {
+    for (s_t d=0; d<nadj; ++d) {
       asens[d].resize(2);
 
       // Propagate to A
@@ -158,15 +158,15 @@ namespace casadi {
   }
 
   template<bool Tr>
-  r_t Solve<Tr>::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Solve<Tr>::sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Number of right-hand-sides
-    int nrhs = dep(0).size2();
+    s_t nrhs = dep(0).size2();
 
     // Sparsities
     const Sparsity& A_sp = dep(1).sparsity();
-    const int* A_colind = A_sp.colind();
-    const int* A_row = A_sp.row();
-    int n = A_sp.size1();
+    const s_t* A_colind = A_sp.colind();
+    const s_t* A_row = A_sp.row();
+    s_t n = A_sp.size1();
 
     // Get pointers to data
     const bvec_t *B=arg[0], *A = arg[1];
@@ -174,14 +174,14 @@ namespace casadi {
     bvec_t* tmp = w;
 
     // For all right-hand-sides
-    for (int r=0; r<nrhs; ++r) {
+    for (s_t r=0; r<nrhs; ++r) {
       // Copy B to a temporary vector
       copy(B, B+n, tmp);
 
       // Add A_hat contribution to tmp
-      for (int cc=0; cc<n; ++cc) {
-        for (int k=A_colind[cc]; k<A_colind[cc+1]; ++k) {
-          int rr = A_row[k];
+      for (s_t cc=0; cc<n; ++cc) {
+        for (s_t k=A_colind[cc]; k<A_colind[cc+1]; ++k) {
+          s_t rr = A_row[k];
           tmp[Tr ? cc : rr] |= A[k];
         }
       }
@@ -198,22 +198,22 @@ namespace casadi {
   }
 
   template<bool Tr>
-  r_t Solve<Tr>::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Solve<Tr>::sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Number of right-hand-sides
-    int nrhs = dep(0).size2();
+    s_t nrhs = dep(0).size2();
 
     // Sparsities
     const Sparsity& A_sp = dep(1).sparsity();
-    const int* A_colind = A_sp.colind();
-    const int* A_row = A_sp.row();
-    int n = A_sp.size1();
+    const s_t* A_colind = A_sp.colind();
+    const s_t* A_row = A_sp.row();
+    s_t n = A_sp.size1();
 
     // Get pointers to data
     bvec_t *B=arg[0], *A=arg[1], *X=res[0];
     bvec_t* tmp = w;
 
     // For all right-hand-sides
-    for (int r=0; r<nrhs; ++r) {
+    for (s_t r=0; r<nrhs; ++r) {
       // Solve transposed
       std::fill(tmp, tmp+n, 0);
       A_sp.spsolve(tmp, X, !Tr);
@@ -222,12 +222,12 @@ namespace casadi {
       std::fill(X, X+n, 0);
 
       // Propagate to B
-      for (int i=0; i<n; ++i) B[i] |= tmp[i];
+      for (s_t i=0; i<n; ++i) B[i] |= tmp[i];
 
       // Propagate to A
-      for (int cc=0; cc<n; ++cc) {
-        for (int k=A_colind[cc]; k<A_colind[cc+1]; ++k) {
-          int rr = A_row[k];
+      for (s_t cc=0; cc<n; ++cc) {
+        for (s_t k=A_colind[cc]; k<A_colind[cc+1]; ++k) {
+          s_t rr = A_row[k];
           A[k] |= tmp[Tr ? cc : rr];
         }
       }
@@ -246,9 +246,9 @@ namespace casadi {
 
   template<bool Tr>
   void Solve<Tr>::generate(CodeGenerator& g,
-                           const std::vector<int>& arg, const std::vector<int>& res) const {
+                           const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     // Number of right-hand-sides
-    int nrhs = dep(0).size2();
+    s_t nrhs = dep(0).size2();
 
     // Array for x
     g.local("rr", "casadi_real", "*");

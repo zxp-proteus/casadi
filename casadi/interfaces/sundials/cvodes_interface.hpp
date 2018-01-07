@@ -63,7 +63,7 @@ namespace casadi {
     void* mem;
 
     // Ids of backward problem
-    int whichB;
+    s_t whichB;
 
     // Remember the gamma and gammaB from last factorization
     double gamma, gammaB;
@@ -156,43 +156,43 @@ namespace casadi {
   protected:
 
     // Sundials callback functions
-    static int rhs(double t, N_Vector x, N_Vector xdot, void *user_data);
-    static void ehfun(int error_code, const char *module, const char *function, char *msg,
+    static s_t rhs(double t, N_Vector x, N_Vector xdot, void *user_data);
+    static void ehfun(s_t error_code, const char *module, const char *function, char *msg,
                       void *user_data);
-    static int rhsQ(double t, N_Vector x, N_Vector qdot, void *user_data);
-    static int rhsB(double t, N_Vector x, N_Vector xB, N_Vector xdotB, void *user_data);
-    static int rhsQB(double t, N_Vector x, N_Vector xB, N_Vector qdotB, void *user_data);
-    static int jtimes(N_Vector v, N_Vector Jv, double t, N_Vector x, N_Vector xdot,
+    static s_t rhsQ(double t, N_Vector x, N_Vector qdot, void *user_data);
+    static s_t rhsB(double t, N_Vector x, N_Vector xB, N_Vector xdotB, void *user_data);
+    static s_t rhsQB(double t, N_Vector x, N_Vector xB, N_Vector qdotB, void *user_data);
+    static s_t jtimes(N_Vector v, N_Vector Jv, double t, N_Vector x, N_Vector xdot,
                       void *user_data, N_Vector tmp);
-    static int jtimesB(N_Vector vB, N_Vector JvB, double t, N_Vector x, N_Vector xB,
+    static s_t jtimesB(N_Vector vB, N_Vector JvB, double t, N_Vector x, N_Vector xB,
                        N_Vector xdotB, void *user_data , N_Vector tmpB);
-    static int psolve(double t, N_Vector x, N_Vector xdot, N_Vector r, N_Vector z,
-                      double gamma, double delta, int lr, void *user_data, N_Vector tmp);
-    static int psolveB(double t, N_Vector x, N_Vector xB, N_Vector xdotB, N_Vector rvecB,
+    static s_t psolve(double t, N_Vector x, N_Vector xdot, N_Vector r, N_Vector z,
+                      double gamma, double delta, s_t lr, void *user_data, N_Vector tmp);
+    static s_t psolveB(double t, N_Vector x, N_Vector xB, N_Vector xdotB, N_Vector rvecB,
                        N_Vector zvecB, double gammaB, double deltaB,
-                       int lr, void *user_data, N_Vector tmpB);
-    static int psetup(double t, N_Vector x, N_Vector xdot, booleantype jok,
+                       s_t lr, void *user_data, N_Vector tmpB);
+    static s_t psetup(double t, N_Vector x, N_Vector xdot, booleantype jok,
                       booleantype *jcurPtr, double gamma, void *user_data,
                       N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    static int psetupB(double t, N_Vector x, N_Vector xB, N_Vector xdotB,
+    static s_t psetupB(double t, N_Vector x, N_Vector xB, N_Vector xdotB,
                        booleantype jokB, booleantype *jcurPtrB, double gammaB,
                        void *user_data, N_Vector tmp1B, N_Vector tmp2B, N_Vector tmp3B);
-    static int lsetup(CVodeMem cv_mem, int convfail, N_Vector x, N_Vector xdot,
+    static s_t lsetup(CVodeMem cv_mem, s_t convfail, N_Vector x, N_Vector xdot,
                       booleantype *jcurPtr,
                       N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
-    static int lsolve(CVodeMem cv_mem, N_Vector b, N_Vector weight, N_Vector x,
+    static s_t lsolve(CVodeMem cv_mem, N_Vector b, N_Vector weight, N_Vector x,
                       N_Vector xdot);
-    static int lsetupB(CVodeMem cv_mem, int convfail, N_Vector x, N_Vector xdot,
+    static s_t lsetupB(CVodeMem cv_mem, s_t convfail, N_Vector x, N_Vector xdot,
                        booleantype *jcurPtr,
                        N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
-    static int lsolveB(CVodeMem cv_mem, N_Vector b, N_Vector weight,
+    static s_t lsolveB(CVodeMem cv_mem, N_Vector b, N_Vector weight,
                        N_Vector x, N_Vector xdot);
 
     // Throw error
-    static void cvodes_error(const char* module, int flag);
+    static void cvodes_error(const char* module, s_t flag);
 
-    int lmm_; // linear multistep method
-    int iter_; // nonlinear solver iteration
+    s_t lmm_; // linear multistep method
+    s_t iter_; // nonlinear solver iteration
   };
 
 } // namespace casadi

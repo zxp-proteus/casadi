@@ -40,24 +40,24 @@ namespace casadi {
     return it!=attributes_.end();
   }
 
-  XmlNode& XmlNode::operator[](int i) {
+  XmlNode& XmlNode::operator[](s_t i) {
     casadi_assert(i>=0 && i < size(),
       "index out of bounds for element " + str(i) + " of node " + name());
     return children_.at(i);
   }
 
-  const XmlNode& XmlNode::operator[](int i) const {
+  const XmlNode& XmlNode::operator[](s_t i) const {
     return const_cast<XmlNode*>(this)->operator[](i);
   }
 
   bool XmlNode::hasChild(const string& childname) const {
-    map<string, int>::const_iterator it = child_indices_.find(childname);
+    map<string, s_t>::const_iterator it = child_indices_.find(childname);
     return it!=child_indices_.end();
   }
 
   XmlNode& XmlNode::operator[](const string& childname) {
     // Find the child
-    map<string, int>::const_iterator it = child_indices_.find(childname);
+    map<string, s_t>::const_iterator it = child_indices_.find(childname);
 
     // check that the child was indeed found
     if (it == child_indices_.end()) {
@@ -81,7 +81,7 @@ namespace casadi {
     return stream;
   }
 
-  int XmlNode::size() const {
+  s_t XmlNode::size() const {
     return children_.size();
   }
 
@@ -93,7 +93,7 @@ namespace casadi {
     name_ = name;
   }
 
-  void XmlNode::dump(ostream &stream, int indent) const {
+  void XmlNode::dump(ostream &stream, s_t indent) const {
     // Print name
     stream << string(indent, ' ') << "Node: " << name_ << endl;
 
@@ -113,7 +113,7 @@ namespace casadi {
       stream << string(indent+2, ' ') << "attribute " << it->first << " = " << it->second << endl;
 
     // Print Children
-    for (int i=0; i<size(); ++i) {
+    for (s_t i=0; i<size(); ++i) {
       stream << string(indent, ' ') << "Child " << i << ":" << endl;
       (*this)[i].dump(stream, indent+2);
     }
@@ -136,7 +136,7 @@ namespace casadi {
       throw CasadiException("XML argument not true or false");
   }
 
-  void XmlNode::readString(const std::string& str, int& val) {
+  void XmlNode::readString(const std::string& str, s_t& val) {
     std::istringstream buffer(str);
     buffer >> val;
   }

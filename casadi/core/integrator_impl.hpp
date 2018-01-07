@@ -61,14 +61,14 @@ namespace casadi {
 
    /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override;
-    Sparsity get_sparsity_out(int i) override;
+    Sparsity get_sparsity_in(s_t i) override;
+    Sparsity get_sparsity_out(s_t i) override;
     /// @}
 
     ///@{
     /** \brief Names of function input and outputs */
-    std::string get_name_in(int i) override { return integrator_in(i);}
-    std::string get_name_out(int i) override { return integrator_out(i);}
+    std::string get_name_in(s_t i) override { return integrator_in(i);}
+    std::string get_name_out(s_t i) override { return integrator_out(i);}
     /// @}
 
     /** \brief Initalize memory block */
@@ -100,16 +100,16 @@ namespace casadi {
                          double* rx, double* rz, double* rq) const = 0;
 
     /** \brief  evaluate */
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /** \brief  Print solver statistics */
     virtual void print_stats(IntegratorMemory* mem) const {}
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const override;
 
     ///@{
     /// Is the class able to propagate seeds through the algorithm?
@@ -119,20 +119,20 @@ namespace casadi {
 
     ///@{
     /** \brief Generate a function that calculates \a nfwd forward derivatives */
-    Function get_forward(int nfwd, const std::string& name,
+    Function get_forward(s_t nfwd, const std::string& name,
                          const std::vector<std::string>& inames,
                          const std::vector<std::string>& onames,
                          const Dict& opts) const override;
-    bool has_forward(int nfwd) const override { return true;}
+    bool has_forward(s_t nfwd) const override { return true;}
     ///@}
 
     ///@{
     /** \brief Generate a function that calculates \a nadj adjoint derivatives */
-    Function get_reverse(int nadj, const std::string& name,
+    Function get_reverse(s_t nadj, const std::string& name,
                          const std::vector<std::string>& inames,
                          const std::vector<std::string>& onames,
                          const Dict& opts) const override;
-    bool has_reverse(int nadj) const override { return true;}
+    bool has_reverse(s_t nadj) const override { return true;}
     ///@}
 
     /** \brief  Set stop time for the integration */
@@ -142,10 +142,10 @@ namespace casadi {
     virtual Dict getDerivativeOptions(bool fwd) const;
 
     /** \brief Generate a augmented DAE system with \a nfwd forward sensitivities */
-    template<typename MatType> std::map<std::string, MatType> aug_fwd(int nfwd) const;
+    template<typename MatType> std::map<std::string, MatType> aug_fwd(s_t nfwd) const;
 
     /** \brief Generate a augmented DAE system with \a nadj adjoint sensitivities */
-    template<typename MatType> std::map<std::string, MatType> aug_adj(int nadj) const;
+    template<typename MatType> std::map<std::string, MatType> aug_adj(s_t nadj) const;
 
     /// Create sparsity pattern of the extended Jacobian (forward problem)
     Sparsity sp_jac_dae();
@@ -170,20 +170,20 @@ namespace casadi {
     ///@}
 
     /// Number of states for the forward integration
-    int nx_, nz_, nq_, nx1_, nz1_, nq1_;
+    s_t nx_, nz_, nq_, nx1_, nz1_, nq1_;
 
     /// Number of states for the backward integration
-    int nrx_, nrz_, nrq_, nrx1_, nrz1_, nrq1_;
+    s_t nrx_, nrz_, nrq_, nrx1_, nrz1_, nrq1_;
 
     /// Number of forward and backward parameters
-    int np_, nrp_, np1_, nrp1_;
+    s_t np_, nrp_, np1_, nrp1_;
 
     /// Number of sensitivities
-    int ns_;
+    s_t ns_;
 
     // Time grid
     std::vector<double> grid_;
-    int ngrid_;
+    s_t ngrid_;
 
     // Augmented user option
     Dict augmented_options_;
@@ -199,7 +199,7 @@ namespace casadi {
 
     /// Output the state at the initial time
     bool output_t0_;
-    int ntout_;
+    s_t ntout_;
 
     // Creator function for internal class
     typedef Integrator* (*Creator)(const std::string& name, const Function& oracle);
@@ -224,7 +224,7 @@ namespace casadi {
     double t;
 
     // Discrete time
-    int k;
+    s_t k;
 
     // Current state
     std::vector<double> x, z, p, q, rx, rz, rp, rq;
@@ -295,13 +295,13 @@ namespace casadi {
     Function F_, G_;
 
     // Number of finite elements
-    int nk_;
+    s_t nk_;
 
     // Time step size
     double h_;
 
     /// Number of algebraic variables for the discrete time integration
-    int nZ_, nRZ_;
+    s_t nZ_, nRZ_;
   };
 
   class CASADI_EXPORT ImplicitFixedStepIntegrator : public FixedStepIntegrator {

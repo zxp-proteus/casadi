@@ -41,7 +41,7 @@ namespace casadi {
 
 
   // Allocate storage for the caching
-  CACHING_MAP<int, IntegerSX*> IntegerSX::cached_constants_;
+  CACHING_MAP<s_t, IntegerSX*> IntegerSX::cached_constants_;
   CACHING_MAP<double, RealtypeSX*> RealtypeSX::cached_constants_;
 
   SXElem::SXElem() {
@@ -63,7 +63,7 @@ namespace casadi {
   }
 
   SXElem::SXElem(double val) {
-    int intval = static_cast<int>(val);
+    s_t intval = static_cast<s_t>(val);
     if (val-intval == 0) { // check if integer
       if (intval == 0)             node = casadi_limits<SXElem>::zero.node;
       else if (intval == 1)        node = casadi_limits<SXElem>::one.node;
@@ -101,7 +101,7 @@ namespace casadi {
     return *this;
   }
 
-  void SXElem::assignIfDuplicate(const SXElem& scalar, int depth) {
+  void SXElem::assignIfDuplicate(const SXElem& scalar, s_t depth) {
     casadi_assert_dev(depth>=1);
     if (!is_equal(*this, scalar, 0) && is_equal(*this, scalar, depth)) {
       *this = scalar;
@@ -318,7 +318,7 @@ namespace casadi {
       case OP_POW:
         if (y->is_constant()) {
           if (y->is_integer()) {
-            int nn = y->to_int();
+            s_t nn = y->to_int();
             if (nn == 0) {
               return 1;
             } else if (nn>100 || nn<-100) { // maximum depth
@@ -462,7 +462,7 @@ namespace casadi {
     return node->name();
   }
 
-  int SXElem::op() const {
+  s_t SXElem::op() const {
     return node->op();
   }
 
@@ -470,7 +470,7 @@ namespace casadi {
     return node->is_op(op);
   }
 
-  bool SXElem::is_equal(const SXElem& x, const SXElem& y, int depth) {
+  bool SXElem::is_equal(const SXElem& x, const SXElem& y, s_t depth) {
     SXNode *x_node = x.get(), *y_node = y.get();
     if (x_node==y_node) {
       return true;
@@ -495,16 +495,16 @@ namespace casadi {
     return node->to_double();
   }
 
-  SXElem::operator int() const {
+  SXElem::operator s_t() const {
     return node->to_int();
   }
 
-  SXElem SXElem::dep(int ch) const {
+  SXElem SXElem::dep(s_t ch) const {
     casadi_assert_dev(ch==0 || ch==1);
     return node->dep(ch);
   }
 
-  int SXElem::n_dep() const {
+  s_t SXElem::n_dep() const {
     return node->n_dep();
   }
 
@@ -528,7 +528,7 @@ namespace casadi {
     return val.is_zero();
   }
 
-  bool casadi_limits<SXElem>::is_equal(const SXElem& x, const SXElem& y, int depth) {
+  bool casadi_limits<SXElem>::is_equal(const SXElem& x, const SXElem& y, s_t depth) {
     return SXElem::is_equal(x, y, depth);
   }
 
@@ -568,11 +568,11 @@ namespace casadi {
     return SX(Sparsity::scalar(), *this, false);
   }
 
-  int SXElem::get_temp() const {
+  s_t SXElem::get_temp() const {
     return (*this)->temp;
   }
 
-  void SXElem::set_temp(int t) const {
+  void SXElem::set_temp(s_t t) const {
     (*this)->temp = t;
   }
 

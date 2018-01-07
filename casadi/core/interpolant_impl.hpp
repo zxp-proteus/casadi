@@ -43,9 +43,9 @@ namespace casadi {
     /// Constructor
     Interpolant(const std::string& name,
                 const std::vector<double>& grid,
-                const std::vector<int>& offset,
+                const std::vector<s_t>& offset,
                 const std::vector<double>& values,
-                int m);
+                s_t m);
 
     /// Destructor
     ~Interpolant() override;
@@ -58,22 +58,22 @@ namespace casadi {
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override;
-    Sparsity get_sparsity_out(int i) override;
+    Sparsity get_sparsity_in(s_t i) override;
+    Sparsity get_sparsity_out(s_t i) override;
     /// @}
 
     ///@{
     /** \brief Names of function input and outputs */
-    std::string get_name_in(int i) override;
-    std::string get_name_out(int i) override;
+    std::string get_name_in(s_t i) override;
+    std::string get_name_out(s_t i) override;
     /// @}
 
     // Creator function for internal class
     typedef Interpolant* (*Creator)(const std::string& name,
                                     const std::vector<double>& grid,
-                                    const std::vector<int>& offset,
+                                    const std::vector<s_t>& offset,
                                     const std::vector<double>& values,
-                                    int m);
+                                    s_t m);
 
     // No static functions exposed
     struct Exposed{ };
@@ -85,16 +85,16 @@ namespace casadi {
     static const std::string infix_;
 
     // Number of dimensions
-    int ndim_;
+    s_t ndim_;
 
     // Number of outputs
-    int m_;
+    s_t m_;
 
     // Input grid
     std::vector<double> grid_;
 
     // Offset for each dimension
-    std::vector<int> offset_;
+    std::vector<s_t> offset_;
 
     // Values at gridpoints
     std::vector<double> values_;

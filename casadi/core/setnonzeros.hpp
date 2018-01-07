@@ -43,7 +43,7 @@ namespace casadi {
   public:
     ///@{
     /// Create functions
-    static MX create(const MX& y, const MX& x, const std::vector<int>& nz);
+    static MX create(const MX& y, const MX& x, const std::vector<s_t>& nz);
     static MX create(const MX& y, const MX& x, const Slice& s);
     static MX create(const MX& y, const MX& x, const Slice& inner, const Slice& outer);
     ///@}
@@ -55,7 +55,7 @@ namespace casadi {
     ~SetNonzeros() override = 0;
 
     /// Get all the nonzeros
-    virtual std::vector<int> all() const = 0;
+    virtual std::vector<s_t> all() const = 0;
 
     /** \brief  Evaluate symbolically (MX) */
     void eval_mx(const std::vector<MX>& arg, std::vector<MX>& res) const override;
@@ -72,10 +72,10 @@ namespace casadi {
     e_t op() const override { return Add ? OP_ADDNONZEROS : OP_SETNONZEROS;}
 
     /// Get an IM representation of a GetNonzeros or SetNonzeros node
-    Matrix<int> mapping() const override;
+    Matrix<s_t> mapping() const override;
 
     /// Can the operation be performed inplace (i.e. overwrite the result)
-    int n_inplace() const override { return 1;}
+    s_t n_inplace() const override { return 1;}
 
   };
 
@@ -89,45 +89,45 @@ namespace casadi {
   public:
 
     /// Constructor
-    SetNonzerosVector(const MX& y, const MX& x, const std::vector<int>& nz);
+    SetNonzerosVector(const MX& y, const MX& x, const std::vector<s_t>& nz);
 
     /// Destructor
     ~SetNonzerosVector() override {}
 
     /// Get all the nonzeros
-    std::vector<int> all() const override { return nz_;}
+    std::vector<s_t> all() const override { return nz_;}
 
     /// Evaluate the function (template)
     template<typename T>
-    r_t eval_gen(const T** arg, T** res, int* iw, T* w) const;
+    r_t eval_gen(const T** arg, T** res, s_t* iw, T* w) const;
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const override;
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Print expression */
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const override;
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    bool is_equal(const MXNode* node, int depth) const override;
+    bool is_equal(const MXNode* node, s_t depth) const override;
 
     /** Obtain information about node */
     Dict info() const override { return {{"nz", nz_}, {"add", Add}}; }
 
     /// Operation sequence
-    std::vector<int> nz_;
+    std::vector<s_t> nz_;
   };
 
   // Specialization of the above when nz_ is a Slice
@@ -142,33 +142,33 @@ namespace casadi {
     ~SetNonzerosSlice() override {}
 
     /// Get all the nonzeros
-    std::vector<int> all() const override { return s_.all(s_.stop);}
+    std::vector<s_t> all() const override { return s_.all(s_.stop);}
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /// Evaluate the function (template)
     template<typename T>
-    r_t eval_gen(const T** arg, T** res, int* iw, T* w) const;
+    r_t eval_gen(const T** arg, T** res, s_t* iw, T* w) const;
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const override;
 
     /** \brief  Print expression */
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const override;
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    bool is_equal(const MXNode* node, int depth) const override;
+    bool is_equal(const MXNode* node, s_t depth) const override;
 
     /** Obtain information about node */
     Dict info() const override { return {{"slice", s_.info()}, {"add", Add}}; }
@@ -190,33 +190,33 @@ namespace casadi {
     ~SetNonzerosSlice2() override {}
 
     /// Get all the nonzeros
-    std::vector<int> all() const override { return inner_.all(outer_, outer_.stop);}
+    std::vector<s_t> all() const override { return inner_.all(outer_, outer_.stop);}
 
     /** \brief  Propagate sparsity forward */
-    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /// Evaluate the function (template)
     template<typename T>
-    r_t eval_gen(const T** arg, T** res, int* iw, T* w) const;
+    r_t eval_gen(const T** arg, T** res, s_t* iw, T* w) const;
 
     /// Evaluate the function numerically
-    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const override;
 
     /** \brief  Print expression */
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
-                          const std::vector<int>& arg, const std::vector<int>& res) const override;
+                          const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
-    bool is_equal(const MXNode* node, int depth) const override;
+    bool is_equal(const MXNode* node, s_t depth) const override;
 
     /** Obtain information about node */
     Dict info() const override { return {{"inner", inner_.info()}, {"outer", outer_.info()},

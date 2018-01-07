@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_LINSOL_LAPACKLU_EXPORT
+  s_t CASADI_LINSOL_LAPACKLU_EXPORT
   casadi_register_linsol_lapacklu(LinsolInternal::Plugin* plugin) {
     plugin->creator = LapackLu::creator;
     plugin->name = "lapacklu";
@@ -103,8 +103,8 @@ namespace casadi {
     auto m = static_cast<LapackLuMemory*>(mem);
 
     // Dimensions
-    int nrow = this->nrow();
-    int ncol = this->ncol();
+    s_t nrow = this->nrow();
+    s_t ncol = this->ncol();
 
     // Get the elements of the matrix, dense format
     casadi_densify(A, sp_, get_ptr(m->mat), false);
@@ -113,7 +113,7 @@ namespace casadi {
       // Calculate the col and row scaling factors
       double colcnd, rowcnd; // ratio of the smallest to the largest col/row scaling factor
       double amax; // absolute value of the largest matrix element
-      int info = -100;
+      s_t info = -100;
       dgeequ_(&ncol, &nrow, get_ptr(m->mat), &ncol, get_ptr(m->r),
               get_ptr(m->c), &colcnd, &rowcnd, &amax, &info);
       if (info < 0) return 1;
@@ -136,7 +136,7 @@ namespace casadi {
     }
 
     // Factorize the matrix
-    int info = -100;
+    s_t info = -100;
     dgetrf_(&ncol, &ncol, get_ptr(m->mat), &ncol, get_ptr(m->ipiv), &info);
     if (info) {
       if (verbose_) casadi_warning("dgetrf_ failed: Info: " + str(info));
@@ -145,28 +145,28 @@ namespace casadi {
     return 0;
   }
 
-  r_t LapackLu::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LapackLu::solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<LapackLuMemory*>(mem);
 
     // Dimensions
-    int nrow = this->nrow();
-    int ncol = this->ncol();
+    s_t nrow = this->nrow();
+    s_t ncol = this->ncol();
 
     // Scale the right hand side
     if (tr) {
       if (m->equed=='C' || m->equed=='B')
-        for (int rhs=0; rhs<nrhs; ++rhs)
-          for (int i=0; i<nrow; ++i)
+        for (s_t rhs=0; rhs<nrhs; ++rhs)
+          for (s_t i=0; i<nrow; ++i)
             x[i+rhs*nrow] *= m->c[i];
     } else {
       if (m->equed=='R' || m->equed=='B')
-        for (int rhs=0; rhs<nrhs; ++rhs)
-          for (int i=0; i<ncol; ++i)
+        for (s_t rhs=0; rhs<nrhs; ++rhs)
+          for (s_t i=0; i<ncol; ++i)
             x[i+rhs*nrow] *= m->r[i];
     }
 
     // Solve the system of equations
-    int info = 100;
+    s_t info = 100;
     char trans = tr ? 'T' : 'N';
     dgetrs_(&trans, &ncol, &nrhs, get_ptr(m->mat), &ncol, get_ptr(m->ipiv), x, &ncol, &info);
     if (info) return 1;
@@ -174,13 +174,13 @@ namespace casadi {
     // Scale the solution
     if (tr) {
       if (m->equed=='R' || m->equed=='B')
-        for (int rhs=0; rhs<nrhs; ++rhs)
-          for (int i=0; i<ncol; ++i)
+        for (s_t rhs=0; rhs<nrhs; ++rhs)
+          for (s_t i=0; i<ncol; ++i)
             x[i+rhs*nrow] *= m->r[i];
     } else {
       if (m->equed=='C' || m->equed=='B')
-        for (int rhs=0; rhs<nrhs; ++rhs)
-          for (int i=0; i<nrow; ++i)
+        for (s_t rhs=0; rhs<nrhs; ++rhs)
+          for (s_t i=0; i<nrow; ++i)
             x[i+rhs*nrow] *= m->c[i];
     }
     return 0;

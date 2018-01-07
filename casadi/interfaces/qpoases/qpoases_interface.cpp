@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  int CASADI_CONIC_QPOASES_EXPORT
+  s_t CASADI_CONIC_QPOASES_EXPORT
   casadi_register_conic_qpoases(Conic::Plugin* plugin) {
     plugin->creator = QpoasesInterface::creator;
     plugin->name = "qpoases";
@@ -339,8 +339,8 @@ namespace casadi {
     return 0;
   }
 
-  int QpoasesInterface::
-  eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  s_t QpoasesInterface::
+  eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<QpoasesMemory*>(mem);
 
     // Statistics
@@ -353,7 +353,7 @@ namespace casadi {
     }
 
     // Maxiumum number of working set changes
-    int nWSR = max_nWSR_;
+    s_t nWSR = max_nWSR_;
     double cputime = max_cputime_;
     double *cputime_ptr = cputime<=0 ? 0 : &cputime;
 
@@ -370,13 +370,13 @@ namespace casadi {
     casadi_copy(arg[CONIC_UBA], na_, ubA);
 
     // Return flag
-    int flag;
+    s_t flag;
 
     // Sparse or dense mode?
     if (sparse_) {
       // Get quadratic term
-      int* h_colind = const_cast<int*>(H_.colind());
-      int* h_row = const_cast<int*>(H_.row());
+      s_t* h_colind = const_cast<s_t*>(H_.colind());
+      s_t* h_row = const_cast<s_t*>(H_.row());
       double* h=w; w += H_.nnz();
       casadi_copy(arg[CONIC_H], H_.nnz(), h);
       if (m->h) delete m->h;
@@ -384,8 +384,8 @@ namespace casadi {
       m->h->createDiagInfo();
 
       // Get linear term
-      int* a_colind = const_cast<int*>(A_.colind());
-      int* a_row = const_cast<int*>(A_.row());
+      s_t* a_colind = const_cast<s_t*>(A_.colind());
+      s_t* a_row = const_cast<s_t*>(A_.row());
       double* a=w; w += A_.nnz();
       casadi_copy(arg[CONIC_A], A_.nnz(), a);
       if (m->a) delete m->a;
@@ -464,7 +464,7 @@ namespace casadi {
     return 0;
   }
 
-  std::string QpoasesInterface::getErrorMessage(int flag) {
+  std::string QpoasesInterface::getErrorMessage(s_t flag) {
     switch (flag) {
     case qpOASES::SUCCESSFUL_RETURN:
       return "Successful return.";
@@ -827,8 +827,8 @@ namespace casadi {
     if (this->a) delete this->a;
   }
 
-  int QpoasesInterface::
-  qpoases_init(void* mem, int dim, int nnz, const int* row, const int* col) {
+  s_t QpoasesInterface::
+  qpoases_init(void* mem, s_t dim, s_t nnz, const s_t* row, const s_t* col) {
     casadi_assert_dev(mem!=0);
     QpoasesMemory* m = static_cast<QpoasesMemory*>(mem);
 
@@ -836,7 +836,7 @@ namespace casadi {
     m->row.clear();
     m->col.clear();
     m->nz_map.clear();
-    for (int k=0; k<nnz; ++k) {
+    for (s_t k=0; k<nnz; ++k) {
       // Add upper(?) triangular part (and diagonal)
       m->row.push_back(row[k]-1);
       m->col.push_back(col[k]-1);
@@ -851,7 +851,7 @@ namespace casadi {
 
     // Create sparsity pattern: TODO(@jaeandersson) No memory allocation
     Sparsity sp = Sparsity::triplet(dim, dim, m->row, m->col, m->lin_map, false);
-    for (int& e : m->lin_map) e = m->nz_map[e];
+    for (s_t& e : m->lin_map) e = m->nz_map[e];
 
     // Allocate memory for nonzeros
     m->nz.resize(sp.nnz());
@@ -862,12 +862,12 @@ namespace casadi {
     return 0;
   }
 
-  int QpoasesInterface::qpoases_sfact(void* mem, const double* vals) {
+  s_t QpoasesInterface::qpoases_sfact(void* mem, const double* vals) {
     casadi_assert_dev(mem!=0);
     QpoasesMemory* m = static_cast<QpoasesMemory*>(mem);
 
     // Get nonzero elements (entire elements)
-    for (int i=0; i<m->nz.size(); ++i) m->nz[i] = vals[m->lin_map[i]];
+    for (s_t i=0; i<m->nz.size(); ++i) m->nz[i] = vals[m->lin_map[i]];
 
     // Pass to linear solver
     m->linsol.sfact(get_ptr(m->nz));
@@ -875,13 +875,13 @@ namespace casadi {
     return 0;
   }
 
-  int QpoasesInterface::
-  qpoases_nfact(void* mem, const double* vals, int* neig, int* rank) {
+  s_t QpoasesInterface::
+  qpoases_nfact(void* mem, const double* vals, s_t* neig, s_t* rank) {
     casadi_assert_dev(mem!=0);
     QpoasesMemory* m = static_cast<QpoasesMemory*>(mem);
 
     // Get nonzero elements (entire elements)
-    for (int i=0; i<m->nz.size(); ++i) m->nz[i] = vals[m->lin_map[i]];
+    for (s_t i=0; i<m->nz.size(); ++i) m->nz[i] = vals[m->lin_map[i]];
 
     // Pass to linear solver
     m->linsol.nfact(get_ptr(m->nz));
@@ -895,7 +895,7 @@ namespace casadi {
     return 0;
   }
 
-  int QpoasesInterface::qpoases_solve(void* mem, int nrhs, double* rhs) {
+  s_t QpoasesInterface::qpoases_solve(void* mem, s_t nrhs, double* rhs) {
     casadi_assert_dev(mem!=0);
     QpoasesMemory* m = static_cast<QpoasesMemory*>(mem);
 

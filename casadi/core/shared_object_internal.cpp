@@ -56,7 +56,7 @@ namespace casadi {
     }
   }
 
-  int SharedObjectInternal::getCount() const {
+  s_t SharedObjectInternal::getCount() const {
     return count;
   }
 

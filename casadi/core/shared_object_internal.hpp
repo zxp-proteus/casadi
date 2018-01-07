@@ -50,7 +50,7 @@ namespace casadi {
     virtual ~SharedObjectInternal() = 0;
 
     /// Get the reference count
-    int getCount() const;
+    s_t getCount() const;
 
     /// Readable name of the internal class
     virtual std::string class_name() const = 0;

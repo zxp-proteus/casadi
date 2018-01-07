@@ -30,20 +30,20 @@
 #include <casadi/interfaces/hsl/casadi_linsol_ma27_export.h>
 
 extern "C" {
-  void ma27id_(int* ICNTL, double* CNTL);
-  void ma27ad_(int *N, int *NZ, const int *IRN, const int* ICN,
-               int *IW, int* LIW, int* IKEEP, int *IW1,
-               int* NSTEPS, int* IFLAG, int* ICNTL,
-               double* CNTL, int *INFO, double* OPS);
-  void ma27bd_(int *N, int *NZ, const int *IRN, const int* ICN,
-               double* A, int* LA, int* IW, int* LIW,
-               int* IKEEP, int* NSTEPS, int* MAXFRT,
-               int* IW1, int* ICNTL, double* CNTL,
-               int* INFO);
-  void ma27cd_(int *N, double* A, int* LA, int* IW,
-               int* LIW, double* W, int* MAXFRT,
-               double* RHS, int* IW1, int* NSTEPS,
-               int* ICNTL, double* CNTL);
+  void ma27id_(s_t* ICNTL, double* CNTL);
+  void ma27ad_(s_t *N, s_t *NZ, const s_t *IRN, const s_t* ICN,
+               s_t *IW, s_t* LIW, s_t* IKEEP, s_t *IW1,
+               s_t* NSTEPS, s_t* IFLAG, s_t* ICNTL,
+               double* CNTL, s_t *INFO, double* OPS);
+  void ma27bd_(s_t *N, s_t *NZ, const s_t *IRN, const s_t* ICN,
+               double* A, s_t* LA, s_t* IW, s_t* LIW,
+               s_t* IKEEP, s_t* NSTEPS, s_t* MAXFRT,
+               s_t* IW1, s_t* ICNTL, double* CNTL,
+               s_t* INFO);
+  void ma27cd_(s_t *N, double* A, s_t* LA, s_t* IW,
+               s_t* LIW, double* W, s_t* MAXFRT,
+               double* RHS, s_t* IW1, s_t* NSTEPS,
+               s_t* ICNTL, double* CNTL);
 }
 
 /** \defgroup plugin_Linsol_ma27
@@ -65,46 +65,46 @@ namespace casadi {
     ~Ma27Memory();
 
     /* Work vector for MA27AD */
-    std::vector<int> iw1;
+    std::vector<s_t> iw1;
 
     /* Number of nonzeros in the current linear system. */
-    int nnz;
+    s_t nnz;
 
     /* matrix/factor for MA27 (A in MA27) */
     std::vector<double> nz;
 
     /* Row entries of matrix (IRN in MA27) */
-    std::vector<int> irn;
+    std::vector<s_t> irn;
 
     /* Column entries of matrix (JCN in MA27) */
-    std::vector<int> jcn;
+    std::vector<s_t> jcn;
 
     /* integer control values (ICNRL in MA27) */
-    int icntl[30];
+    s_t icntl[30];
 
     /* real control values (CNRL in MA27) */
     double cntl[5];
 
     /* integer work space (IW in MA27) */
-    std::vector<int> iw;
+    std::vector<s_t> iw;
 
     /* Real work space (W in MA27CD) */
     std::vector<double> w;
 
     /* IKEEP in MA27 */
-    std::vector<int> ikeep;
+    std::vector<s_t> ikeep;
 
     /* NSTEPS in MA27 */
-    int nsteps;
+    s_t nsteps;
 
     /* MAXFRT in MA27 */
-    int maxfrt;
+    s_t maxfrt;
 
     /* number of negative eigenvalues */
-    int neig;
+    s_t neig;
 
     // Rank of matrix
-    int rank;
+    s_t rank;
   };
 
   /** \brief \pluginbrief{Linsol,ma27}
@@ -141,13 +141,13 @@ namespace casadi {
     r_t nfact(void* mem, const double* A) const override;
 
     /// Number of negative eigenvalues
-    int neig(void* mem, const double* A) const override;
+    s_t neig(void* mem, const double* A) const override;
 
     /// Matrix rank
-    int rank(void* mem, const double* A) const override;
+    s_t rank(void* mem, const double* A) const override;
 
     // Solve the linear system
-    r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
+    r_t solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const override;
 
     /// A documentation string
     static const std::string meta_doc;

@@ -47,13 +47,13 @@ namespace casadi {
     bool is_warm;
 
     /// Nature of problem (always minimization)
-    int objsen;
+    s_t objsen;
 
     /// Determines relation >,<, = in the linear constraints
     std::vector<char> sense;
 
     /// Coefficients of matrix A (constraint Jacobian)
-    std::vector<int> matcnt;
+    std::vector<s_t> matcnt;
 
     /// Right-hand side of constraints
     std::vector<double> rhs;
@@ -62,13 +62,13 @@ namespace casadi {
     std::vector<double> rngval;
 
     /// Coefficients of matrix H (objective Hessian)
-    std::vector<int> qmatcnt;
+    std::vector<s_t> qmatcnt;
 
     /// Storage for basis info of primal variables
-    std::vector<int> cstat;
+    std::vector<s_t> cstat;
 
     /// Storage for basis info of slack variables
-    std::vector<int> rstat;
+    std::vector<s_t> rstat;
 
     /// CPLEX environment
     CPXENVptr env;
@@ -129,7 +129,7 @@ namespace casadi {
     void free_mem(void *mem) const override { delete static_cast<CplexMemory*>(mem);}
 
     // Solve the QP
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// Can discrete variables be treated
     bool integer_support() const override { return true;}
@@ -139,11 +139,11 @@ namespace casadi {
 
     ///@{
     /// Options
-    int qp_method_;
+    s_t qp_method_;
     bool dump_to_file_;
     std::string dump_filename_;
     double tol_;
-    int dep_check_;
+    s_t dep_check_;
     bool warm_start_;
     ///@}
 

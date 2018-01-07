@@ -34,40 +34,40 @@ namespace casadi {
     set_sparsity(x.sparsity().T());
   }
 
-  r_t Transpose::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Transpose::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
- r_t DenseTranspose::eval(const double** arg, double** res, int* iw, double* w) const {
+ r_t DenseTranspose::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int Transpose::
-  eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  s_t Transpose::
+  eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
-  int DenseTranspose::
-  eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  s_t DenseTranspose::
+  eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
   r_t Transpose::eval_gen(const T* const* arg, T* const* res,
-                          int* iw, T* w) const {
+                          s_t* iw, T* w) const {
     // Get sparsity patterns
-    //const vector<int>& x_colind = input[0]->colind();
-    const int* x_row = dep(0).row();
-    int x_sz = dep(0).nnz();
-    const int* xT_colind = sparsity().colind();
-    int xT_ncol = sparsity().size2();
+    //const vector<s_t>& x_colind = input[0]->colind();
+    const s_t* x_row = dep(0).row();
+    s_t x_sz = dep(0).nnz();
+    const s_t* xT_colind = sparsity().colind();
+    s_t xT_ncol = sparsity().size2();
 
     const T* x = arg[0];
     T* xT = res[0];
 
     // Transpose
     copy(xT_colind, xT_colind+xT_ncol+1, iw);
-    for (int el=0; el<x_sz; ++el) {
+    for (s_t el=0; el<x_sz; ++el) {
       xT[iw[x_row[el]]++] = x[el];
     }
     return 0;
@@ -75,91 +75,91 @@ namespace casadi {
 
   template<typename T>
   r_t DenseTranspose::eval_gen(const T* const* arg, T* const* res,
-                               int* iw, T* w) const {
+                               s_t* iw, T* w) const {
     // Get sparsity patterns
-    int x_nrow = dep().size1();
-    int x_ncol = dep().size2();
+    s_t x_nrow = dep().size1();
+    s_t x_ncol = dep().size2();
 
     const T* x = arg[0];
     T* xT = res[0];
-    for (int i=0; i<x_ncol; ++i) {
-      for (int j=0; j<x_nrow; ++j) {
+    for (s_t i=0; i<x_ncol; ++i) {
+      for (s_t j=0; j<x_nrow; ++j) {
         xT[i+j*x_ncol] = x[j+i*x_nrow];
       }
     }
     return 0;
   }
 
-  int Transpose::
-  sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  s_t Transpose::
+  sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shortands
     const bvec_t *x = arg[0];
     bvec_t *xT = res[0];
 
     // Get sparsity
-    int nz = nnz();
-    const int* x_row = dep().row();
-    const int* xT_colind = sparsity().colind();
-    int xT_ncol = sparsity().size2();
+    s_t nz = nnz();
+    const s_t* x_row = dep().row();
+    const s_t* xT_colind = sparsity().colind();
+    s_t xT_ncol = sparsity().size2();
 
     // Loop over the nonzeros of the argument
     copy(xT_colind, xT_colind+xT_ncol+1, iw);
-    for (int el=0; el<nz; ++el) {
+    for (s_t el=0; el<nz; ++el) {
       xT[iw[*x_row++]++] = *x++;
     }
     return 0;
   }
 
-  int Transpose::
-  sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  s_t Transpose::
+  sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shortands
     bvec_t *x = arg[0];
     bvec_t *xT = res[0];
 
     // Get sparsity
-    int nz = nnz();
-    const int* x_row = dep().row();
-    const int* xT_colind = sparsity().colind();
-    int xT_ncol = sparsity().size2();
+    s_t nz = nnz();
+    const s_t* x_row = dep().row();
+    const s_t* xT_colind = sparsity().colind();
+    s_t xT_ncol = sparsity().size2();
 
     // Loop over the nonzeros of the argument
     copy(xT_colind, xT_colind+xT_ncol+1, iw);
-    for (int el=0; el<nz; ++el) {
-      int elT = iw[*x_row++]++;
+    for (s_t el=0; el<nz; ++el) {
+      s_t elT = iw[*x_row++]++;
       *x++ |= xT[elT];
       xT[elT] = 0;
     }
     return 0;
   }
 
-  int DenseTranspose::
-  sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  s_t DenseTranspose::
+  sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shorthands
     const bvec_t *x = arg[0];
     bvec_t *xT = res[0];
-    int x_nrow = dep().size1();
-    int x_ncol = dep().size2();
+    s_t x_nrow = dep().size1();
+    s_t x_ncol = dep().size2();
 
     // Loop over the elements
-    for (int rr=0; rr<x_nrow; ++rr) {
-      for (int cc=0; cc<x_ncol; ++cc) {
+    for (s_t rr=0; rr<x_nrow; ++rr) {
+      for (s_t cc=0; cc<x_ncol; ++cc) {
         *xT++ = x[rr+cc*x_nrow];
       }
     }
     return 0;
   }
 
-  int DenseTranspose::
-  sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  s_t DenseTranspose::
+  sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shorthands
     bvec_t *x = arg[0];
     bvec_t *xT = res[0];
-    int x_nrow = dep().size1();
-    int x_ncol = dep().size2();
+    s_t x_nrow = dep().size1();
+    s_t x_ncol = dep().size2();
 
     // Loop over the elements
-    for (int rr=0; rr<x_nrow; ++rr) {
-      for (int cc=0; cc<x_ncol; ++cc) {
+    for (s_t rr=0; rr<x_nrow; ++rr) {
+      for (s_t cc=0; cc<x_ncol; ++cc) {
         x[rr+cc*x_nrow] |= *xT;
         *xT++ = 0;
       }
@@ -177,30 +177,30 @@ namespace casadi {
 
   void Transpose::ad_forward(const std::vector<std::vector<MX> >& fseed,
                           std::vector<std::vector<MX> >& fsens) const {
-    for (int d=0; d<fsens.size(); ++d) {
+    for (s_t d=0; d<fsens.size(); ++d) {
       fsens[d][0] = fseed[d][0].T();
     }
   }
 
   void Transpose::ad_reverse(const std::vector<std::vector<MX> >& aseed,
                           std::vector<std::vector<MX> >& asens) const {
-    for (int d=0; d<aseed.size(); ++d) {
+    for (s_t d=0; d<aseed.size(); ++d) {
       asens[d][0] += aseed[d][0].T();
     }
   }
 
   void Transpose::generate(CodeGenerator& g,
-                           const std::vector<int>& arg, const std::vector<int>& res) const {
+                           const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     g << g.trans(g.work(arg[0], nnz()), dep().sparsity(),
                  g.work(res[0], nnz()), sparsity(), "iw") <<  ";\n";
   }
 
   void DenseTranspose::generate(CodeGenerator& g,
-                                const std::vector<int>& arg, const std::vector<int>& res) const {
+                                const std::vector<s_t>& arg, const std::vector<s_t>& res) const {
     g.local("cs", "const casadi_real", "*");
     g.local("rr", "casadi_real", "*");
-    g.local("i", "int");
-    g.local("j", "int");
+    g.local("i", "s_t");
+    g.local("j", "s_t");
     g << "for (i=0, rr=" << g.work(res[0], nnz()) << ", "
       << "cs=" << g.work(arg[0], nnz()) << "; i<" << dep().size2() << "; ++i) "
       << "for (j=0; j<" << dep().size1() << "; ++j) "

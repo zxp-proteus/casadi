@@ -95,7 +95,7 @@ namespace casadi {
     void free_mem(void *mem) const override { delete static_cast<ClpMemory*>(mem);}
 
     // Solve the QP
-    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const override;
 
     /// A documentation string
     static const std::string meta_doc;

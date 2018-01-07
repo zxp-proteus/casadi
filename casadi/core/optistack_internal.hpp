@@ -63,10 +63,10 @@ public:
   ~OptiNode();
 
   /// Create a decision variable (symbol)
-  MX variable(int n=1, int m=1, const std::string& attribute="full");
+  MX variable(s_t n=1, s_t m=1, const std::string& attribute="full");
 
   /// Create a parameter (symbol); fixed during optimization
-  MX parameter(int n=1, int m=1, const std::string& attribute="full");
+  MX parameter(s_t n=1, s_t m=1, const std::string& attribute="full");
 
   /// Set objective
   void minimize(const MX& f);
@@ -168,12 +168,12 @@ public:
   std::vector<MX> active_symvar(VariableType type) const;
   std::vector<DM> active_values(VariableType type) const;
 
-  MX x_lookup(int i) const;
-  MX g_lookup(int i) const;
+  MX x_lookup(s_t i) const;
+  MX g_lookup(s_t i) const;
 
-  std::string x_describe(int i) const;
-  std::string g_describe(int i) const;
-  std::string describe(const MX& x, int indent=0) const;
+  std::string x_describe(s_t i) const;
+  std::string g_describe(s_t i) const;
+  std::string describe(const MX& x, s_t indent=0) const;
 
   void solve_prepare();
   DMDict solve_actual(const DMDict& args);
@@ -193,19 +193,19 @@ public:
   std::string class_name() const override { return "OptiNode"; }
 
   /// Number of (scalarised) decision variables
-  int nx() const {
+  s_t nx() const {
     if (problem_dirty()) return baked_copy().nx();
     return nlp_.at("x").size1();
   }
 
   /// Number of (scalarised) parameters
-  int np() const {
+  s_t np() const {
     if (problem_dirty()) return baked_copy().np();
     return nlp_.at("p").size1();
   }
 
   /// Number of (scalarised) constraints
-  int ng() const {
+  s_t ng() const {
     if (problem_dirty()) return baked_copy().ng();
     return nlp_.at("g").size1();
   }
@@ -247,7 +247,7 @@ public:
   /// Fix the structure of the optimization problem
   void bake();
 
-  int instance_number() const;
+  s_t instance_number() const;
 
   static OptiNode* create();
 
@@ -320,11 +320,11 @@ private:
   std::vector<MX> symbols_;
 
   /// Symbol counter
-  int count_;
+  s_t count_;
 
-  int count_var_;
-  int count_par_;
-  int count_dual_;
+  s_t count_var_;
+  s_t count_par_;
+  s_t count_dual_;
 
   /// Storing latest values for all parameters (including inactive)
   std::vector<DM> values_;
@@ -371,13 +371,13 @@ private:
   void assert_only_opti_nondual(const MX& e) const;
 
 
-  static int instance_count_;
-  int instance_number_;
+  static s_t instance_count_;
+  s_t instance_number_;
 
 
   std::string name_prefix() const;
 
-  static std::string format_stacktrace(const Dict& stacktrace, int indent);
+  static std::string format_stacktrace(const Dict& stacktrace, s_t indent);
 
 };
 
