@@ -861,7 +861,7 @@ namespace casadi {
   MatType GenericMatrix<MatType>::linspace(const MatType& a, const MatType& b, s_t nsteps) {
     std::vector<MatType> ret(nsteps);
     ret[0] = a;
-    MatType step = (b-a)/(nsteps-1);
+    MatType step = (b-a)/static_cast<MatType>(nsteps-1);
 
     for (s_t i=1; i<nsteps-1; ++i)
       ret[i] = ret[i-1] + step;
@@ -1139,7 +1139,8 @@ namespace casadi {
     casadi_assert(a.is_square() && b.is_constant() && b.is_scalar(),
       "Not Implemented");
     double bv = static_cast<double>(b);
-    s_t N = bv;
+    s_t N = static_cast<s_t>(bv);
+    casadi_assert(bv-static_cast<double>(N)==0, "mpower only defined for integer powers.");
     casadi_assert(bv==N, "Not Implemented");
     if (N<0) return inv(mpower(a, -N));
     if (N==0) return MatType::eye(a.size1());

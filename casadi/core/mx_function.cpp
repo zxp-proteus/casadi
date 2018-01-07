@@ -158,7 +158,7 @@ namespace casadi {
       }
 
       // If a new element in the algorithm needs to be added
-      if (op>=0) {
+      if (op!=std::numeric_limits<e_t>::max()) {
         AlgEl ae;
         ae.op = op;
         ae.data.own(n);
@@ -476,7 +476,7 @@ namespace casadi {
     }
   }
 
-  s_t MXFunction::
+  r_t MXFunction::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
     // Temporaries to hold pointers to operation input and outputs
     const bvec_t** arg1=arg+n_in_;
@@ -1313,7 +1313,7 @@ namespace casadi {
     // Loop over algorithm
     for (s_t k=0;k<f.n_instructions();++k) {
       // Get operation
-      e_t op = f.instruction_id(k);
+      e_t op = static_cast<e_t>(f.instruction_id(k));
       // Get MX node
       MX x = f.instruction_MX(k);
       // Get input positions into workvector

@@ -44,7 +44,7 @@ namespace casadi {
     s_t nnz = dep(0).nnz();
     s_t k=0;
     while (k<nnz && *x++ == 0) k++;
-    res[0][0] = k<nnz ? dep(0).row(k) : dep(0).size1();
+    res[0][0] = k<nnz ? static_cast<double>(dep(0).row(k)) : static_cast<double>(dep(0).size1());
     return 0;
   }
 

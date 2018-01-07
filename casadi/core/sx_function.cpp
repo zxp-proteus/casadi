@@ -251,10 +251,11 @@ namespace casadi {
       }
     }
 
+    casadi_assert(nodes.size() <= std::numeric_limits<int>::max(), "Integer overflow");
     // Set the temporary variables to be the corresponding place in the sorted graph
     for (s_t i=0; i<nodes.size(); ++i) {
       if (nodes[i]) {
-        nodes[i]->temp = i;
+        nodes[i]->temp = static_cast<int>(i);
       }
     }
 
@@ -272,10 +273,11 @@ namespace casadi {
     }
 
     // Input instructions
-    vector<pair<s_t, SXNode*> > symb_loc;
+    vector<pair<int, SXNode*> > symb_loc;
 
     // Current output and nonzero, start with the first one
-    s_t curr_oind, curr_nz=0;
+    int curr_oind, curr_nz=0;
+    casadi_assert(out_.size() <= std::numeric_limits<int>::max(), "Integer overflow");
     for (curr_oind=0; curr_oind<out_.size(); ++curr_oind) {
       if (out_[curr_oind].nnz()!=0) {
         break;
@@ -296,7 +298,7 @@ namespace casadi {
       AlgEl ae;
 
       // Get operation
-      ae.op = n==0 ? OP_OUTPUT : n->op();
+      ae.op = n==0 ? static_cast<e_t>(OP_OUTPUT) : n->op();
 
       // Get instruction
       switch (ae.op) {
@@ -314,9 +316,11 @@ namespace casadi {
         ae.i2 = curr_nz;
 
         // Go to the next nonzero
+        casadi_assert(curr_nz < std::numeric_limits<int>::max(), "Integer overflow");
         curr_nz++;
         if (curr_nz>=out_[curr_oind].nnz()) {
           curr_nz=0;
+          casadi_assert(curr_oind < std::numeric_limits<int>::max(), "Integer overflow");
           curr_oind++;
           for (; curr_oind<out_.size(); ++curr_oind) {
             if (out_[curr_oind].nnz()!=0) {
@@ -343,13 +347,13 @@ namespace casadi {
     }
 
     // Place in the work vector for each of the nodes in the tree (overwrites the reference counter)
-    vector<s_t> place(nodes.size());
+    vector<int> place(nodes.size());
 
     // Stack with unused elements in the work vector
-    stack<s_t> unused;
+    stack<int> unused;
 
     // Work vector size
-    worksize_ = 0;
+    int worksize = 0;
 
     // Find a place in the work vector for the operation
     for (auto&& a : algorithm_) {
@@ -373,7 +377,7 @@ namespace casadi {
           unused.pop();
         } else {
           // Allocate a new variable
-          a.i0 = place[a.i0] = worksize_++;
+          a.i0 = place[a.i0] = worksize++;
         }
       }
 
@@ -402,6 +406,8 @@ namespace casadi {
       }
     }
 
+    worksize_ = worksize;
+
     // Allocate work vectors (symbolic/numeric)
     alloc_w(worksize_);
 
@@ -418,10 +424,11 @@ namespace casadi {
     }
 
     // Add input instructions
-    for (s_t ind=0; ind<in_.size(); ++ind) {
-      s_t nz=0;
+    casadi_assert(in_.size() <= std::numeric_limits<int>::max(), "Integer overflow");
+    for (int ind=0; ind<in_.size(); ++ind) {
+      int nz=0;
       for (auto itc = in_[ind]->begin(); itc != in_[ind]->end(); ++itc, ++nz) {
-        s_t i = itc->get_temp()-1;
+        int i = itc->get_temp()-1;
         if (i>=0) {
           // Mark as input
           algorithm_[i].op = OP_INPUT;
@@ -438,7 +445,7 @@ namespace casadi {
 
     // Locate free variables
     free_vars_.clear();
-    for (vector<pair<s_t, SXNode*> >::const_iterator it=symb_loc.begin();
+    for (vector<pair<int, SXNode*> >::const_iterator it=symb_loc.begin();
          it!=symb_loc.end(); ++it) {
       if (it->second->temp!=0) {
         // Save to list of free parameters
@@ -463,7 +470,7 @@ namespace casadi {
     if (verbose_) casadi_message(str(algorithm_.size()) + " elementary operations");
   }
 
-  s_t SXFunction::
+  r_t SXFunction::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem) const {
     if (verbose_) casadi_message(name_ + "::eval_sx");
 
@@ -719,7 +726,7 @@ namespace casadi {
     }
   }
 
-  s_t SXFunction::
+  r_t SXFunction::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
     // Propagate sparsity forward
     for (auto&& e : algorithm_) {
@@ -835,7 +842,7 @@ namespace casadi {
 
     for (s_t k=0;k<f.n_instructions();++k) {
       // Get operation
-      e_t op = f.instruction_id(k);
+      e_t op = static_cast<e_t>(f.instruction_id(k));
       // Get input positions into workvector
       std::vector<s_t> o = f.instruction_output(k);
       // Get output positions into workvector

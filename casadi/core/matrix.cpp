@@ -796,7 +796,7 @@ namespace casadi {
       print_scalar(stream);
     } else if (is_column()) {
       print_vector(stream);
-    } else if (std::max(size1(), size2())<=10 || static_cast<double>(nnz())/numel()>=0.5) {
+    } else if (std::max(size1(), size2())<=10 || static_cast<double>(nnz())/static_cast<double>(numel())>=0.5) {
       // if "small" or "dense"
       print_dense(stream);
     } else {
@@ -834,8 +834,18 @@ namespace casadi {
 
   template<typename Scalar>
   Matrix<Scalar>::Matrix(double val) :
-      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, val)) {
+      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
   }
+
+  template<typename Scalar>
+  Matrix<Scalar>::Matrix(s_t val) :
+      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
+  }
+
+  /**template<typename Scalar>
+  Matrix<Scalar>::Matrix(i_t val) :
+      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
+  }*/
 
   template<typename Scalar>
   Matrix<Scalar>::Matrix(const std::vector< std::vector<double> >& d) {
@@ -858,7 +868,7 @@ namespace casadi {
     typename std::vector<Scalar>::iterator it=nonzeros_.begin();
     for (s_t cc=0; cc<ncol; ++cc) {
       for (s_t rr=0; rr<nrow; ++rr) {
-        *it++ = d[rr][cc];
+        *it++ = static_cast<Scalar>(d[rr][cc]);
       }
     }
   }
@@ -3313,7 +3323,7 @@ namespace casadi {
     SX dxa = (x-a);
     for (s_t i=1; i<=order; i++) {
       ff = jacobian(ff, x);
-      nf*=i;
+      nf*=static_cast<double>(i);
       result+=1/nf * substitute(ff, x, a) * dxa;
       dxa*=dx;
     }
@@ -3337,7 +3347,7 @@ namespace casadi {
                                     order-order_contributions[i],
                                     order_contributions,
                                     current_dx*(x->at(i)-a->at(i)),
-                                    current_denom*current_order, current_order+1);
+                                    current_denom*static_cast<double>(current_order), current_order+1);
       }
     }
     return result;
@@ -3463,9 +3473,11 @@ namespace casadi {
       v.push_back(SXElem::sym(v_name.str()));
     }
 
+    casadi_assert(vdef.size()<numeric_limits<i_t>::max(), "Integer overflow");
+
     // Mark the above expressions
     for (s_t i=0; i<vdef.size(); ++i) {
-      vdef[i].set_temp(i+1);
+      vdef[i].set_temp(static_cast<i_t>(i)+1);
     }
 
     // Save the marked nodes for later cleanup
@@ -3521,7 +3533,7 @@ namespace casadi {
     s_t mult = 1;
     bool success = false;
     for (s_t i=0; i<1000; ++i) {
-      r.push_back((substitute(j, x, 0)/mult).scalar());
+      r.push_back((substitute(j, x, 0)/static_cast<double>(mult)).scalar());
       j = jacobian(j, x);
       if (j.nnz()==0) {
         success = true;

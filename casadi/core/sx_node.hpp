@@ -125,10 +125,10 @@ namespace casadi {
         the user is responsible of making sure that use is thread-safe
         The variable is initialized to zero
     */
-    mutable s_t temp;
+    mutable i_t temp;
 
     // Reference counter -- counts the number of parents of the node
-    e_t count;
+    unsigned int count;
 
   };
 

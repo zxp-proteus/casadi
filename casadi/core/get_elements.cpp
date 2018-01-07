@@ -39,7 +39,7 @@ namespace casadi {
     set_dep(ind, x);
   }
 
-  s_t GetElements::
+  r_t GetElements::
   eval(const double** arg, double** res, s_t* iw, double* w) const {
     // Get input and output arguments
     const double* ind = arg[0];

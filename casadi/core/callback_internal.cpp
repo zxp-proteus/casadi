@@ -87,12 +87,12 @@ namespace casadi {
     FunctionInternal::finalize(opts);
   }
 
-  s_t CallbackInternal::
+  r_t CallbackInternal::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     TRY_CALL(eval, self_, arg, res, iw, w, 0);
   }
 
-  s_t CallbackInternal::
+  r_t CallbackInternal::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem) const {
     TRY_CALL(eval_sx, self_, arg, res, iw, w, mem);
   }

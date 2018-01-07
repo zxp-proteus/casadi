@@ -59,18 +59,18 @@ namespace casadi {
     set_dep(y);
   }
 
-  s_t GetNonzerosVector::
+  r_t GetNonzerosVector::
   eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  s_t GetNonzerosVector::
+  r_t GetNonzerosVector::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  s_t GetNonzerosVector::
+  r_t GetNonzerosVector::
   eval_gen(const T* const* arg, T* const* res, s_t* iw, T* w) const {
     const T* idata = arg[0];
     T* odata = res[0];
@@ -80,12 +80,12 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosSlice::
+  r_t GetNonzerosSlice::
   eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  s_t GetNonzerosSlice::
+  r_t GetNonzerosSlice::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
@@ -102,18 +102,18 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosSlice2::
+  r_t GetNonzerosSlice2::
   eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  s_t GetNonzerosSlice2::
+  r_t GetNonzerosSlice2::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  s_t GetNonzerosSlice2::
+  r_t GetNonzerosSlice2::
   eval_gen(const T* const* arg, T* const* res, s_t* iw, T* w) const {
     const T* outer = arg[0] + outer_.start;
     const T* outer_stop = arg[0] + outer_.stop;
@@ -128,7 +128,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosVector::
+  r_t GetNonzerosVector::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     const bvec_t *a = arg[0];
     bvec_t *r = res[0];
@@ -136,7 +136,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosVector::
+  r_t GetNonzerosVector::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     bvec_t *a = arg[0];
     bvec_t *r = res[0];
@@ -147,7 +147,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosSlice::
+  r_t GetNonzerosSlice::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     const bvec_t *a = arg[0];
     bvec_t *r = res[0];
@@ -157,7 +157,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosSlice::
+  r_t GetNonzerosSlice::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     bvec_t *a = arg[0];
     bvec_t *r = res[0];
@@ -168,7 +168,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosSlice2::
+  r_t GetNonzerosSlice2::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     const bvec_t *a = arg[0];
     bvec_t *r = res[0];
@@ -180,7 +180,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t GetNonzerosSlice2::
+  r_t GetNonzerosSlice2::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     bvec_t *a = arg[0];
     bvec_t *r = res[0];

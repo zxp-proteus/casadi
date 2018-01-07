@@ -141,7 +141,9 @@ class RealtypeSX : public ConstantSX {
 class IntegerSX : public ConstantSX {
   private:
     /// Constructor is private, use "create" below
-    explicit IntegerSX(s_t value) : value(value) {}
+    explicit IntegerSX(s_t value) : value(static_cast<i_t>(value)) {
+      casadi_assert(value<std::numeric_limits<i_t>::max(), "Integer overflow");
+    }
 
   public:
 
@@ -174,8 +176,8 @@ class IntegerSX : public ConstantSX {
 
     ///@{
     /** \brief  evaluate function */
-    double to_double() const override {  return value; }
-    s_t to_int() const override {  return value; }
+    double to_double() const override {  return static_cast<double>(value); }
+    s_t to_int() const override {  return static_cast<s_t>(value); }
     ///@}
 
     /** \brief  Properties */
@@ -188,7 +190,7 @@ class IntegerSX : public ConstantSX {
     static CACHING_MAP<s_t, IntegerSX*> cached_constants_;
 
     /** \brief  Data members */
-    s_t value;
+    i_t value;
 };
 
 /** \brief  Represents a zero SX

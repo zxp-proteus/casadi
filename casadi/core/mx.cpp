@@ -58,6 +58,14 @@ namespace casadi {
     own(ConstantMX::create(Sparsity::dense(1, 1), x));
   }
 
+  MX::MX(s_t x) {
+    own(ConstantMX::create(Sparsity::dense(1, 1), static_cast<double>(x)));
+  }
+
+  MX::MX(i_t x) {
+    own(ConstantMX::create(Sparsity::dense(1, 1), static_cast<double>(x)));
+  }
+
   MX::MX(const DM& x) {
     own(ConstantMX::create(x));
   }
@@ -100,6 +108,10 @@ namespace casadi {
   }
 
   MX::MX(const Sparsity& sp, s_t val, bool dummy) {
+    own(ConstantMX::create(sp, val));
+  }
+
+  MX::MX(const Sparsity& sp, i_t val, bool dummy) {
     own(ConstantMX::create(sp, val));
   }
 
@@ -689,7 +701,7 @@ namespace casadi {
     return (*this)->is_unary();
   }
 
-  s_t MX::op() const {
+  e_t MX::op() const {
     return (*this)->op();
   }
 
@@ -1146,7 +1158,7 @@ namespace casadi {
     } else {
       MX ret = x_default;
       for (s_t k=0; k<x.size(); ++k) {
-        ret = if_else(ind==k, x[k], ret);
+        ret = if_else(ind==static_cast<double>(k), x[k], ret);
       }
       return ret;
     }

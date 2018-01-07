@@ -147,7 +147,7 @@ namespace casadi {
     return Sparsity();
   }
 
-  s_t Integrator::
+  r_t Integrator::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<IntegratorMemory*>(mem);
 
@@ -503,7 +503,7 @@ namespace casadi {
     return ret;
   }
 
-  s_t Integrator::
+  r_t Integrator::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
     if (verbose_) casadi_message(name_ + "::sp_forward");
 
@@ -1051,7 +1051,7 @@ namespace casadi {
 
     // Number of finite elements and time steps
     casadi_assert_dev(nk_>0);
-    h_ = (grid_.back() - grid_.front())/nk_;
+    h_ = static_cast<double>(grid_.back() - grid_.front())/static_cast<double>(nk_);
 
     // Setup discrete time dynamics
     setupFG();
@@ -1098,7 +1098,7 @@ namespace casadi {
     auto m = static_cast<FixedStepMemory*>(mem);
 
     // Get discrete time sought
-    s_t k_out = std::ceil((t - grid_.front())/h_);
+    s_t k_out = static_cast<s_t>(std::ceil((t - grid_.front())/h_));
     k_out = std::min(k_out, nk_); //  make sure that rounding errors does not result in k_out>nk_
     casadi_assert_dev(k_out>=0);
 
@@ -1137,7 +1137,7 @@ namespace casadi {
 
       // Advance time
       m->k++;
-      m->t = grid_.front() + m->k*h_;
+      m->t = static_cast<double>(grid_.front()) + static_cast<double>(m->k)*h_;
     }
 
     // Return to user TODO(@jaeandersson): interpolate
@@ -1151,8 +1151,8 @@ namespace casadi {
     auto m = static_cast<FixedStepMemory*>(mem);
 
     // Get discrete time sought
-    s_t k_out = std::floor((t - grid_.front())/h_);
-    k_out = std::max(k_out, 0); //  make sure that rounding errors does not result in k_out>nk_
+    s_t k_out = static_cast<s_t>(std::floor((t - grid_.front())/h_));
+    k_out = std::max(k_out, s_t(0)); //  make sure that rounding errors does not result in k_out>nk_
     casadi_assert_dev(k_out<=nk_);
 
     // Explicit discrete time dynamics
@@ -1176,7 +1176,7 @@ namespace casadi {
     while (m->k>k_out) {
       // Advance time
       m->k--;
-      m->t = grid_.front() + m->k*h_;
+      m->t = static_cast<double>(grid_.front()) + static_cast<double>(m->k)*h_;
 
       // Update the previous step
       casadi_copy(get_ptr(m->rx), nrx_, get_ptr(m->rx_prev));

@@ -112,6 +112,10 @@ namespace casadi {
     return !is_zero();
   }
 
+  ConstantMX* ConstantMX::create(const Sparsity& sp, i_t val) {
+    return create(static_cast<s_t>(val));
+  }
+
   ConstantMX* ConstantMX::create(const Sparsity& sp, s_t val) {
     if (sp.is_empty(true)) {
       return ZeroByZero::getInstance();
@@ -129,8 +133,8 @@ namespace casadi {
     if (sp.is_empty(true)) {
       return ZeroByZero::getInstance();
     } else {
-      s_t intval(val);
-      if (intval-val==0) {
+      s_t intval = static_cast<s_t>(val);
+      if (static_cast<double>(intval)-val==0) {
         return create(sp, intval);
       } else {
         return new Constant<RuntimeConst<double> >(sp, val);

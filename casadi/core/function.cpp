@@ -415,7 +415,7 @@ namespace casadi {
     return call_gen(arg, res);
   }
 
-  s_t Function::rev(std::vector<bvec_t*> arg, std::vector<bvec_t*> res) const {
+  r_t Function::rev(std::vector<bvec_t*> arg, std::vector<bvec_t*> res) const {
     // Input buffer
     casadi_assert_dev(arg.size()>=n_in());
     arg.resize(sz_arg());
@@ -872,7 +872,7 @@ namespace casadi {
 
   size_t Function::sz_w() const { return (*this)->sz_w();}
 
-  s_t Function::operator()(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem) const {
+  r_t Function::operator()(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem) const {
     try {
       return (*this)->sp_forward(arg, res, iw, w, memory(mem));
     } catch (exception& e) {
@@ -880,7 +880,7 @@ namespace casadi {
     }
   }
 
-  s_t Function::rev(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem) const {
+  r_t Function::rev(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem) const {
     try {
       return (*this)->sp_reverse(arg, res, iw, w, memory(mem));
     } catch (exception& e) {
@@ -1136,7 +1136,7 @@ namespace casadi {
     return (*this)->get_min_in(ind);
   }
 
-  s_t Function::operator()(const double** arg, double** res, s_t* iw, double* w, s_t mem) const {
+  r_t Function::operator()(const double** arg, double** res, s_t* iw, double* w, s_t mem) const {
     try {
       return (*this)->eval_gen(arg, res, iw, w, memory(mem));
     } catch (KeyboardInterruptException& e) {
@@ -1146,7 +1146,7 @@ namespace casadi {
     }
   }
 
-  s_t Function::operator()(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, s_t mem) const {
+  r_t Function::operator()(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, s_t mem) const {
     try {
       return (*this)->eval_sx(arg, res, iw, w, memory(mem));
     } catch (exception& e) {

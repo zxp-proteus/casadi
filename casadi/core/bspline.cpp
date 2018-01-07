@@ -404,7 +404,7 @@ namespace casadi {
         n_iter*= degree+1;
       }
 
-      casadi_fill(index, n_dims, 0);
+      casadi_fill(index, n_dims, s_t(0));
 
       // Prepare offset
       for (s_t pivot=n_dims-1;pivot>=0;--pivot) {
@@ -449,7 +449,7 @@ namespace casadi {
       }
     }
 
-    s_t BSplineDual::
+    r_t BSplineDual::
     sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
       if (!res[0]) return 0;
       casadi_fill(res[0], reverse_? coeffs_size_: m_*N_, bvec_t(0));
@@ -463,7 +463,7 @@ namespace casadi {
       return 0;
     }
 
-    s_t BSplineDual::
+    r_t BSplineDual::
     sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
       if (!res[0]) return 0;
       s_t n_dims = degree_.size();

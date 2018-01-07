@@ -62,9 +62,20 @@ namespace casadi {
     node->count++;
   }
 
+  SXElem::SXElem(i_t val) : SXElem(static_cast<s_t>(val)) {}
+
+  SXElem::SXElem(s_t val) {
+    if (val == 0)             node = casadi_limits<SXElem>::zero.node;
+    else if (val == 1)        node = casadi_limits<SXElem>::one.node;
+    else if (val == 2)        node = casadi_limits<SXElem>::two.node;
+    else if (val == -1)       node = casadi_limits<SXElem>::minus_one.node;
+    else                      node = IntegerSX::create(val);
+    node->count++;
+  }
+
   SXElem::SXElem(double val) {
     s_t intval = static_cast<s_t>(val);
-    if (val-intval == 0) { // check if integer
+    if (val-static_cast<double>(intval) == 0) { // check if integer
       if (intval == 0)             node = casadi_limits<SXElem>::zero.node;
       else if (intval == 1)        node = casadi_limits<SXElem>::one.node;
       else if (intval == 2)        node = casadi_limits<SXElem>::two.node;
@@ -462,7 +473,7 @@ namespace casadi {
     return node->name();
   }
 
-  s_t SXElem::op() const {
+  e_t SXElem::op() const {
     return node->op();
   }
 
@@ -568,11 +579,11 @@ namespace casadi {
     return SX(Sparsity::scalar(), *this, false);
   }
 
-  s_t SXElem::get_temp() const {
+  i_t SXElem::get_temp() const {
     return (*this)->temp;
   }
 
-  void SXElem::set_temp(s_t t) const {
+  void SXElem::set_temp(i_t t) const {
     (*this)->temp = t;
   }
 

@@ -138,9 +138,9 @@ namespace casadi {
 
   double Sparsity::density() const {
     double r = 100;
-    r *= nnz();
-    r /= size1();
-    r /= size2();
+    r *= static_cast<double>(nnz());
+    r /= static_cast<double>(size1());
+    r /= static_cast<double>(size2());
     return r;
   }
 
@@ -986,16 +986,16 @@ namespace casadi {
 
     std::vector< s_t >          row(nc);
 
-    s_t offset = max(p, 0);
+    s_t offset = max(p, s_t(0));
     for (s_t i=0;i<nc;i++) {
       row[i]=i+offset;
     }
 
     std::vector< s_t >          colind(n+1);
 
-    offset = min(p, 0);
+    offset = min(p, s_t(0));
     for (s_t i=0;i<n+1;i++) {
-      colind[i]=max(min(i+offset, nc), 0);
+      colind[i]=max(min(i+offset, nc), s_t(0));
     }
 
     return Sparsity(n, n, colind, row);

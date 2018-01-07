@@ -85,6 +85,8 @@ namespace casadi {
 
     /** \brief  Create scalar constant (also implicit type conversion) */
     MX(double x);
+    MX(s_t x);
+    MX(i_t x);
 
     /** \brief  Copy constructor */
     MX(const MX& x);
@@ -603,6 +605,7 @@ namespace casadi {
 #ifndef SWIG
     /// Construct constant matrix with a given sparsity and values
     MX(const Sparsity& sp, s_t val, bool dummy);
+    MX(const Sparsity& sp, i_t val, bool dummy);
     MX(const Sparsity& sp, double val, bool dummy);
 
     // Create matrix symbolic primitive

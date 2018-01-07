@@ -134,6 +134,7 @@ namespace casadi {
 
     /** \brief Print a constant in a lossless but compact manner */
     static std::string constant(double v);
+    static std::string constant(s_t v);
 
     /** \brief Print an intializer */
     static std::string initializer(const std::vector<double>& v);

@@ -400,7 +400,7 @@ namespace casadi {
     casadi_assert_dev(mem==0);
   }
 
-  s_t FunctionInternal::
+  r_t FunctionInternal::
   eval_gen(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     if (eval_) {
       return eval_(arg, res, iw, w, mem);
@@ -585,7 +585,7 @@ namespace casadi {
 
       // Number of local seed directions
       s_t ndir_local = seed.size()-offset;
-      ndir_local = std::min(bvec_size, ndir_local);
+      ndir_local = std::min(static_cast<s_t>(bvec_size), ndir_local);
 
       for (s_t i=0; i<ndir_local; ++i) {
         seed[offset+i] |= bvec_t(1)<<i;
@@ -954,8 +954,8 @@ namespace casadi {
       }
 
       // Use whatever required less colors if we tried both (with preference to forward mode)
-      double fwd_cost = (use_fwd ? granularity_row : granularity_col) * sp_w*D1.size2();
-      double adj_cost = (use_fwd ? granularity_col : granularity_row) * (1-sp_w)*D2.size2();
+      double fwd_cost = static_cast<double>(use_fwd ? granularity_row : granularity_col) * sp_w*static_cast<double>(D1.size2());
+      double adj_cost = static_cast<double>(use_fwd ? granularity_col : granularity_row) * (1-sp_w)*static_cast<double>(D2.size2());
       use_fwd = fwd_cost <= adj_cost;
       if (verbose_) {
         casadi_message(string(use_fwd ? "Forward" : "Reverse") + " mode chosen "
@@ -1188,7 +1188,7 @@ namespace casadi {
         double w = sp_weight();
 
         // Use forward mode?
-        if (w*nsweep_fwd <= (1-w)*nsweep_adj) {
+        if (w*static_cast<double>(nsweep_fwd) <= (1-w)*static_cast<double>(nsweep_adj)) {
           sp = getJacSparsityGen<true>(iind, oind, false);
         } else {
           sp = getJacSparsityGen<false>(iind, oind, false);
@@ -1301,7 +1301,7 @@ namespace casadi {
       double best_coloring = numeric_limits<double>::infinity();
 
       // Test forward mode first?
-      bool test_fwd_first = allow_forward && w*A.size1() <= (1-w)*A.size2();
+      bool test_fwd_first = allow_forward && w*static_cast<double>(A.size1()) <= (1-w)*static_cast<double>(A.size2());
       s_t mode_fwd = test_fwd_first ? 0 : 1;
 
       // Test both coloring modes
@@ -1316,8 +1316,8 @@ namespace casadi {
         // Perform the coloring
         if (fwd) {
           if (verbose_) casadi_message("Unidirectional coloring (forward mode)");
-          s_t max_colorings_to_test = best_coloring>=w*A.size1() ? A.size1() :
-            floor(best_coloring/w);
+          bool d = best_coloring>=w*static_cast<double>(A.size1());
+          s_t max_colorings_to_test = d ? A.size1() : static_cast<s_t>(floor(best_coloring/w));
           D1 = AT.uni_coloring(A, max_colorings_to_test);
           if (D1.is_null()) {
             if (verbose_) {
@@ -1331,12 +1331,12 @@ namespace casadi {
                              + str(A.size1()) + " without coloring).");
             }
             D2 = Sparsity();
-            best_coloring = w*D1.size2();
+            best_coloring = w*static_cast<double>(D1.size2());
           }
         } else {
           if (verbose_) casadi_message("Unidirectional coloring (adjoint mode)");
-          s_t max_colorings_to_test = best_coloring>=(1-w)*A.size2() ? A.size2() :
-            floor(best_coloring/(1-w));
+          bool d = best_coloring>=(1-w)*static_cast<double>(A.size2());
+          s_t max_colorings_to_test = d ? A.size2() : static_cast<s_t>(floor(best_coloring/(1-w)));
 
           D2 = A.uni_coloring(AT, max_colorings_to_test);
           if (D2.is_null()) {
@@ -1351,7 +1351,7 @@ namespace casadi {
                              + str(A.size2()) + " without coloring).");
             }
             D1 = Sparsity();
-            best_coloring = (1-w)*D2.size2();
+            best_coloring = (1-w)*static_cast<double>(D2.size2());
           }
         }
       }
@@ -1363,7 +1363,7 @@ namespace casadi {
     casadi_error("'eval', 'eval_dm' not defined for " + class_name());
   }
 
-  s_t FunctionInternal::
+  r_t FunctionInternal::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, void* mem) const {
     casadi_error("'eval_sx' not defined for " + class_name());
   }
@@ -1884,7 +1884,7 @@ namespace casadi {
     casadi_error("'generate_dependencies' not defined for " + class_name());
   }
 
-  s_t FunctionInternal::
+  r_t FunctionInternal::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
     // Loop over outputs
     for (s_t oind=0; oind<n_out_; ++oind) {
@@ -1916,7 +1916,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t FunctionInternal::
+  r_t FunctionInternal::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
     // Loop over outputs
     for (s_t oind=0; oind<n_out_; ++oind) {
@@ -2007,11 +2007,11 @@ namespace casadi {
     if (jac_penalty_==-1) return false;
 
     // Heuristic 1: Jac calculated via forward mode likely cheaper
-    if (jac_penalty_*nnz_in()<nfwd) return true;
+    if (jac_penalty_*static_cast<double>(nnz_in())<nfwd) return true;
 
     // Heuristic 2: Jac calculated via reverse mode likely cheaper
     double w = ad_weight();
-    if (enable_reverse_ && jac_penalty_*(1-w)*nnz_out()<w*nfwd)
+    if (enable_reverse_ && jac_penalty_*(1-w)*static_cast<double>(nnz_out())<w*static_cast<double>(nfwd))
       return true;
 
     return false;
@@ -2022,11 +2022,11 @@ namespace casadi {
     if (jac_penalty_==-1) return false;
 
     // Heuristic 1: Jac calculated via reverse mode likely cheaper
-    if (jac_penalty_*nnz_out()<nadj) return true;
+    if (jac_penalty_*static_cast<double>(nnz_out())<nadj) return true;
 
     // Heuristic 2: Jac calculated via forward mode likely cheaper
     double w = ad_weight();
-    if ((enable_forward_ || enable_fd_) && jac_penalty_*w*nnz_in()<(1-w)*nadj)
+    if ((enable_forward_ || enable_fd_) && jac_penalty_*w*static_cast<double>(nnz_in())<(1-w)*static_cast<double>(nadj))
       return true;
 
     return false;
@@ -2621,7 +2621,7 @@ namespace casadi {
     }
   }
 
-  s_t FunctionInternal::
+  r_t FunctionInternal::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     // As a fallback, redirect to (the less efficient) eval_dm
 

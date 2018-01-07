@@ -249,7 +249,7 @@ namespace casadi {
 
     // Alocate a handle pointer
 #ifndef _WIN32
-    s_t flag;
+    int flag;
     if (global) {
       flag = RTLD_NOW | RTLD_GLOBAL;
     } else {

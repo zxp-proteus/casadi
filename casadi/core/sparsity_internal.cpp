@@ -631,7 +631,7 @@ namespace casadi {
       colind[c+1] = nnz;
     }
     // dense threshold
-    s_t dense = std::max(16, static_cast<s_t>(10*sqrt(static_cast<double>(n))));
+    s_t dense = std::max(s_t(16), static_cast<s_t>(10*sqrt(static_cast<double>(n))));
     dense = std::min(n-2, dense);
     // Allocate result
     vector<s_t> P(n+1);
@@ -1346,7 +1346,7 @@ namespace casadi {
     #if defined(_WIN32)
     srand(seed);
     #else
-    u_t seedu = seed;
+    unsigned int seedu = static_cast<unsigned int>(seed);
     #endif
 
     for (s_t k=0; k<n; ++k) {

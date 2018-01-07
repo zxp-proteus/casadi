@@ -231,7 +231,7 @@ namespace casadi {
 
     // Get perturbation expression
     double pert(s_t k, double h) const override {
-      return (2*k-1)*h;
+      return (2*static_cast<double>(k)-1)*h;
     }
 
     // Calculate finite difference approximation

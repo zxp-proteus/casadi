@@ -766,6 +766,9 @@ namespace casadi {
     return s.str();
   }
 
+  string CodeGenerator::constant(s_t v) {
+    return constant(static_cast<double>(v));
+  }
   string CodeGenerator::constant(double v) {
     stringstream s;
     if (isnan(v)) {
@@ -774,8 +777,8 @@ namespace casadi {
       if (v<0) s << "-";
       s << "INFINITY";
     } else {
-      s_t v_int(v);
-      if (v_int==v) {
+      s_t v_int = static_cast<s_t>(v);
+      if (static_cast<double>(v_int)==v) {
         // Print integer
         s << v_int << ".";
       } else {

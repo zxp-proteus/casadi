@@ -2,6 +2,8 @@
 // SYMBOL "house"
 // Householder reflection
 // Ref: Chapter 5, Direct Methods for Sparse Linear Systems by Tim Davis
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
 template<typename T1>
 T1 casadi_house(T1* x, T1* beta, s_t n) {
   // Local variable
@@ -139,3 +141,4 @@ void casadi_qr_solve(T1* x, s_t nrhs, s_t tr,
     x += ncol;
   }
 }
+#pragma GCC diagnostic pop

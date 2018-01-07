@@ -188,6 +188,8 @@ namespace casadi {
   };
   #define NUM_BUILT_IN_OPS (OP_EINSTEIN+1)
 
+  #define OP_
+
 #ifndef SWIG
 
   ///@{

@@ -73,6 +73,8 @@ namespace casadi {
         \param val Numerical value
     */
     SXElem(double val);
+    SXElem(s_t val);
+    SXElem(i_t val);
 
     /** \brief Create a symbolic primitive
          \param name Name of the symbolic primitive

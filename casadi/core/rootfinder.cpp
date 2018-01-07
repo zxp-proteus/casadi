@@ -242,7 +242,7 @@ namespace casadi {
     return Function(name, arg, res, inames, onames, opts);
   }
 
-  s_t Rootfinder::
+  r_t Rootfinder::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, void* mem) const {
     bvec_t* tmp1 = w; w += n_;
     bvec_t* tmp2 = w; w += n_;

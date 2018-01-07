@@ -53,7 +53,7 @@ namespace casadi {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  s_t Multiplication::
+  r_t Multiplication::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
@@ -89,7 +89,7 @@ namespace casadi {
     res[0] = mac(arg[1], arg[2], arg[0]);
   }
 
-  s_t Multiplication::
+  r_t Multiplication::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     copy_fwd(arg[0], res[0], nnz());
     Sparsity::mul_sparsityF(arg[1], dep(1).sparsity(),
@@ -98,7 +98,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t Multiplication::
+  r_t Multiplication::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     Sparsity::mul_sparsityR(arg[1], dep(1).sparsity(),
                             arg[2], dep(2).sparsity(),

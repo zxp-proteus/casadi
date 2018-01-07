@@ -129,6 +129,9 @@ namespace casadi {
     /// This constructor enables implicit type conversion from a numeric type
     Matrix(double val);
 
+    Matrix(s_t val);
+    Matrix(i_t val);
+
 #if !(defined(SWIG) && defined(SWIGMATLAB))
     /// Dense matrix constructor with data given as vector of vectors
     explicit Matrix(const std::vector< std::vector<double> >& m);

@@ -52,6 +52,7 @@ namespace casadi {
 
     // Creator (all values are the same integer)
     static ConstantMX* create(const Sparsity& sp, s_t val);
+    static ConstantMX* create(const Sparsity& sp, i_t val);
 
     // Creator (all values are the same floating point value)
     static ConstantMX* create(const Sparsity& sp, double val);
@@ -259,9 +260,9 @@ namespace casadi {
   };
 
   /** \brief  Constant known at compiletime */
-  template<s_t v>
+  template<int v>
   struct CompiletimeConst {
-    static const s_t value = v;
+    static const int value = v;
   };
 
   /// A constant with all entries identical
@@ -297,12 +298,12 @@ namespace casadi {
 
     /// Get the value (only for scalar constant nodes)
     double to_double() const override {
-      return v_.value;
+      return static_cast<double>(v_.value);
     }
 
     /// Get the value (only for constant nodes)
     Matrix<double> get_DM() const override {
-      return Matrix<double>(sparsity(), v_.value, false);
+      return Matrix<double>(sparsity(), to_double(), false);
     }
 
     /// Get densification
@@ -343,7 +344,7 @@ namespace casadi {
   MX Constant<Value>::get_horzcat(const std::vector<MX>& x) const {
     // Check if all arguments have the same constant value
     for (auto&& i : x) {
-      if (!i->is_value(v_.value)) {
+      if (!i->is_value(to_double())) {
         // Not all the same value, fall back to base class
         return ConstantMX::get_horzcat(x);
       }
@@ -359,7 +360,7 @@ namespace casadi {
   MX Constant<Value>::get_vertcat(const std::vector<MX>& x) const {
     // Check if all arguments have the same constant value
     for (auto&& i : x) {
-      if (!i->is_value(v_.value)) {
+      if (!i->is_value(to_double())) {
         // Not all the same value, fall back to base class
         return ConstantMX::get_vertcat(x);
       }
@@ -385,7 +386,7 @@ namespace casadi {
   MX Constant<Value>::get_unary(e_t op) const {
     // Constant folding
     double ret(0);
-    casadi_math<double>::fun(op, v_.value, 0.0, ret);
+    casadi_math<double>::fun(op, to_double(), 0.0, ret);
     if (operation_checker<F0XChecker>(op) || sparsity().is_dense()) {
       return MX(sparsity(), ret);
     } else {
@@ -409,7 +410,7 @@ namespace casadi {
 
     if (ScX && !operation_checker<FX0Checker>(op)) {
       double ret;
-      casadi_math<double>::fun(op, nnz()> 0 ? v_.value: 0, 0, ret);
+      casadi_math<double>::fun(op, nnz()> 0 ? to_double(): 0.0, 0, ret);
 
       if (ret!=0) {
         Sparsity f = Sparsity::dense(y.size1(), y.size2());
@@ -459,7 +460,7 @@ namespace casadi {
     if (y->op()==OP_CONST && dynamic_cast<const ConstantDM*>(y.get())==0) {
       double y_value = y.nnz()>0 ? y->to_double() : 0;
       double ret;
-      casadi_math<double>::fun(op, nnz()> 0 ? v_.value: 0, y_value, ret);
+      casadi_math<double>::fun(op, nnz()> 0.0 ? to_double(): 0, y_value, ret);
 
       return MX(y.sparsity(), ret, false);
     }
@@ -470,12 +471,12 @@ namespace casadi {
 
   template<typename Value>
   r_t Constant<Value>::eval(const double** arg, double** res, s_t* iw, double* w) const {
-    std::fill(res[0], res[0]+nnz(), static_cast<double>(v_.value));
+    std::fill(res[0], res[0]+nnz(), to_double());
     return 0;
   }
 
   template<typename Value>
-  s_t Constant<Value>::
+  r_t Constant<Value>::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     std::fill(res[0], res[0]+nnz(), SXElem(v_.value));
     return 0;
@@ -487,9 +488,9 @@ namespace casadi {
     if (nnz()==0) {
       // Quick return
     } else if (nnz()==1) {
-      g << g.workel(res[0]) << " = " << g.constant(v_.value) << ";\n";
+      g << g.workel(res[0]) << " = " << g.constant(to_double()) << ";\n";
     } else {
-      g << g.fill(g.work(res[0], nnz()), nnz(), g.constant(v_.value)) << '\n';
+      g << g.fill(g.work(res[0], nnz()), nnz(), g.constant(to_double())) << '\n';
     }
   }
 
@@ -567,7 +568,7 @@ namespace casadi {
 
   template<typename Value>
   bool Constant<Value>::is_equal(const MXNode* node, s_t depth) const {
-    return node->is_value(v_.value) && sparsity()==node->sparsity();
+    return node->is_value(to_double()) && sparsity()==node->sparsity();
   }
 
 } // namespace casadi

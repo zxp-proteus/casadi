@@ -458,21 +458,21 @@ namespace casadi {
     ///@}
 
     /** \brief Evaluate memory-less, numerically */
-    s_t operator()(const double** arg, double** res, s_t* iw, double* w, s_t mem=0) const;
+    r_t operator()(const double** arg, double** res, s_t* iw, double* w, s_t mem=0) const;
 
     /** \brief Evaluate memory-less SXElem
         Same syntax as the double version, allowing use in templated code
      */
-    s_t operator()(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, s_t mem=0) const;
+    r_t operator()(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w, s_t mem=0) const;
 
     /** \brief  Propagate sparsity forward */
-    s_t operator()(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem=0) const;
+    r_t operator()(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem=0) const;
 
     /** \brief  Propagate sparsity backward */
-    s_t rev(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem=0) const;
+    r_t rev(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w, s_t mem=0) const;
 
     /** \brief Propagate sparsity backward with temporary memory allocation */
-    s_t rev(std::vector<bvec_t*> arg, std::vector<bvec_t*> res) const;
+    r_t rev(std::vector<bvec_t*> arg, std::vector<bvec_t*> res) const;
 
 #endif // SWIG
 

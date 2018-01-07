@@ -62,7 +62,7 @@
 namespace casadi {
 
   typedef unsigned char e_t;
-  typedef int r_t;
+  typedef int r_t; // To be changed to signed char
   typedef signed long long int s_t;
   typedef unsigned long long int u_t;
   typedef int i_t;
@@ -143,10 +143,10 @@ namespace casadi {
   typedef const char* (*name_t)(s_t i);
   typedef const s_t* (*sparsity_t)(s_t i);
   typedef void* (*alloc_mem_t)(void);
-  typedef s_t (*init_mem_t)(void* mem);
+  typedef r_t (*init_mem_t)(void* mem);
   typedef void (*free_mem_t)(void* mem);
-  typedef s_t (*work_t)(s_t* sz_arg, s_t* sz_res, s_t* sz_iw, s_t* sz_w);
-  typedef s_t (*eval_t)(const double** arg, double** res, s_t* iw, double* w, void* mem);
+  typedef r_t (*work_t)(s_t* sz_arg, s_t* sz_res, s_t* sz_iw, s_t* sz_w);
+  typedef r_t (*eval_t)(const double** arg, double** res, s_t* iw, double* w, void* mem);
   ///@}
 
   /// String representation, any type

@@ -38,16 +38,16 @@ namespace casadi {
     return eval_gen<double>(arg, res, iw, w);
   }
 
- r_t DenseTranspose::eval(const double** arg, double** res, s_t* iw, double* w) const {
+  r_t DenseTranspose::eval(const double** arg, double** res, s_t* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  s_t Transpose::
+  r_t Transpose::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
-  s_t DenseTranspose::
+  r_t DenseTranspose::
   eval_sx(const SXElem** arg, SXElem** res, s_t* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
@@ -90,7 +90,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t Transpose::
+  r_t Transpose::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shortands
     const bvec_t *x = arg[0];
@@ -110,7 +110,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t Transpose::
+  r_t Transpose::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shortands
     bvec_t *x = arg[0];
@@ -132,7 +132,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t DenseTranspose::
+  r_t DenseTranspose::
   sp_forward(const bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shorthands
     const bvec_t *x = arg[0];
@@ -149,7 +149,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t DenseTranspose::
+  r_t DenseTranspose::
   sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const {
     // Shorthands
     bvec_t *x = arg[0];
