@@ -41,12 +41,12 @@ class UnarySX : public SXNode {
   private:
 
     /** \brief  Constructor is private, use "create" below */
-    UnarySX(unsigned char op, const SXElem& dep) : op_(op), dep_(dep) {}
+    UnarySX(e_t op, const SXElem& dep) : op_(op), dep_(dep) {}
 
   public:
 
     /** \brief  Create a unary expression */
-    inline static SXElem create(unsigned char op, const SXElem& dep) {
+    inline static SXElem create(e_t op, const SXElem& dep) {
       if (dep.is_constant()) {
         // Evaluate constant
         double dep_val(dep);
@@ -91,7 +91,7 @@ class UnarySX : public SXNode {
     }
 
     /** \brief  The binary operation as an 1 byte integer (allows 256 values) */
-    unsigned char op_;
+    e_t op_;
 
     /** \brief  The dependencies of the node */
     SXElem dep_;
