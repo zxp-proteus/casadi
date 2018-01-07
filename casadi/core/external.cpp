@@ -174,7 +174,7 @@ namespace casadi {
     }
   }
 
-  int GenericExternal::init_mem(void* mem) const {
+  r_t GenericExternal::init_mem(void* mem) const {
     if (init_mem_) {
       return init_mem_(mem);
     } else {

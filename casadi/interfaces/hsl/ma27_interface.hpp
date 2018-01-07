@@ -132,13 +132,13 @@ namespace casadi {
     void* alloc_mem() const override { return new Ma27Memory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<Ma27Memory*>(mem);}
 
     // Factorize the linear system
-    int nfact(void* mem, const double* A) const override;
+    r_t nfact(void* mem, const double* A) const override;
 
     /// Number of negative eigenvalues
     int neig(void* mem, const double* A) const override;
@@ -147,7 +147,7 @@ namespace casadi {
     int rank(void* mem, const double* A) const override;
 
     // Solve the linear system
-    int solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
+    r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
 
     /// A documentation string
     static const std::string meta_doc;

@@ -139,7 +139,7 @@ namespace casadi {
     solveT_ = Function("QR_solv_T", solv_in, {x}, fopts_);
   }
 
-  int SymbolicQr::init_mem(void* mem) const {
+  r_t SymbolicQr::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<SymbolicQrMemory*>(mem);
 
@@ -156,7 +156,7 @@ namespace casadi {
     return 0;
   }
 
-  int SymbolicQr::nfact(void* mem, const double* A) const {
+  r_t SymbolicQr::nfact(void* mem, const double* A) const {
     auto m = static_cast<SymbolicQrMemory*>(mem);
 
     // Factorize
@@ -169,7 +169,7 @@ namespace casadi {
     return 0;
   }
 
-  int SymbolicQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t SymbolicQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<SymbolicQrMemory*>(mem);
 
     // Select solve function

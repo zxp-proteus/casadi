@@ -58,7 +58,7 @@ namespace casadi {
   SXFunction::~SXFunction() {
   }
 
-  int SXFunction::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t SXFunction::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     if (verbose_) casadi_message(name_ + "::eval");
 
     // Make sure no free parameters
@@ -740,7 +740,7 @@ namespace casadi {
     return 0;
   }
 
-  int SXFunction::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+  r_t SXFunction::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
     fill_n(w, sz_w(), 0);
 
     // Propagate sparsity backward
@@ -835,7 +835,7 @@ namespace casadi {
 
     for (int k=0;k<f.n_instructions();++k) {
       // Get operation
-      int op = f.instruction_id(k);
+      e_t op = f.instruction_id(k);
       // Get input positions into workvector
       std::vector<int> o = f.instruction_output(k);
       // Get output positions into workvector

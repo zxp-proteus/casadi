@@ -101,7 +101,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Get relative tolerance */
     double get_reltol() const override { return reltol_;}

@@ -176,7 +176,7 @@ namespace casadi {
     return node;
   }
 
-  SXElem SXElem::binary(int op, const SXElem& x, const SXElem& y) {
+  SXElem SXElem::binary(e_t op, const SXElem& x, const SXElem& y) {
     // Simplifications
     if (GlobalOptions::simplification_on_the_fly) {
       switch (op) {
@@ -369,7 +369,7 @@ namespace casadi {
     return BinarySX::create(Operation(op), x, y);
   }
 
-  SXElem SXElem::unary(int op, const SXElem& x) {
+  SXElem SXElem::unary(e_t op, const SXElem& x) {
     // Simplifications
     if (GlobalOptions::simplification_on_the_fly) {
       switch (op) {
@@ -466,7 +466,7 @@ namespace casadi {
     return node->op();
   }
 
-  bool SXElem::is_op(int op) const {
+  bool SXElem::is_op(e_t op) const {
     return node->is_op(op);
   }
 

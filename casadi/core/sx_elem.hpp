@@ -124,8 +124,8 @@ namespace casadi {
     /// \endcond
 
     /** \brief  Perform operations by ID */
-    static SXElem binary(int op, const SXElem& x, const SXElem& y);
-    static SXElem unary(int op, const SXElem& x);
+    static SXElem binary(e_t op, const SXElem& x, const SXElem& y);
+    static SXElem unary(e_t op, const SXElem& x);
 
     /** \brief Check the truth value of this node
      * Introduced to catch bool(x) situations in python
@@ -150,8 +150,8 @@ namespace casadi {
     bool is_inf() const;
     bool is_minus_inf() const;
     const std::string& name() const;
-    int op() const;
-    bool is_op(int op) const;
+    e_t op() const;
+    bool is_op(e_t op) const;
 
     /// Checks if expression does not contain NaN or Inf
     bool is_regular() const;

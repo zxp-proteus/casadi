@@ -194,7 +194,7 @@ namespace casadi {
     }
   }
 
-  int IpoptInterface::init_mem(void* mem) const {
+  r_t IpoptInterface::init_mem(void* mem) const {
     if (Nlpsol::init_mem(mem)) return 1;
     auto m = static_cast<IpoptMemory*>(mem);
 

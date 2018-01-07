@@ -70,7 +70,7 @@ namespace casadi {
     alloc_w(nnz_in(CONIC_A), true); // A
   }
 
-  int ClpInterface::init_mem(void* mem) const {
+  r_t ClpInterface::init_mem(void* mem) const {
     if (!mem) return 1;
     auto m = static_cast<ClpMemory*>(mem);
 

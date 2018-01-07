@@ -330,7 +330,7 @@ namespace casadi {
     alloc_w(nx_ + nz_ + nrx_ + nrz_, true);
   }
 
-  int Integrator::init_mem(void* mem) const {
+  r_t Integrator::init_mem(void* mem) const {
     if (OracleFunction::init_mem(mem)) return 1;
 
     auto m = static_cast<IntegratorMemory*>(mem);
@@ -585,7 +585,7 @@ namespace casadi {
     return 0;
   }
 
-  int Integrator::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+  r_t Integrator::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
     if (verbose_) casadi_message(name_ + "::sp_reverse");
 
     // Work vectors
@@ -1061,7 +1061,7 @@ namespace casadi {
     nRZ_ =  G_.is_null() ? 0 : G_.nnz_in(RDAE_RZ);
   }
 
-  int FixedStepIntegrator::init_mem(void* mem) const {
+  r_t FixedStepIntegrator::init_mem(void* mem) const {
     if (Integrator::init_mem(mem)) return 1;
     auto m = static_cast<FixedStepMemory*>(mem);
 

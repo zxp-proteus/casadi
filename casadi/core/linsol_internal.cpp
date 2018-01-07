@@ -49,7 +49,7 @@ namespace casadi {
     }
   }
 
-  int LinsolInternal::init_mem(void* mem) const {
+  r_t LinsolInternal::init_mem(void* mem) const {
     if (!mem) return 1;
     //auto m = static_cast<LinsolMemory*>(mem);
     return 0;
@@ -60,7 +60,7 @@ namespace casadi {
     casadi_error("eval_sx not defined for " + class_name());
   }
 
-  int LinsolInternal::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LinsolInternal::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     casadi_error("'solve' not defined for " + class_name());
   }
 
@@ -90,7 +90,7 @@ namespace casadi {
   }
 #endif
 
-  int LinsolInternal::nfact(void* mem, const double* A) const {
+  r_t LinsolInternal::nfact(void* mem, const double* A) const {
     casadi_error("'nfact' not defined for " + class_name());
   }
 

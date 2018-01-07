@@ -154,13 +154,13 @@ namespace casadi {
     void* alloc_mem() const override { return new HpmpcMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<HpmpcMemory*>(mem);}
 
     /** \brief  Evaluate numerically */
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     /** \brief Helper function */
     static void mproject(double factor, const double* x, const int* sp_x,

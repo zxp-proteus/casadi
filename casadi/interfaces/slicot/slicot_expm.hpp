@@ -99,7 +99,7 @@ namespace casadi {
     void* alloc_mem() const override { return new SlicotExpmMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<SlicotExpmMemory*>(mem);}
@@ -109,7 +109,7 @@ namespace casadi {
                           int*& iw, double*& w) const override;
 
     /** \brief  Evaluate numerically */
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     /// A documentation string
     static const std::string meta_doc;

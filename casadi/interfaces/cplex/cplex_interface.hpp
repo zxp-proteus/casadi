@@ -123,13 +123,13 @@ namespace casadi {
     void* alloc_mem() const override { return new CplexMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<CplexMemory*>(mem);}
 
     // Solve the QP
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     /// Can discrete variables be treated
     bool integer_support() const override { return true;}

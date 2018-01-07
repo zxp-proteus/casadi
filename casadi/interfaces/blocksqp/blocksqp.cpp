@@ -495,7 +495,7 @@ namespace casadi {
     alloc_iw(nnz_H_ + (nx_+1) + nx_, true); // hessIndRow
   }
 
-  int Blocksqp::init_mem(void* mem) const {
+  r_t Blocksqp::init_mem(void* mem) const {
     if (Nlpsol::init_mem(mem)) return 1;
     auto m = static_cast<BlocksqpMemory*>(mem);
 

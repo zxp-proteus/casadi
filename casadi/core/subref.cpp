@@ -33,26 +33,26 @@ namespace casadi {
     set_dep(x);
   }
 
-  int SubRef::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t SubRef::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int SubRef::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t SubRef::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  int SubRef::eval_gen(const T* const* arg, T* const* res, int* iw, T* w) const {
+  r_t SubRef::eval_gen(const T* const* arg, T* const* res, int* iw, T* w) const {
     casadi_error("not ready");
     return 1;
   }
 
-  int SubRef::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t SubRef::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     casadi_error("not ready");
     return 1;
   }
 
-  int SubRef::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t SubRef::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     casadi_error("not ready");
     return 1;
   }

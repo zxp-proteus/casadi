@@ -109,9 +109,9 @@ namespace casadi {
     #ifndef SWIG
     ///@{
     /// Low-level API
-    int sfact(const double* A, int mem=0) const;
-    int nfact(const double* A, int mem=0) const;
-    int solve(const double* A, double* x, int nrhs=1, bool tr=false, int mem=0) const;
+    r_t sfact(const double* A, int mem=0) const;
+    r_t nfact(const double* A, int mem=0) const;
+    r_t solve(const double* A, double* x, int nrhs=1, bool tr=false, int mem=0) const;
     int neig(const double* A, int mem=0) const;
     int rank(const double* A, int mem=0) const;
     ///@}

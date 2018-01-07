@@ -212,7 +212,7 @@ namespace casadi {
     stream.unsetf(std::ios::floatfield);
   }
 
-  int Newton::init_mem(void* mem) const {
+  r_t Newton::init_mem(void* mem) const {
     if (Rootfinder::init_mem(mem)) return 1;
     auto m = static_cast<NewtonMemory*>(mem);
     m->return_status = 0;

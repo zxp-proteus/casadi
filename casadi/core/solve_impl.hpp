@@ -51,7 +51,7 @@ namespace casadi {
   }
 
   template<bool Tr>
-  int Solve<Tr>::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Solve<Tr>::eval(const double** arg, double** res, int* iw, double* w) const {
     if (arg[0]!=res[0]) copy(arg[0], arg[0]+dep(0).nnz(), res[0]);
     if (linsol_.sfact(arg[1])) return 1;
     if (linsol_.nfact(arg[1])) return 1;
@@ -60,7 +60,7 @@ namespace casadi {
   }
 
   template<bool Tr>
-  int Solve<Tr>::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Solve<Tr>::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     linsol_->linsol_eval_sx(arg, res, iw, w, linsol_->memory(0), Tr, dep(0).size2());
     return 0;
   }
@@ -158,7 +158,7 @@ namespace casadi {
   }
 
   template<bool Tr>
-  int Solve<Tr>::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Solve<Tr>::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     // Number of right-hand-sides
     int nrhs = dep(0).size2();
 
@@ -198,7 +198,7 @@ namespace casadi {
   }
 
   template<bool Tr>
-  int Solve<Tr>::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Solve<Tr>::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     // Number of right-hand-sides
     int nrhs = dep(0).size2();
 

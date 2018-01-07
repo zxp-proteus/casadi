@@ -172,7 +172,7 @@ namespace casadi {
 
   }
 
-  int BSplineInterpolant::eval(const double** arg, double** res,
+  r_t BSplineInterpolant::eval(const double** arg, double** res,
                                 int* iw, double* w, void* mem) const {
     return S_->eval(arg, res, iw, w, mem);
   }

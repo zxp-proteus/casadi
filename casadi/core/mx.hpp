@@ -201,7 +201,7 @@ namespace casadi {
     int which_output() const;
 
     /// Is it a certain operation
-    bool is_op(int op) const;
+    bool is_op(e_t op) const;
 
     /// Check if multiplication
     bool is_multiplication() const;
@@ -268,7 +268,7 @@ namespace casadi {
     bool is_unary() const;
 
     /// Get operation type
-    int op() const;
+    e_t op() const;
 
     /** Obtain information about node */
     Dict info() const;
@@ -283,8 +283,8 @@ namespace casadi {
 
     ///@{
     /** \brief  Create nodes by their ID */
-    static MX binary(int op, const MX &x, const MX &y);
-    static MX unary(int op, const MX &x);
+    static MX binary(e_t op, const MX &x, const MX &y);
+    static MX unary(e_t op, const MX &x);
     ///@}
 
     ///@{

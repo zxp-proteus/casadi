@@ -289,12 +289,12 @@ namespace casadi {
     casadi_error("'which_output' not defined for class " + class_name());
   }
 
-  int MXNode::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t MXNode::eval(const double** arg, double** res, int* iw, double* w) const {
     casadi_error("'eval' not defined for class " + class_name());
     return 1;
   }
 
-  int MXNode::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t MXNode::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     casadi_error("'eval_sx' not defined for class " + class_name());
     return 1;
   }
@@ -313,7 +313,7 @@ namespace casadi {
     casadi_error("'ad_reverse' not defined for class " + class_name());
   }
 
-  int MXNode::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t MXNode::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     // By default, everything depends on everything
     bvec_t all_depend(0);
 
@@ -335,7 +335,7 @@ namespace casadi {
     return 0;
   }
 
-  int MXNode::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t MXNode::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     // By default, everything depends on everything
     bvec_t all_depend(0);
 
@@ -500,7 +500,7 @@ namespace casadi {
     return MX::create(new SubAssign(shared_from_this<MX>(), y, i, j));
   }
 
-  MX MXNode::get_unary(int op) const {
+  MX MXNode::get_unary(e_t op) const {
     if (operation_checker<F0XChecker>(op) && is_zero()) {
       // If identically zero
       return MX::zeros(sparsity());
@@ -510,7 +510,7 @@ namespace casadi {
     }
   }
 
-  MX MXNode::get_binary(int op, const MX& y) const {
+  MX MXNode::get_binary(e_t op, const MX& y) const {
     // Make sure that dimensions match
     casadi_assert(sparsity().is_scalar() || y.is_scalar() || sparsity().size()==y.size(),
       "Dimension mismatch for " + casadi_math<double>::print(op, "lhs", "rhs") +
@@ -552,7 +552,7 @@ namespace casadi {
     }
   }
 
-  MX MXNode::_get_binary(int op, const MX& y, bool scX, bool scY) const {
+  MX MXNode::_get_binary(e_t op, const MX& y, bool scX, bool scY) const {
     casadi_assert_dev(sparsity()==y.sparsity() || scX || scY);
 
     if (GlobalOptions::simplification_on_the_fly) {

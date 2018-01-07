@@ -312,7 +312,7 @@ namespace casadi {
     alloc_w(nx_+na_, true); // dual
   }
 
-  int QpoasesInterface::init_mem(void* mem) const {
+  r_t QpoasesInterface::init_mem(void* mem) const {
     auto m = static_cast<QpoasesMemory*>(mem);
     m->called_once = false;
 

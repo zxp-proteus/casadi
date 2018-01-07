@@ -104,7 +104,7 @@ namespace casadi {
     alloc_iw(nx_, true); // tr_ind
   }
 
-  int GurobiInterface::init_mem(void* mem) const {
+  r_t GurobiInterface::init_mem(void* mem) const {
     auto m = static_cast<GurobiMemory*>(mem);
 
     // Load environment

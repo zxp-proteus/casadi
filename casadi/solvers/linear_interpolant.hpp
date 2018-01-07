@@ -77,7 +77,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /// Evaluate numerically
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     ///@{
     /** \brief Full Jacobian */
@@ -128,7 +128,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /// Evaluate numerically
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     ///@{
     /** \brief Full Jacobian */

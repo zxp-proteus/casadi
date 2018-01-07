@@ -149,7 +149,7 @@ namespace casadi {
         "got " + str(coeffs_.size()) + " instead.");
     }
 
-    int BSpline::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+    r_t BSpline::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
       if (!res[0]) return 0;
 
       casadi_fill(res[0], m_, 0.0);
@@ -307,7 +307,7 @@ namespace casadi {
       BSplineCommon::init(opts);
     }
 
-    int BSplineDual::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+    r_t BSplineDual::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
       if (!res[0]) return 0;
       casadi_fill(res[0], reverse_? coeffs_size_: m_*N_, 0.0);
 

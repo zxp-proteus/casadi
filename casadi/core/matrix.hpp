@@ -252,13 +252,13 @@ namespace casadi {
     /// \cond INTERNAL
     ///@{
     /** \brief  Create nodes by their ID */
-    static Matrix<Scalar> binary(int op, const Matrix<Scalar> &x, const Matrix<Scalar> &y);
-    static Matrix<Scalar> unary(int op, const Matrix<Scalar> &x);
-    static Matrix<Scalar> scalar_matrix(int op,
+    static Matrix<Scalar> binary(e_t op, const Matrix<Scalar> &x, const Matrix<Scalar> &y);
+    static Matrix<Scalar> unary(e_t op, const Matrix<Scalar> &x);
+    static Matrix<Scalar> scalar_matrix(e_t op,
                                           const Matrix<Scalar> &x, const Matrix<Scalar> &y);
-    static Matrix<Scalar> matrix_scalar(int op,
+    static Matrix<Scalar> matrix_scalar(e_t op,
                                           const Matrix<Scalar> &x, const Matrix<Scalar> &y);
-    static Matrix<Scalar> matrix_matrix(int op,
+    static Matrix<Scalar> matrix_matrix(e_t op,
                                           const Matrix<Scalar> &x, const Matrix<Scalar> &y);
     ///@}
     /// \endcond

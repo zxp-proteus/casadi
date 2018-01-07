@@ -905,7 +905,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::unary(int op, const Matrix<Scalar> &x) {
+  Matrix<Scalar> Matrix<Scalar>::unary(e_t op, const Matrix<Scalar> &x) {
     // Return value
     Matrix<Scalar> ret = Matrix<Scalar>::zeros(x.sparsity());
 
@@ -1118,7 +1118,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::binary(int op,
+  Matrix<Scalar> Matrix<Scalar>::binary(e_t op,
                                             const Matrix<Scalar> &x,
                                             const Matrix<Scalar> &y) {
     if (x.numel()==1)
@@ -1130,7 +1130,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::scalar_matrix(int op,
+  Matrix<Scalar> Matrix<Scalar>::scalar_matrix(e_t op,
                                                    const Matrix<Scalar> &x,
                                                    const Matrix<Scalar> &y) {
 
@@ -1166,7 +1166,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::matrix_scalar(int op,
+  Matrix<Scalar> Matrix<Scalar>::matrix_scalar(e_t op,
                                                    const Matrix<Scalar> &x,
                                                    const Matrix<Scalar> &y) {
 
@@ -1202,7 +1202,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::matrix_matrix(int op,
+  Matrix<Scalar> Matrix<Scalar>::matrix_matrix(e_t op,
                                                const Matrix<Scalar> &x,
                                                const Matrix<Scalar> &y) {
     casadi_assert(x.size()==y.size(),

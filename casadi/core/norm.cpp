@@ -37,17 +37,17 @@ namespace casadi {
     return "||" + arg.at(0) + "||_F";
   }
 
-  int NormF::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t NormF::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int NormF::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t NormF::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     eval_gen<SXElem>(arg, res, iw, w);
     return 0;
   }
 
   template<typename T>
-  int NormF::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t NormF::eval_gen(const T** arg, T** res, int* iw, T* w) const {
     *res[0] = casadi_norm_2(dep().nnz(), arg[0]);
     return 0;
   }

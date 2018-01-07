@@ -61,7 +61,7 @@ namespace casadi {
     sp_.qr_sparse(sp_v_, sp_r_, pinv_, leftmost_, parent_);
   }
 
-  int LinsolQr::init_mem(void* mem) const {
+  r_t LinsolQr::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<LinsolQrMemory*>(mem);
 
@@ -74,11 +74,11 @@ namespace casadi {
     return 0;
   }
 
-  int LinsolQr::sfact(void* mem, const double* A) const {
+  r_t LinsolQr::sfact(void* mem, const double* A) const {
     return 0;
   }
 
-  int LinsolQr::nfact(void* mem, const double* A) const {
+  r_t LinsolQr::nfact(void* mem, const double* A) const {
     auto m = static_cast<LinsolQrMemory*>(mem);
     casadi_qr(sp_, A, get_ptr(m->iw), get_ptr(m->w),
               sp_v_, get_ptr(m->v), sp_r_, get_ptr(m->r),
@@ -86,7 +86,7 @@ namespace casadi {
     return 0;
   }
 
-  int LinsolQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LinsolQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<LinsolQrMemory*>(mem);
     casadi_qr_solve(x, nrhs, tr,
                     sp_v_, get_ptr(m->v), sp_r_, get_ptr(m->r),

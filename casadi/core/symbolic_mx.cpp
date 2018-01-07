@@ -42,11 +42,11 @@ namespace casadi {
     return name_;
   }
 
-  int SymbolicMX::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t SymbolicMX::eval(const double** arg, double** res, int* iw, double* w) const {
     return 0;
   }
 
-  int SymbolicMX::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t SymbolicMX::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     return 0;
   }
 
@@ -65,12 +65,12 @@ namespace casadi {
     return name_;
   }
 
-  int SymbolicMX::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t SymbolicMX::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     fill_n(res[0], nnz(), 0);
     return 0;
   }
 
-  int SymbolicMX::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t SymbolicMX::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     fill_n(res[0], nnz(), 0);
     return 0;
   }

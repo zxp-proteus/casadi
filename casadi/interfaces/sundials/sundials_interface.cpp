@@ -231,7 +231,7 @@ namespace casadi {
     }
   }
 
-  int SundialsInterface::init_mem(void* mem) const {
+  r_t SundialsInterface::init_mem(void* mem) const {
     if (Integrator::init_mem(mem)) return 1;
     auto m = static_cast<SundialsMemory*>(mem);
 

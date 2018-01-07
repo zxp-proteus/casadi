@@ -446,11 +446,11 @@ namespace casadi {
     *this = m->get_nzassign(*this, kk.nonzeros());
   }
 
-  MX MX::binary(int op, const MX &x, const MX &y) {
+  MX MX::binary(e_t op, const MX &x, const MX &y) {
     return x->get_binary(op, y);
   }
 
-  MX MX::unary(int op, const MX &x) {
+  MX MX::unary(e_t op, const MX &x) {
     return x->get_unary(Operation(op));
   }
 
@@ -661,7 +661,7 @@ namespace casadi {
     return (*this)->which_output();
   }
 
-  bool MX::is_op(int op) const {
+  bool MX::is_op(e_t op) const {
     return (*this)->op()==op;
   }
 

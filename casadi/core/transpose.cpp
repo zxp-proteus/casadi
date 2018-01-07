@@ -34,11 +34,11 @@ namespace casadi {
     set_sparsity(x.sparsity().T());
   }
 
-  int Transpose::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Transpose::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
- int DenseTranspose::eval(const double** arg, double** res, int* iw, double* w) const {
+ r_t DenseTranspose::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
@@ -53,7 +53,7 @@ namespace casadi {
   }
 
   template<typename T>
-  int Transpose::eval_gen(const T* const* arg, T* const* res,
+  r_t Transpose::eval_gen(const T* const* arg, T* const* res,
                           int* iw, T* w) const {
     // Get sparsity patterns
     //const vector<int>& x_colind = input[0]->colind();
@@ -74,7 +74,7 @@ namespace casadi {
   }
 
   template<typename T>
-  int DenseTranspose::eval_gen(const T* const* arg, T* const* res,
+  r_t DenseTranspose::eval_gen(const T* const* arg, T* const* res,
                                int* iw, T* w) const {
     // Get sparsity patterns
     int x_nrow = dep().size1();

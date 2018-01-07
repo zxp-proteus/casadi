@@ -67,7 +67,7 @@ namespace casadi {
     void* alloc_mem() const override { return new LinsolMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<LinsolMemory*>(mem);}
@@ -88,13 +88,13 @@ namespace casadi {
 #endif
 
     // Symbolic factorization
-    virtual int sfact(void* mem, const double* A) const { return 0;}
+    virtual r_t sfact(void* mem, const double* A) const { return 0;}
 
     /// Numeric factorization
-    virtual int nfact(void* mem, const double* A) const;
+    virtual r_t nfact(void* mem, const double* A) const;
 
     // Solve numerically
-    virtual int solve(void* mem, const double* A, double* x, int nrhs, bool tr) const;
+    virtual r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const;
 
     /// Number of negative eigenvalues
     virtual int neig(void* mem, const double* A) const;

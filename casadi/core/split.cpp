@@ -39,16 +39,16 @@ namespace casadi {
   Split::~Split() {
   }
 
-  int Split::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Split::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int Split::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Split::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  int Split::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t Split::eval_gen(const T** arg, T** res, int* iw, T* w) const {
     // Number of derivatives
     int nx = offset_.size()-1;
 
@@ -62,7 +62,7 @@ namespace casadi {
     return 0;
   }
 
-  int Split::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Split::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     int nx = offset_.size()-1;
     for (int i=0; i<nx; ++i) {
       if (res[i]!=0) {
@@ -77,7 +77,7 @@ namespace casadi {
     return 0;
   }
 
-  int Split::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Split::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     int nx = offset_.size()-1;
     for (int i=0; i<nx; ++i) {
       if (res[i]!=0) {

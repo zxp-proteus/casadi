@@ -169,7 +169,7 @@ namespace casadi {
     // Loop over the algorithm
     for (int k=0; k<F.n_instructions(); ++k) {
       // Get the atomic operation
-      int op = F.instruction_id(k);
+      e_t op = F.instruction_id(k);
       // Get the operation indices
       std::vector<int> o = F.instruction_output(k);
       int o0=-1, o1=-1, i0=-1, i1=-1;
@@ -258,7 +258,7 @@ namespace casadi {
     }
   }
 
-  int AmplInterface::init_mem(void* mem) const {
+  r_t AmplInterface::init_mem(void* mem) const {
     if (Nlpsol::init_mem(mem)) return 1;
     //auto m = static_cast<AmplInterfaceMemory*>(mem);
 

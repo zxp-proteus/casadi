@@ -56,7 +56,7 @@ namespace casadi {
     clear_mem();
   }
 
-  int Lsqr::init_mem(void* mem) const {
+  r_t Lsqr::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<LsqrMemory*>(mem);
 
@@ -66,7 +66,7 @@ namespace casadi {
     return 0;
   }
 
-  int Lsqr::nfact(void* mem, const double* A) const {
+  r_t Lsqr::nfact(void* mem, const double* A) const {
     auto m = static_cast<LsqrMemory*>(mem);
 
     std::copy(A, A+m->A.size(), get_ptr(m->A));
@@ -255,7 +255,7 @@ namespace casadi {
     return 0;
   }
 
-  int Lsqr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t Lsqr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<LsqrMemory*>(mem);
 
     int n_ = ncol();

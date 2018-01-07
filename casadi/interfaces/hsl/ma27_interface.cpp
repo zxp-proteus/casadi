@@ -60,7 +60,7 @@ namespace casadi {
 
   }
 
-  int Ma27Interface::init_mem(void* mem) const {
+  r_t Ma27Interface::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<Ma27Memory*>(mem);
 
@@ -84,7 +84,7 @@ namespace casadi {
     return 0;
   }
 
-  int Ma27Interface::nfact(void* mem, const double* A) const {
+  r_t Ma27Interface::nfact(void* mem, const double* A) const {
     auto m = static_cast<Ma27Memory*>(mem);
     casadi_assert_dev(A!=0);
 
@@ -173,7 +173,7 @@ namespace casadi {
     return m->rank;
   }
 
-  int Ma27Interface::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t Ma27Interface::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<Ma27Memory*>(mem);
 
     // Solve for each right-hand-side

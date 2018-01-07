@@ -103,10 +103,10 @@ namespace casadi {
                           const std::vector<int>& arg, const std::vector<int>& res) const;
 
     /** \brief  Evaluate numerically */
-    virtual int eval(const double** arg, double** res, int* iw, double* w) const;
+    virtual r_t eval(const double** arg, double** res, int* iw, double* w) const;
 
     /** \brief  Evaluate symbolically (SX) */
-    virtual int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const;
+    virtual r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const;
 
     /** \brief  Evaluate symbolically (MX) */
     virtual void eval_mx(const std::vector<MX>& arg, std::vector<MX>& res) const;
@@ -120,10 +120,10 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const;
 
     /** \brief  Propagate sparsity forward */
-    virtual int sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const;
+    virtual r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const;
 
     /** \brief  Propagate sparsity backwards */
-    virtual int sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const;
+    virtual r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const;
 
     /** \brief  Get the name */
     virtual const std::string& name() const;
@@ -168,7 +168,7 @@ namespace casadi {
     virtual const Function& which_function() const;
 
     /** \brief Get the operation */
-    virtual int op() const = 0;
+    virtual e_t op() const = 0;
 
     /** Obtain information about node */
     virtual Dict info() const;
@@ -339,13 +339,13 @@ namespace casadi {
     virtual MX get_project(const Sparsity& sp) const;
 
     /// Get a unary operation
-    virtual MX get_unary(int op) const;
+    virtual MX get_unary(e_t op) const;
 
     /// Get a binary operation operation
-    MX get_binary(int op, const MX& y) const;
+    MX get_binary(e_t op, const MX& y) const;
 
     /// Get a binary operation operation (matrix-matrix)
-    virtual MX _get_binary(int op, const MX& y, bool scX, bool scY) const;
+    virtual MX _get_binary(e_t op, const MX& y, bool scX, bool scY) const;
 
     /// Determinant
     virtual MX get_det() const;

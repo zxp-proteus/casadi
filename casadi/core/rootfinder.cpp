@@ -159,13 +159,13 @@ namespace casadi {
     alloc_w(sz_w + 2*static_cast<size_t>(n_));
   }
 
-  int Rootfinder::init_mem(void* mem) const {
+  r_t Rootfinder::init_mem(void* mem) const {
     if (OracleFunction::init_mem(mem)) return 1;
     //auto m = static_cast<RootfinderMemory*>(mem);
     return 0;
   }
 
-  int Rootfinder::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t Rootfinder::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     // Reset the solver, prepare for solution
     setup(mem, arg, res, iw, w);
 
@@ -271,7 +271,7 @@ namespace casadi {
     return 0;
   }
 
-  int Rootfinder::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+  r_t Rootfinder::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
     bvec_t* tmp1 = w; w += n_;
     bvec_t* tmp2 = w; w += n_;
 

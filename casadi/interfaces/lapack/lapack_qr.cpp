@@ -75,7 +75,7 @@ namespace casadi {
     }
   }
 
-  int LapackQr::init_mem(void* mem) const {
+  r_t LapackQr::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<LapackQrMemory*>(mem);
     m->mat.resize(ncol() * ncol());
@@ -84,7 +84,7 @@ namespace casadi {
     return 0;
   }
 
-  int LapackQr::nfact(void* mem, const double* A) const {
+  r_t LapackQr::nfact(void* mem, const double* A) const {
     auto m = static_cast<LapackQrMemory*>(mem);
 
     // Dimensions
@@ -106,7 +106,7 @@ namespace casadi {
     return 0;
   }
 
-  int LapackQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LapackQr::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<LapackQrMemory*>(mem);
 
     // Solve up to max_nrhs rhs at a time

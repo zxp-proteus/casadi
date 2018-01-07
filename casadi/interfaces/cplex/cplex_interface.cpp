@@ -139,7 +139,7 @@ namespace casadi {
     alloc_w(na_, true); // lam_a
   }
 
-  int CplexInterface::init_mem(void* mem) const {
+  r_t CplexInterface::init_mem(void* mem) const {
     if (!mem) return 1;
     auto m = static_cast<CplexMemory*>(mem);
 

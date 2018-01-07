@@ -150,7 +150,7 @@ namespace casadi {
     for (MXNode* n : nodes) {
 
       // Get the operation
-      int op = n->op();
+      e_t op = n->op();
 
       // Store location if parameter (or input)
       if (op==OP_PARAMETER) {
@@ -375,7 +375,7 @@ namespace casadi {
     }
   }
 
-  int MXFunction::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t MXFunction::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     if (verbose_) casadi_message(name_ + "::eval");
     // Work vector and temporaries to hold pointers to operation input and outputs
     const double** arg1 = arg+n_in_;
@@ -518,7 +518,7 @@ namespace casadi {
     return 0;
   }
 
-  int MXFunction::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+  r_t MXFunction::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
     // Temporaries to hold pointers to operation input and outputs
     bvec_t** arg1=arg+n_in_;
     bvec_t** res1=res+n_out_;
@@ -981,7 +981,7 @@ namespace casadi {
     }
   }
 
-  int MXFunction::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
+  r_t MXFunction::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
     // Work vector and temporaries to hold pointers to operation input and outputs
     vector<const SXElem*> argp(sz_arg());
     vector<SXElem*> resp(sz_res());
@@ -1313,7 +1313,7 @@ namespace casadi {
     // Loop over algorithm
     for (int k=0;k<f.n_instructions();++k) {
       // Get operation
-      int op = f.instruction_id(k);
+      e_t op = f.instruction_id(k);
       // Get MX node
       MX x = f.instruction_MX(k);
       // Get input positions into workvector

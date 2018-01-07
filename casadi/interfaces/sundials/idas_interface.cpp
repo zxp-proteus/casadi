@@ -255,7 +255,7 @@ namespace casadi {
     }
   }
 
-  int IdasInterface::init_mem(void* mem) const {
+  r_t IdasInterface::init_mem(void* mem) const {
     if (SundialsInterface::init_mem(mem)) return 1;
     auto m = to_mem(mem);
 

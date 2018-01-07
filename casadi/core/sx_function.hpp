@@ -33,7 +33,7 @@
 namespace casadi {
   /** \brief  An atomic operation for the SXElem virtual machine */
   struct ScalarAtomic {
-    int op;     /// Operator index
+    e_t op;     /// Operator index
     int i0;
     union {
       double d;
@@ -60,10 +60,10 @@ class CASADI_EXPORT SXFunction :
   ~SXFunction() override;
 
   /** \brief  Evaluate numerically, work vectors given */
-  int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+  r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
   /** \brief  evaluate symbolically while also propagating directional derivatives */
-  int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const override;
+  r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const override;
 
   /** Inline calls? */
   bool should_inline(bool always_inline, bool never_inline) const override {
@@ -210,10 +210,10 @@ class CASADI_EXPORT SXFunction :
   void codegen_body(CodeGenerator& g) const override;
 
   /** \brief  Propagate sparsity forward */
-  int sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+  r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
 
   /** \brief  Propagate sparsity backwards */
-  int sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
+  r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const override;
 
   /** \brief Return Jacobian of all input elements with respect to all output elements */
   Function get_jacobian(const std::string& name,

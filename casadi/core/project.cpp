@@ -46,16 +46,16 @@ namespace casadi {
   }
 
   template<typename T>
-  int Project::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t Project::eval_gen(const T** arg, T** res, int* iw, T* w) const {
     casadi_project(arg[0], dep().sparsity(), res[0], sparsity(), w);
     return 0;
   }
 
-  int Project::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Project::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int Project::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Project::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
@@ -79,12 +79,12 @@ namespace casadi {
     }
   }
 
-  int Project::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Project::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     sparsity().set(res[0], arg[0], dep().sparsity());
     return 0;
   }
 
-  int Project::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Project::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     dep().sparsity().bor(arg[0], res[0], sparsity());
     fill(res[0], res[0]+nnz(), 0);
     return 0;

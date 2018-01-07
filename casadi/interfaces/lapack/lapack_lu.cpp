@@ -82,7 +82,7 @@ namespace casadi {
     }
   }
 
-  int LapackLu::init_mem(void* mem) const {
+  r_t LapackLu::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 0;
     auto m = static_cast<LapackLuMemory*>(mem);
 
@@ -99,7 +99,7 @@ namespace casadi {
     return 0;
   }
 
-  int LapackLu::nfact(void* mem, const double* A) const {
+  r_t LapackLu::nfact(void* mem, const double* A) const {
     auto m = static_cast<LapackLuMemory*>(mem);
 
     // Dimensions
@@ -145,7 +145,7 @@ namespace casadi {
     return 0;
   }
 
-  int LapackLu::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LapackLu::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<LapackLuMemory*>(mem);
 
     // Dimensions

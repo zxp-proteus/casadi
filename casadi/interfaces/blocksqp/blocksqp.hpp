@@ -170,7 +170,7 @@ namespace casadi {
     void* alloc_mem() const override { return new BlocksqpMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<BlocksqpMemory*>(mem);}

@@ -48,7 +48,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    int op() const override { return op_;}
+    e_t op() const override { return op_;}
 
     /** \brief Check if binary operation */
     bool is_binary() const override { return true;}
@@ -65,20 +65,20 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const override;
 
     /** \brief  Propagate sparsity forward */
-    int sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    int sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
 
     /// Evaluate the function (template)
     template<typename T>
-    int eval_gen(const T* const* arg, T* const* res, int* iw, T* w) const;
+    r_t eval_gen(const T* const* arg, T* const* res, int* iw, T* w) const;
 
     /// Evaluate the function numerically
-    int eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
 
     /// Can the operation be performed inplace (i.e. overwrite the result)
     int n_inplace() const override { return 2;}
@@ -88,10 +88,10 @@ namespace casadi {
                   const std::vector<int>& arg, const std::vector<int>& res) const override;
 
     /// Get a unary operation
-    MX get_unary(int op) const override;
+    MX get_unary(e_t op) const override;
 
     /// Get a binary operation operation
-    MX _get_binary(int op, const MX& y, bool scX, bool scY) const override;
+    MX _get_binary(e_t op, const MX& y, bool scX, bool scY) const override;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
     bool is_equal(const MXNode* node, int depth) const override {

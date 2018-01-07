@@ -138,8 +138,8 @@ namespace casadi {
     auto m = static_cast<ImplicitToNlpMemory*>(mem);
 
     // Buffers for calling the NLP solver
-    fill_n(m->arg, static_cast<int>(NLPSOL_NUM_IN), nullptr);
-    fill_n(m->res, static_cast<int>(NLPSOL_NUM_OUT), nullptr);
+    fill_n(m->arg, static_cast<e_t>(NLPSOL_NUM_IN), nullptr);
+    fill_n(m->res, static_cast<e_t>(NLPSOL_NUM_OUT), nullptr);
 
     // Initial guess
     m->arg[NLPSOL_X] = m->iarg[iin_];

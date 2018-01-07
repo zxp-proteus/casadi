@@ -326,7 +326,7 @@ namespace casadi {
     return stats;
   }
 
-  int OracleFunction::init_mem(void* mem) const {
+  r_t OracleFunction::init_mem(void* mem) const {
     if (!mem) return 1;
     auto m = static_cast<OracleMemory*>(mem);
 

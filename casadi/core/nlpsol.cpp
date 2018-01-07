@@ -371,7 +371,7 @@ namespace casadi {
     }
   }
 
-  int Nlpsol::init_mem(void* mem) const {
+  r_t Nlpsol::init_mem(void* mem) const {
     if (OracleFunction::init_mem(mem)) return 1;
     auto m = static_cast<NlpsolMemory*>(mem);
     m->add_stat(name_);
@@ -439,7 +439,7 @@ namespace casadi {
     casadi_error("setOptionsFromFile not defined for class " + class_name());
   }
 
-  int Nlpsol::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t Nlpsol::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     auto m = static_cast<NlpsolMemory*>(mem);
 
     // Reset statistics

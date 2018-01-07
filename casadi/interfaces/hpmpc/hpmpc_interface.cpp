@@ -444,7 +444,7 @@ namespace casadi {
   }
 
 
-  int HpmpcInterface::init_mem(void* mem) const {
+  r_t HpmpcInterface::init_mem(void* mem) const {
     if (Conic::init_mem(mem)) return 1;
     auto m = static_cast<HpmpcMemory*>(mem);
 

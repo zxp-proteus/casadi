@@ -135,7 +135,7 @@ class BinarySX : public SXNode {
 
     bool is_smooth() const override { return operation_checker<SmoothChecker>(op_);}
 
-    bool is_op(int op) const override { return op_==op; }
+    bool is_op(e_t op) const override { return op_==op; }
 
     /** \brief Check if two nodes are equivalent up to a given depth */
     bool is_equal(const SXNode* node, int depth) const override {
@@ -158,7 +158,7 @@ class BinarySX : public SXNode {
     SXElem& dep(int i) override { return i==0 ? dep0_ : dep1_;}
 
     /** \brief  Get the operation */
-    int op() const override { return op_;}
+    e_t op() const override { return op_;}
 
     /** \brief  Print expression */
     std::string print(const std::string& arg1, const std::string& arg2) const override {

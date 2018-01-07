@@ -96,7 +96,7 @@ namespace casadi {
     if (sfact(A.ptr())) casadi_error("'sfact' failed");
   }
 
-  int Linsol::sfact(const double* A, int mem) const {
+  r_t Linsol::sfact(const double* A, int mem) const {
     if (A==0) return 1;
     auto m = static_cast<LinsolMemory*>((*this)->memory(mem));
 
@@ -116,7 +116,7 @@ namespace casadi {
     if (nfact(A.ptr())) casadi_error("'nfact' failed");
   }
 
-  int Linsol::nfact(const double* A, int mem) const {
+  r_t Linsol::nfact(const double* A, int mem) const {
     if (A==0) return 1;
     auto m = static_cast<LinsolMemory*>((*this)->memory(mem));
 
@@ -153,7 +153,7 @@ namespace casadi {
     return (*this)->rank((*this)->memory(mem), A);
   }
 
-  int Linsol::solve(const double* A, double* x, int nrhs, bool tr, int mem) const {
+  r_t Linsol::solve(const double* A, double* x, int nrhs, bool tr, int mem) const {
     auto m = static_cast<LinsolMemory*>((*this)->memory(mem));
     casadi_assert(m->is_nfact, "Linear system has not been factorized");
     return (*this)->solve(m, A, x, nrhs, tr);

@@ -105,7 +105,7 @@ namespace casadi {
     virtual void* alloc_mem() const {return 0;}
 
     /** \brief Initalize memory block */
-    virtual int init_mem(void* mem) const { return 0;}
+    virtual r_t init_mem(void* mem) const { return 0;}
 
     /** \brief Free memory block */
     virtual void free_mem(void *mem) const;
@@ -192,12 +192,12 @@ namespace casadi {
 
     ///@{
     /** \brief  Evaluate numerically */
-    int eval_gen(const double** arg, double** res, int* iw, double* w, void* mem) const;
-    virtual int eval(const double** arg, double** res, int* iw, double* w, void* mem) const;
+    r_t eval_gen(const double** arg, double** res, int* iw, double* w, void* mem) const;
+    virtual r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const;
     ///@}
 
     /** \brief  Evaluate with symbolic scalars */
-    virtual int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const;
+    virtual r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const;
 
     /** \brief  Evaluate with symbolic matrices */
     virtual void eval_mx(const MXVector& arg, MXVector& res,
@@ -208,10 +208,10 @@ namespace casadi {
 
     ///@{
     /** \brief Evaluate a function, overloaded */
-    int eval_gen(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
+    r_t eval_gen(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
       return eval_sx(arg, res, iw, w, mem);
     }
-    int eval_gen(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
+    r_t eval_gen(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const {
       return sp_forward(arg, res, iw, w, mem);
     }
     ///@}
@@ -604,10 +604,10 @@ namespace casadi {
     }
 
     /** \brief  Propagate sparsity forward */
-    virtual int sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const;
+    virtual r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const;
 
     /** \brief  Propagate sparsity backwards */
-    virtual int sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const;
+    virtual r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w, void* mem) const;
 
     /** \brief Get number of temporary variables needed */
     void sz_work(size_t& sz_arg, size_t& sz_res, size_t& sz_iw, size_t& sz_w) const;

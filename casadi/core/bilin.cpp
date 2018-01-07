@@ -63,21 +63,21 @@ namespace casadi {
     }
   }
 
-  int Bilin::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Bilin::eval(const double** arg, double** res, int* iw, double* w) const {
     return eval_gen<double>(arg, res, iw, w);
   }
 
-  int Bilin::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
+  r_t Bilin::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const {
     return eval_gen<SXElem>(arg, res, iw, w);
   }
 
   template<typename T>
-  int Bilin::eval_gen(const T** arg, T** res, int* iw, T* w) const {
+  r_t Bilin::eval_gen(const T** arg, T** res, int* iw, T* w) const {
     *res[0] = casadi_bilin(arg[0], dep(0).sparsity(), arg[1], arg[2]);
     return 0;
   }
 
-  int Bilin::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Bilin::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     /* Return value */
     bvec_t r=0;
 
@@ -98,7 +98,7 @@ namespace casadi {
     return 0;
   }
 
-  int Bilin::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t Bilin::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     /* Seed */
     bvec_t s_r=res[0][0]; res[0][0] = 0;
 

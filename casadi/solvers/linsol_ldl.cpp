@@ -61,7 +61,7 @@ namespace casadi {
     sp_L_ = sp_.ldl(parent_);
   }
 
-  int LinsolLdl::init_mem(void* mem) const {
+  r_t LinsolLdl::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<LinsolLdlMemory*>(mem);
 
@@ -75,18 +75,18 @@ namespace casadi {
     return 0;
   }
 
-  int LinsolLdl::sfact(void* mem, const double* A) const {
+  r_t LinsolLdl::sfact(void* mem, const double* A) const {
     return 0;
   }
 
-  int LinsolLdl::nfact(void* mem, const double* A) const {
+  r_t LinsolLdl::nfact(void* mem, const double* A) const {
     auto m = static_cast<LinsolLdlMemory*>(mem);
     casadi_ldl(sp_, get_ptr(parent_), sp_L_,
                A, get_ptr(m->l), get_ptr(m->d), get_ptr(m->iw), get_ptr(m->w));
     return 0;
   }
 
-  int LinsolLdl::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t LinsolLdl::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<LinsolLdlMemory*>(mem);
     casadi_ldl_solve(x, nrhs, sp_L_, get_ptr(m->l), get_ptr(m->d));
     return 0;

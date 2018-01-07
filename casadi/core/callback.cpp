@@ -52,11 +52,11 @@ namespace casadi {
     return (*this)->FunctionInternal::eval_dm(arg);
   }
 
-  int Callback::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t Callback::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     return (*this)->FunctionInternal::eval(arg, res, iw, w, mem);
   }
 
-  int Callback::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
+  r_t Callback::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
     return (*this)->FunctionInternal::eval_sx(arg, res, iw, w, mem);
   }
 

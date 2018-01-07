@@ -170,7 +170,7 @@ namespace casadi {
 
 
   /** \brief Initalize memory block */
-  int SlicotDple::init_mem(void* mem) const {
+  r_t SlicotDple::init_mem(void* mem) const {
     if (Dple::init_mem(mem)) return 1;
     auto m = static_cast<SlicotDpleMemory*>(mem);
 
@@ -205,7 +205,7 @@ namespace casadi {
   }
   /// \endcond
 
-  int SlicotDple::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t SlicotDple::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     auto m = static_cast<SlicotDpleMemory*>(mem);
 
     setup(mem, arg, res, iw, w);

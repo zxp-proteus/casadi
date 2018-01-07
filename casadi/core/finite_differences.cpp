@@ -194,7 +194,7 @@ namespace casadi {
     return Function::create(new CentralDiff(name, nfwd), opts);
   }
 
-  int FiniteDiff::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t FiniteDiff::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     // Shorthands
     int n_in = derivative_of_.n_in(), n_out = derivative_of_.n_out(), n_pert = this->n_pert();
 

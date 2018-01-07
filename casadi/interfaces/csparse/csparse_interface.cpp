@@ -63,7 +63,7 @@ namespace casadi {
     LinsolInternal::init(opts);
   }
 
-  int CsparseInterface::init_mem(void* mem) const {
+  r_t CsparseInterface::init_mem(void* mem) const {
     if (LinsolInternal::init_mem(mem)) return 1;
     auto m = static_cast<CsparseMemory*>(mem);
 
@@ -83,7 +83,7 @@ namespace casadi {
     return 0;
   }
 
-  int CsparseInterface::sfact(void* mem, const double* A) const {
+  r_t CsparseInterface::sfact(void* mem, const double* A) const {
     auto m = static_cast<CsparseMemory*>(mem);
 
     // Set the nonzeros of the matrix
@@ -96,7 +96,7 @@ namespace casadi {
     return 0;
   }
 
-  int CsparseInterface::nfact(void* mem, const double* A) const {
+  r_t CsparseInterface::nfact(void* mem, const double* A) const {
     auto m = static_cast<CsparseMemory*>(mem);
 
     // Set the nonzeros of the matrix
@@ -150,7 +150,7 @@ namespace casadi {
     return 0;
   }
 
-  int CsparseInterface::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
+  r_t CsparseInterface::solve(void* mem, const double* A, double* x, int nrhs, bool tr) const {
     auto m = static_cast<CsparseMemory*>(mem);
     casadi_assert_dev(m->N!=0);
 

@@ -48,19 +48,19 @@ namespace casadi {
 
     /// Evaluate the function (template)
     template<typename T>
-    int eval_gen(const T* const* arg, T* const* res, int* iw, T* w) const;
+    r_t eval_gen(const T* const* arg, T* const* res, int* iw, T* w) const;
 
     /// Evaluate the function numerically
-    int eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
 
     /** \brief  Propagate sparsity forward */
-    int sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    int sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
@@ -119,7 +119,7 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const override;
 
     /** \brief Get the operation */
-    int op() const override { return OP_HORZCAT;}
+    e_t op() const override { return OP_HORZCAT;}
 
     /** \brief Split up an expression along symbolic primitives */
     void split_primitives(const MX& x, std::vector<MX>::iterator& it) const override;
@@ -159,7 +159,7 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const override;
 
     /** \brief Get the operation */
-    int op() const override { return OP_VERTCAT;}
+    e_t op() const override { return OP_VERTCAT;}
 
     /** \brief Split up an expression along symbolic primitives */
     void split_primitives(const MX& x, std::vector<MX>::iterator& it) const override;
@@ -199,7 +199,7 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const override;
 
     /** \brief Get the operation */
-    int op() const override { return OP_DIAGCAT;}
+    e_t op() const override { return OP_DIAGCAT;}
 
     /** \brief Split up an expression along symbolic primitives */
     void split_primitives(const MX& x, std::vector<MX>::iterator& it) const override;

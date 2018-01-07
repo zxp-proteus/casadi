@@ -87,12 +87,12 @@ namespace casadi {
                            std::vector<std::vector<MX> >& asens) const {
   }
 
-  int ConstantMX::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t ConstantMX::sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     fill_n(res[0], nnz(), 0);
     return 0;
   }
 
-  int ConstantMX::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
+  r_t ConstantMX::sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const {
     fill_n(res[0], nnz(), 0);
     return 0;
   }
@@ -232,11 +232,11 @@ namespace casadi {
     return shared_from_this<MX>();
   }
 
-  MX ZeroByZero::get_unary(int op) const {
+  MX ZeroByZero::get_unary(e_t op) const {
     return shared_from_this<MX>();
   }
 
-  MX ZeroByZero::_get_binary(int op, const MX& y, bool ScX, bool ScY) const {
+  MX ZeroByZero::_get_binary(e_t op, const MX& y, bool ScX, bool ScY) const {
     return shared_from_this<MX>();
   }
 

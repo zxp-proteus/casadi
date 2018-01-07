@@ -75,7 +75,7 @@ namespace casadi {
     ~Input() override {}
 
     /** \brief Get the operation */
-    int op() const override { return OP_INPUT;}
+    e_t op() const override { return OP_INPUT;}
 
     /** \brief  Print expression */
     std::string disp(const std::vector<std::string>& arg) const override;
@@ -99,7 +99,7 @@ namespace casadi {
     int nout() const override { return 0;}
 
     /** \brief Get the operation */
-    int op() const override { return OP_OUTPUT;}
+    e_t op() const override { return OP_OUTPUT;}
 
     /** \brief  Print expression */
     std::string disp(const std::vector<std::string>& arg) const override;

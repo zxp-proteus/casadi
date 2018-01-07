@@ -67,19 +67,19 @@ namespace casadi {
     void* alloc_mem() const override { return new LinsolLdlMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<LinsolLdlMemory*>(mem);}
 
     // Symbolic factorization
-    int sfact(void* mem, const double* A) const override;
+    r_t sfact(void* mem, const double* A) const override;
 
     // Factorize the linear system
-    int nfact(void* mem, const double* A) const override;
+    r_t nfact(void* mem, const double* A) const override;
 
     // Solve the linear system
-    int solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
+    r_t solve(void* mem, const double* A, double* x, int nrhs, bool tr) const override;
 
     /// Number of negative eigenvalues
     int neig(void* mem, const double* A) const override;

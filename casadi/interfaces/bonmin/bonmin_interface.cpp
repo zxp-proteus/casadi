@@ -209,7 +209,7 @@ namespace casadi {
     }
   }
 
-  int BonminInterface::init_mem(void* mem) const {
+  r_t BonminInterface::init_mem(void* mem) const {
     return Nlpsol::init_mem(mem);
   }
 

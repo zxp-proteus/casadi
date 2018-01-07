@@ -78,7 +78,7 @@ namespace casadi {
     void init(const Dict& opts) override;
 
     /// Solve the QP
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     /// Throw error
     static const char* errFlag(int flag);

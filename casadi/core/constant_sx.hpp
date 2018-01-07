@@ -57,7 +57,7 @@ double to_double() const override = 0;
 bool is_constant() const override { return true; }
 
 /** \brief  Get the operation */
-int op() const override { return OP_CONST;}
+e_t op() const override { return OP_CONST;}
 
 /** \brief Check if two nodes are equivalent up to a given depth */
 bool is_equal(const SXNode* node, int depth) const override {

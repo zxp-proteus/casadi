@@ -60,10 +60,10 @@ namespace casadi {
     static ConstantMX* create(const Matrix<double>& val);
 
     /// Evaluate the function numerically
-    int eval(const double** arg, double** res, int* iw, double* w) const override = 0;
+    r_t eval(const double** arg, double** res, int* iw, double* w) const override = 0;
 
     /// Evaluate the function symbolically (SX)
-    int eval_sx(const SXElem** arg, SXElem** res,
+    r_t eval_sx(const SXElem** arg, SXElem** res,
                          int* iw, SXElem* w) const override = 0;
 
     /** \brief  Evaluate symbolically (MX) */
@@ -78,13 +78,13 @@ namespace casadi {
                          std::vector<std::vector<MX> >& asens) const override;
 
     /** \brief  Propagate sparsity forward */
-    int sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_forward(const bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
 
     /** \brief  Propagate sparsity backwards */
-    int sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
+    r_t sp_reverse(bvec_t** arg, bvec_t** res, int* iw, bvec_t* w) const override;
 
     /** \brief Get the operation */
-    int op() const override { return OP_CONST;}
+    e_t op() const override { return OP_CONST;}
 
     /// Get the value (only for scalar constant nodes)
     double to_double() const override = 0;
@@ -139,13 +139,13 @@ namespace casadi {
     }
 
     /** \brief  Evaluate the function numerically */
-    int eval(const double** arg, double** res, int* iw, double* w) const override {
+    r_t eval(const double** arg, double** res, int* iw, double* w) const override {
       std::copy(x_->begin(), x_->end(), res[0]);
       return 0;
     }
 
     /** \brief  Evaluate the function symbolically (SX) */
-    int eval_sx(const SXElem** arg, SXElem** res,
+    r_t eval_sx(const SXElem** arg, SXElem** res,
                          int* iw, SXElem* w) const override {
       std::copy(x_->begin(), x_->end(), res[0]);
       return 0;
@@ -199,12 +199,12 @@ namespace casadi {
 
     /** \brief  Evaluate the function numerically */
     /// Evaluate the function numerically
-    int eval(const double** arg, double** res, int* iw, double* w) const override {
+    r_t eval(const double** arg, double** res, int* iw, double* w) const override {
       return 0;
     }
 
     /// Evaluate the function symbolically (SX)
-    int eval_sx(const SXElem** arg, SXElem** res,
+    r_t eval_sx(const SXElem** arg, SXElem** res,
                          int* iw, SXElem* w) const override {
       return 0;
     }
@@ -232,10 +232,10 @@ namespace casadi {
     MX get_transpose() const override;
 
     /// Get a unary operation
-    MX get_unary(int op) const override;
+    MX get_unary(e_t op) const override;
 
     /// Get a binary operation operation
-    MX _get_binary(int op, const MX& y, bool ScX, bool ScY) const override;
+    MX _get_binary(e_t op, const MX& y, bool ScX, bool ScY) const override;
 
     /// Reshape
     MX get_reshape(const Sparsity& sp) const override;
@@ -280,10 +280,10 @@ namespace casadi {
 
     /** \brief  Evaluate the function numerically */
     /// Evaluate the function numerically
-    int eval(const double** arg, double** res, int* iw, double* w) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w) const override;
 
     /// Evaluate the function symbolically (SX)
-    int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
+    r_t eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w) const override;
 
     /** \brief Generate code for the operation */
     void generate(CodeGenerator& g,
@@ -318,10 +318,10 @@ namespace casadi {
     MX get_transpose() const override;
 
     /// Get a unary operation
-    MX get_unary(int op) const override;
+    MX get_unary(e_t op) const override;
 
     /// Get a binary operation operation
-    MX _get_binary(int op, const MX& y, bool ScX, bool ScY) const override;
+    MX _get_binary(e_t op, const MX& y, bool ScX, bool ScY) const override;
 
     /// Reshape
     MX get_reshape(const Sparsity& sp) const override;
@@ -382,7 +382,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  MX Constant<Value>::get_unary(int op) const {
+  MX Constant<Value>::get_unary(e_t op) const {
     // Constant folding
     double ret(0);
     casadi_math<double>::fun(op, v_.value, 0.0, ret);
@@ -404,7 +404,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  MX Constant<Value>::_get_binary(int op, const MX& y, bool ScX, bool ScY) const {
+  MX Constant<Value>::_get_binary(e_t op, const MX& y, bool ScX, bool ScY) const {
     casadi_assert_dev(sparsity()==y.sparsity() || ScX || ScY);
 
     if (ScX && !operation_checker<FX0Checker>(op)) {
@@ -469,7 +469,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  int Constant<Value>::eval(const double** arg, double** res, int* iw, double* w) const {
+  r_t Constant<Value>::eval(const double** arg, double** res, int* iw, double* w) const {
     std::fill(res[0], res[0]+nnz(), static_cast<double>(v_.value));
     return 0;
   }

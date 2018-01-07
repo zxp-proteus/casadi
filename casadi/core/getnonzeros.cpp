@@ -91,7 +91,7 @@ namespace casadi {
   }
 
   template<typename T>
-  int GetNonzerosSlice::eval_gen(const T* const* arg, T* const* res,
+  r_t GetNonzerosSlice::eval_gen(const T* const* arg, T* const* res,
                                  int* iw, T* w) const {
     const T* idata = arg[0] + s_.start;
     const T* idata_stop = arg[0] + s_.stop;

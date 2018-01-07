@@ -133,7 +133,7 @@ namespace casadi {
     alloc_w(sz_buf, true);
   }
 
-  int Switch::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
+  r_t Switch::eval(const double** arg, double** res, int* iw, double* w, void* mem) const {
     // Get the function to be evaluated
     int k = arg[0] ? static_cast<int>(*arg[0]) : 0;
     const Function& fk = k>=0 && k<f_.size() ? f_[k] : f_def_;
@@ -273,7 +273,7 @@ namespace casadi {
     }
   }
 
-  int Switch::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
+  r_t Switch::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
     // Input and output buffers
     const SXElem** arg1 = arg + n_in_;
     SXElem** res1 = res + n_out_;

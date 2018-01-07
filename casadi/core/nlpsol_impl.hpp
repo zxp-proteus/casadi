@@ -128,7 +128,7 @@ namespace casadi {
     void* alloc_mem() const override { return new NlpsolMemory();}
 
     /** \brief Initalize memory block */
-    int init_mem(void* mem) const override;
+    r_t init_mem(void* mem) const override;
 
     /** \brief Free memory block */
     void free_mem(void *mem) const override { delete static_cast<NlpsolMemory*>(mem);}
@@ -147,7 +147,7 @@ namespace casadi {
                           int*& iw, double*& w) const override;
 
     // Evaluate numerically
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+    r_t eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
     // Solve the NLP
     virtual void solve(void* mem) const = 0;
