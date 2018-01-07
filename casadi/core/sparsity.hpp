@@ -861,7 +861,7 @@ namespace casadi {
   }
 
   /** \brief Generate a hash value incrementally, array */
-  inline void hash_combine(std::size_t& seed, const int* v, int sz) {
+  inline void hash_combine(std::size_t& seed, const int* v, std::size_t sz) {
     for (int i=0; i<sz; ++i) hash_combine(seed, v[i]);
   }
 

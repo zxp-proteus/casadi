@@ -147,7 +147,7 @@ namespace casadi {
   typedef unsigned int e_t;
   typedef int r_t;
   typedef signed long long s_t;
-  typedef unsigned int u_t;
+  typedef unsigned long long u_t;
 
   /// String representation, any type
   template<typename T>
