@@ -212,7 +212,7 @@ namespace casadi {
     char inst = read_char();
 
     // Temporaries
-    s_t i;
+    int i;
     double d;
 
     // Error message
@@ -251,7 +251,7 @@ namespace casadi {
       case 'l':
 
       // Read the short number
-      d = read_long();
+      d = static_cast<double>(read_long());
 
       // Return an expression containing the number
       return d;
@@ -347,11 +347,11 @@ namespace casadi {
         case 11: case 12: case 54: case 59: case 60: case 61: case 70: case 71: case 74:
         {
           // Number of elements in the sum
-          s_t n = read_int();
+          int n = read_int();
 
           // Collect the arguments
           vector<MX> args(n);
-          for (s_t k=0; k<n; ++k) {
+          for (int k=0; k<n; ++k) {
             args[k] = expr();
           }
 
@@ -414,8 +414,8 @@ namespace casadi {
 
   void NlImporter::V_segment() {
     // Read header
-    s_t i = read_int();
-    s_t j = read_int();
+    int i = read_int();
+    int j = read_int();
     read_int();
 
     // Make sure that v is long enough
@@ -427,9 +427,9 @@ namespace casadi {
     v_.at(i) = 0;
 
     // Add the linear terms
-    for (s_t jj=0; jj<j; ++jj) {
+    for (int jj=0; jj<j; ++jj) {
       // Linear term
-      s_t pl = read_int();
+      int pl = read_int();
       double cl = read_double();
 
       // Add to variable definition (assuming it has already been defined)
@@ -441,10 +441,10 @@ namespace casadi {
     v_.at(i) += expr();
   }
 
-  s_t NlImporter::read_int() {
-    s_t i;
+  int NlImporter::read_int() {
+    int i;
     if (binary_) {
-      s_.read(reinterpret_cast<char *>(&i), sizeof(s_t));
+      s_.read(reinterpret_cast<char *>(&i), sizeof(int));
     } else {
       s_ >> i;
     }
@@ -493,7 +493,7 @@ namespace casadi {
 
   void NlImporter::C_segment() {
     // Get the number
-    s_t i = read_int();
+    int i = read_int();
 
     // Parse and save expression
     nlp_.g.at(i) = expr();
@@ -508,7 +508,7 @@ namespace casadi {
     read_int(); // i
 
     // Should the objective be maximized
-    s_t sigma= read_int();
+    int sigma= read_int();
     sign_ = sigma!=0 ? -1 : 1;
 
     // Parse and save expression
@@ -517,12 +517,12 @@ namespace casadi {
 
   void NlImporter::d_segment() {
     // Read the number of guesses supplied
-    s_t m = read_int();
+    int m = read_int();
 
     // Process initial guess for the fual variables
-    for (s_t i=0; i<m; ++i) {
+    for (int i=0; i<m; ++i) {
       // Offset and value
-      s_t offset = read_int();
+      int offset = read_int();
       double d = read_double();
 
       // Save initial guess
@@ -532,12 +532,12 @@ namespace casadi {
 
   void NlImporter::x_segment() {
     // Read the number of guesses supplied
-    s_t m = read_int();
+    int m = read_int();
 
     // Process initial guess
-    for (s_t i=0; i<m; ++i) {
+    for (int i=0; i<m; ++i) {
       // Offset and value
-      s_t offset = read_int();
+      int offset = read_int();
       double d = read_double();
 
       // Save initial guess
@@ -547,7 +547,7 @@ namespace casadi {
 
   void NlImporter::r_segment() {
     // For all constraints
-    for (s_t i=0; i<n_con_; ++i) {
+    for (int i=0; i<n_con_; ++i) {
 
       // Read constraint type
       char c_type = read_char();
@@ -654,25 +654,25 @@ namespace casadi {
     vector<s_t> rowind(n_var_+1);
 
     // Get the number of offsets
-    s_t k = read_int();
+    int k = read_int();
     casadi_assert_dev(k==n_var_-1);
 
     // Get the row offsets
     rowind[0]=0;
-    for (s_t i=0; i<k; ++i) {
+    for (int i=0; i<k; ++i) {
       rowind[i+1] = read_int();
     }
   }
 
   void NlImporter::J_segment() {
     // Get constraint number and number of terms
-    s_t i = read_int();
-    s_t k = read_int();
+    int i = read_int();
+    int k = read_int();
 
     // Get terms
-    for (s_t kk=0; kk<k; ++kk) {
+    for (int kk=0; kk<k; ++kk) {
       // Get the term
-      s_t j = read_int();
+      int j = read_int();
       double c = read_double();
 
       // Add to constraints
@@ -683,12 +683,12 @@ namespace casadi {
   void NlImporter::G_segment() {
     // Get objective number and number of terms
     read_int(); // i
-    s_t k = read_int();
+    int k = read_int();
 
     // Get terms
-    for (s_t kk=0; kk<k; ++kk) {
+    for (int kk=0; kk<k; ++kk) {
       // Get the term
-      s_t j = read_int();
+      int j = read_int();
       double c = read_double();
 
       // Add to objective

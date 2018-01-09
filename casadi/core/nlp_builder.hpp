@@ -98,7 +98,7 @@ namespace casadi {
     // Destructor
     ~NlImporter();
   private:
-    s_t read_int();
+    int read_int();
     char read_char();
     double read_double();
     short read_short();

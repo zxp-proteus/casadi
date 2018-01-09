@@ -435,7 +435,7 @@ namespace casadi {
   double Smoothing::pert(s_t k, double h) const {
     s_t sign = 2*(k/2)-1;
     s_t len = k%2+1;
-    return len*sign*h;
+    return static_cast<double>(len*sign)*h;
   }
 
   double Smoothing::calc_fd(double** yk, double* y0, double* J, double h) const {
