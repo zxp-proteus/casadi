@@ -1062,34 +1062,34 @@ namespace casadi {
   struct casadi_math {
 
     /** \brief Evaluate a built in function (scalar-scalar) */
-    static inline void fun(e_t op, const T& x, const T& y, T& f);
+    static inline void fun(unsigned char op, const T& x, const T& y, T& f);
 
     /** \brief Evaluate a built in function (vector-vector) */
-    static inline void fun(e_t op, const T* x, const T* y, T* f, s_t n);
+    static inline void fun(unsigned char op, const T* x, const T* y, T* f, s_t n);
 
     /** \brief Evaluate a built in function (vector-scalar) */
-    static inline void fun(e_t op, const T* x, const T& y, T* f, s_t n);
+    static inline void fun(unsigned char op, const T* x, const T& y, T* f, s_t n);
 
     /** \brief Evaluate a built in function (scalar-vector) */
-    static inline void fun(e_t op, const T& x, const T* y, T* f, s_t n);
+    static inline void fun(unsigned char op, const T& x, const T* y, T* f, s_t n);
 
     /** \brief Evaluate a built in derivative function */
-    static inline void der(e_t op, const T& x, const T& y, const T& f, T* d);
+    static inline void der(unsigned char op, const T& x, const T& y, const T& f, T* d);
 
     /** \brief Evaluate the function and the derivative function */
-    static inline void derF(e_t op, const T& x, const T& y, T& f, T* d);
+    static inline void derF(unsigned char op, const T& x, const T& y, T& f, T* d);
 
     /** \brief Number of dependencies */
-    static inline s_t ndeps(e_t op);
+    static inline s_t ndeps(unsigned char op);
 
     /** \brief Print */
-    static inline std::string print(e_t op, const std::string& x,
+    static inline std::string print(unsigned char op, const std::string& x,
                              const std::string& y);
-    static inline std::string print(e_t op, const std::string& x);
-    static inline std::string name(e_t op);
-    static inline std::string pre(e_t op);
-    static inline std::string sep(e_t op);
-    static inline std::string post(e_t op);
+    static inline std::string print(unsigned char op, const std::string& x);
+    static inline std::string name(unsigned char op);
+    static inline std::string pre(unsigned char op);
+    static inline std::string sep(unsigned char op);
+    static inline std::string post(unsigned char op);
   };
 
   /// Specialize the class so that it can be used with integer type
@@ -1097,13 +1097,13 @@ namespace casadi {
   struct casadi_math<s_t>{
 
     /** \brief Evaluate a built in function */
-    static inline void fun(e_t op, const s_t& x, const s_t& y, s_t& f) {
+    static inline void fun(unsigned char op, const s_t& x, const s_t& y, s_t& f) {
       double ff(0);
       casadi_math<double>::fun(op, static_cast<double>(x), static_cast<double>(y), ff);
       f = static_cast<s_t>(ff);
     }
 
-    static inline void fun(e_t op, const s_t* x, const s_t* y, s_t* f, s_t n) {
+    static inline void fun(unsigned char op, const s_t* x, const s_t* y, s_t* f, s_t n) {
       for (s_t i=0; i<n; ++i) {
         double ff(0);
         casadi_math<double>::fun(op, static_cast<double>(*x++), static_cast<double>(*y++), ff);
@@ -1111,7 +1111,7 @@ namespace casadi {
       }
     }
 
-    static inline void fun(e_t op, const s_t* x, const s_t& y, s_t* f, s_t n) {
+    static inline void fun(unsigned char op, const s_t* x, const s_t& y, s_t* f, s_t n) {
       for (s_t i=0; i<n; ++i) {
         double ff;
         casadi_math<double>::fun(op, static_cast<double>(*x++), static_cast<double>(y), ff);
@@ -1119,7 +1119,7 @@ namespace casadi {
       }
     }
 
-    static inline void fun(e_t op, const s_t& x, const s_t* y, s_t* f, s_t n) {
+    static inline void fun(unsigned char op, const s_t& x, const s_t* y, s_t* f, s_t n) {
       for (s_t i=0; i<n; ++i) {
         double ff;
         casadi_math<double>::fun(op, static_cast<double>(x), static_cast<double>(*y++), ff);
@@ -1128,7 +1128,7 @@ namespace casadi {
     }
 
     /** \brief Evaluate a built in derivative function */
-    static inline void der(e_t op, const s_t& x, const s_t& y, const s_t& f, s_t* d) {
+    static inline void der(unsigned char op, const s_t& x, const s_t& y, const s_t& f, s_t* d) {
       double d_real[2] = {static_cast<double>(d[0]), static_cast<double>(d[1])};
       casadi_math<double>::der(op, static_cast<double>(x), static_cast<double>(y),
                                static_cast<double>(f), d_real);
@@ -1137,7 +1137,7 @@ namespace casadi {
     }
 
     /** \brief Evaluate the function and the derivative function */
-    static inline void derF(e_t op, const s_t& x, const s_t& y, s_t& f, s_t* d) {
+    static inline void derF(unsigned char op, const s_t& x, const s_t& y, s_t& f, s_t* d) {
       double d_real[2] = {static_cast<double>(d[0]), static_cast<double>(d[1])};
       double f_real = static_cast<double>(f);
       casadi_math<double>::derF(op, static_cast<double>(x), static_cast<double>(y), f_real, d_real);
@@ -1147,28 +1147,28 @@ namespace casadi {
     }
 
     /** \brief Number of dependencies */
-    static inline s_t ndeps(e_t op) {
+    static inline s_t ndeps(unsigned char op) {
       return casadi_math<double>::ndeps(op);
     }
 
     /** \brief Print */
-    static inline std::string print(e_t op, const std::string& x,
+    static inline std::string print(unsigned char op, const std::string& x,
                                     const std::string& y) {
       return casadi_math<double>::print(op, x, y);
     }
-    static inline std::string print(e_t op, const std::string& x) {
+    static inline std::string print(unsigned char op, const std::string& x) {
       return casadi_math<double>::print(op, x);
     }
-    static inline std::string pre(e_t op) {
+    static inline std::string pre(unsigned char op) {
       return casadi_math<double>::pre(op);
     }
-    static inline std::string name(e_t op) {
+    static inline std::string name(unsigned char op) {
       return casadi_math<double>::name(op);
     }
-    static inline std::string sep(e_t op) {
+    static inline std::string sep(unsigned char op) {
       return casadi_math<double>::sep(op);
     }
-    static inline std::string post(e_t op) {
+    static inline std::string post(unsigned char op) {
       return casadi_math<double>::post(op);
     }
   };
@@ -1176,7 +1176,7 @@ namespace casadi {
   // Template implementations
 
   template<typename T>
-  inline void casadi_math<T>::fun(e_t op, const T& x, const T& y, T& f) {
+  inline void casadi_math<T>::fun(unsigned char op, const T& x, const T& y, T& f) {
     // NOTE: We define the implementation in a preprocessor macro to be able to force inlining,
     //  and to allow extensions in the VM
 #define CASADI_MATH_FUN_BUILTIN_GEN(CNAME, X, Y, F, N)                  \
@@ -1236,21 +1236,21 @@ namespace casadi {
   }
 
   template<typename T>
-  inline void casadi_math<T>::fun(e_t op, const T* x, const T* y, T* f, s_t n) {
+  inline void casadi_math<T>::fun(unsigned char op, const T* x, const T* y, T* f, s_t n) {
     switch (op) {
       CASADI_MATH_FUN_BUILTIN_GEN(BinaryOperationVV, x, y, f, n)
         }
   }
 
   template<typename T>
-  inline void casadi_math<T>::fun(e_t op, const T* x, const T& y, T* f, s_t n) {
+  inline void casadi_math<T>::fun(unsigned char op, const T* x, const T& y, T* f, s_t n) {
     switch (op) {
       CASADI_MATH_FUN_BUILTIN_GEN(BinaryOperationVS, x, y, f, n)
         }
   }
 
   template<typename T>
-  inline void casadi_math<T>::fun(e_t op, const T& x, const T* y, T* f, s_t n) {
+  inline void casadi_math<T>::fun(unsigned char op, const T& x, const T* y, T* f, s_t n) {
     switch (op) {
       CASADI_MATH_FUN_BUILTIN_GEN(BinaryOperationSV, x, y, f, n)
         }
@@ -1258,7 +1258,7 @@ namespace casadi {
 
 
   template<typename T>
-  inline void casadi_math<T>::der(e_t op, const T& x, const T& y, const T& f, T* d) {
+  inline void casadi_math<T>::der(unsigned char op, const T& x, const T& y, const T& f, T* d) {
     // NOTE: We define the implementation in a preprocessor macro to be able to force inlining,
     // and to allow extensions in the VM
 #define CASADI_MATH_DER_BUILTIN(X, Y, F, D)                             \
@@ -1317,7 +1317,7 @@ namespace casadi {
 
 
     template<typename T>
-      inline void casadi_math<T>::derF(e_t op, const T& x, const T& y, T& f, T* d) {
+      inline void casadi_math<T>::derF(unsigned char op, const T& x, const T& y, T& f, T* d) {
     // NOTE: We define the implementation in a preprocessor macro to be able to force inlining,
     // and to allow extensions in the VM
 #define CASADI_MATH_DERF_BUILTIN(X, Y, F, D)                            \
@@ -1375,7 +1375,7 @@ namespace casadi {
   }
 
   template<typename T>
-  inline s_t casadi_math<T>::ndeps(e_t op) {
+  inline s_t casadi_math<T>::ndeps(unsigned char op) {
 #define CASADI_MATH_BINARY_BUILTIN              \
     case OP_ADD:                                \
   case OP_SUB:                                  \
@@ -1412,7 +1412,7 @@ namespace casadi {
 
   template<typename T>
   inline std::string
-  casadi_math<T>::print(e_t op,
+  casadi_math<T>::print(unsigned char op,
                         const std::string& x, const std::string& y) {
     casadi_assert_dev(ndeps(op)==2);
     return pre(op) + x + sep(op) + y + post(op);
@@ -1420,13 +1420,13 @@ namespace casadi {
 
   template<typename T>
   inline std::string
-  casadi_math<T>::print(e_t op, const std::string& x) {
+  casadi_math<T>::print(unsigned char op, const std::string& x) {
     casadi_assert_dev(ndeps(op)==1);
     return pre(op) + x + post(op);
   }
 
   template<typename T>
-  inline std::string casadi_math<T>::name(e_t op) {
+  inline std::string casadi_math<T>::name(unsigned char op) {
     switch (op) {
     case OP_ASSIGN:         return "assign";
     case OP_ADD:            return "add";
@@ -1512,7 +1512,7 @@ namespace casadi {
   }
 
   template<typename T>
-  inline std::string casadi_math<T>::pre(e_t op) {
+  inline std::string casadi_math<T>::pre(unsigned char op) {
     switch (op) {
     case OP_ASSIGN:    return "";
     case OP_ADD:       return "(";
@@ -1535,7 +1535,7 @@ namespace casadi {
   }
 
   template<typename T>
-  inline std::string casadi_math<T>::sep(e_t op) {
+  inline std::string casadi_math<T>::sep(unsigned char op) {
     switch (op) {
     case OP_ADD:       return "+";
     case OP_SUB:       return "-";
@@ -1553,7 +1553,7 @@ namespace casadi {
   }
 
   template<typename T>
-  inline std::string casadi_math<T>::post(e_t op) {
+  inline std::string casadi_math<T>::post(unsigned char op) {
     switch (op) {
     case OP_ASSIGN:       return "";
     case OP_IF_ELSE_ZERO: return ":0)";

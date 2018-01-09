@@ -41,13 +41,13 @@ class BinarySX : public SXNode {
   private:
 
     /** \brief  Constructor is private, use "create" below */
-    BinarySX(e_t op, const SXElem& dep0, const SXElem& dep1) :
+    BinarySX(unsigned char op, const SXElem& dep0, const SXElem& dep1) :
         op_(op), dep0_(dep0), dep1_(dep1) {}
 
   public:
 
     /** \brief  Create a binary expression */
-    inline static SXElem create(e_t op, const SXElem& dep0, const SXElem& dep1) {
+    inline static SXElem create(unsigned char op, const SXElem& dep0, const SXElem& dep1) {
       if (dep0.is_constant() && dep1.is_constant()) {
         // Evaluate constant
         double dep0_val(dep0);
@@ -166,7 +166,7 @@ class BinarySX : public SXNode {
     }
 
     /** \brief  The binary operation as an 1 byte integer (allows 256 values) */
-    e_t op_;
+    unsigned char op_;
 
     /** \brief  The dependencies of the node */
     SXElem dep0_, dep1_;
