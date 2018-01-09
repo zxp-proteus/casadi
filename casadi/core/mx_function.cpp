@@ -158,7 +158,7 @@ namespace casadi {
       }
 
       // If a new element in the algorithm needs to be added
-      if (op!=std::numeric_limits<e_t>::max()) {
+      if (op>=0) {
         AlgEl ae;
         ae.op = op;
         ae.data.own(n);
