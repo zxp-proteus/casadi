@@ -42,7 +42,7 @@ namespace casadi {
   /** \brief  An element of the algorithm, namely an MX node */
   struct MXAlgEl {
     /// Operator index
-    e_t op;
+    s_t op;
 
     /// Data associated with the operation
     MX data;

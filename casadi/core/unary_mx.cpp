@@ -122,7 +122,7 @@ namespace casadi {
     g << r << " = " << casadi_math<double>::print(op_, " " + x + " ") << ";\n";
   }
 
-  MX UnaryMX::get_unary(e_t op) const {
+  MX UnaryMX::get_unary(s_t op) const {
     if (!GlobalOptions::simplification_on_the_fly) return MXNode::get_unary(op);
 
     switch (op_) {
@@ -162,7 +162,7 @@ namespace casadi {
     return MXNode::get_unary(op);
   }
 
-  MX UnaryMX::_get_binary(e_t op, const MX& y, bool scX, bool scY) const {
+  MX UnaryMX::_get_binary(s_t op, const MX& y, bool scX, bool scY) const {
     switch (op_) {
     case OP_NEG:
       if (op==OP_ADD) return y->_get_binary(OP_SUB, dep(), scY, scX);

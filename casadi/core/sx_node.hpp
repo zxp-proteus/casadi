@@ -60,7 +60,7 @@ namespace casadi {
     virtual bool is_integer() const { return false; }
     virtual bool is_symbolic() const { return false; }
     virtual bool is_zero() const { return false; }
-    virtual bool is_op(e_t op) const { return false; }
+    virtual bool is_op(s_t op) const { return false; }
     virtual bool is_almost_zero(double tol) const { return false; }
     virtual bool is_one() const { return false; }
     virtual bool is_minus_one() const { return false; }
@@ -82,7 +82,7 @@ namespace casadi {
     virtual std::string class_name() const = 0;
 
     /** \brief get the operation */
-    virtual e_t op() const=0;
+    virtual s_t op() const=0;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
     virtual bool is_equal(const SXNode* node, s_t depth) const;
@@ -125,7 +125,7 @@ namespace casadi {
         the user is responsible of making sure that use is thread-safe
         The variable is initialized to zero
     */
-    mutable i_t temp;
+    mutable int temp;
 
     // Reference counter -- counts the number of parents of the node
     unsigned int count;

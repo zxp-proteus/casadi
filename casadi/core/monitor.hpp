@@ -76,7 +76,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_MONITOR;}
+    s_t op() const override { return OP_MONITOR;}
 
     /// Can the operation be performed inplace (i.e. overwrite the result)
     s_t n_inplace() const override { return 1;}

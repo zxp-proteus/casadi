@@ -80,7 +80,7 @@ namespace casadi {
                           const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_SUBASSIGN;}
+    s_t op() const override { return OP_SUBASSIGN;}
 
     /** Obtain information about node */
     Dict info() const override;

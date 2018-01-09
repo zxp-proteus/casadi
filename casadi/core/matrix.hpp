@@ -130,7 +130,7 @@ namespace casadi {
     Matrix(double val);
 
     Matrix(s_t val);
-    Matrix(i_t val);
+    Matrix(int val);
 
 #if !(defined(SWIG) && defined(SWIGMATLAB))
     /// Dense matrix constructor with data given as vector of vectors
@@ -255,13 +255,13 @@ namespace casadi {
     /// \cond INTERNAL
     ///@{
     /** \brief  Create nodes by their ID */
-    static Matrix<Scalar> binary(e_t op, const Matrix<Scalar> &x, const Matrix<Scalar> &y);
-    static Matrix<Scalar> unary(e_t op, const Matrix<Scalar> &x);
-    static Matrix<Scalar> scalar_matrix(e_t op,
+    static Matrix<Scalar> binary(s_t op, const Matrix<Scalar> &x, const Matrix<Scalar> &y);
+    static Matrix<Scalar> unary(s_t op, const Matrix<Scalar> &x);
+    static Matrix<Scalar> scalar_matrix(s_t op,
                                           const Matrix<Scalar> &x, const Matrix<Scalar> &y);
-    static Matrix<Scalar> matrix_scalar(e_t op,
+    static Matrix<Scalar> matrix_scalar(s_t op,
                                           const Matrix<Scalar> &x, const Matrix<Scalar> &y);
-    static Matrix<Scalar> matrix_matrix(e_t op,
+    static Matrix<Scalar> matrix_matrix(s_t op,
                                           const Matrix<Scalar> &x, const Matrix<Scalar> &y);
     ///@}
     /// \endcond

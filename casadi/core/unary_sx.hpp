@@ -67,7 +67,7 @@ class UnarySX : public SXNode {
 
     bool is_smooth() const override { return operation_checker<SmoothChecker>(op_);}
 
-    bool is_op(e_t op) const override { return op_==op; }
+    bool is_op(s_t op) const override { return op_==op; }
 
     /** \brief Check if two nodes are equivalent up to a given depth */
     bool is_equal(const SXNode* node, s_t depth) const override {
@@ -83,7 +83,7 @@ class UnarySX : public SXNode {
     SXElem& dep(s_t i) override { return dep_; }
 
     /** \brief  Get the operation */
-    e_t op() const override { return op_;}
+    s_t op() const override { return op_;}
 
     /** \brief  Print expression */
     std::string print(const std::string& arg1, const std::string& arg2) const  override {

@@ -192,7 +192,7 @@ namespace casadi {
     own(new IntType(i));
   }
 
-  GenericType::GenericType(i_t i) {
+  GenericType::GenericType(int i) {
     own(new IntType(i));
   }
 

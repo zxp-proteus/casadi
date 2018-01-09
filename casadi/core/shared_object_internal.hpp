@@ -83,7 +83,7 @@ namespace casadi {
 
   private:
     /// Number of references pointing to the object
-    e_t count;
+    s_t count;
 
     /// Weak pointer (non-owning) object for the object
     WeakRef* weak_ref_;

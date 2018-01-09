@@ -168,7 +168,7 @@ namespace casadi {
     virtual const Function& which_function() const;
 
     /** \brief Get the operation */
-    virtual e_t op() const = 0;
+    virtual s_t op() const = 0;
 
     /** Obtain information about node */
     virtual Dict info() const;
@@ -339,13 +339,13 @@ namespace casadi {
     virtual MX get_project(const Sparsity& sp) const;
 
     /// Get a unary operation
-    virtual MX get_unary(e_t op) const;
+    virtual MX get_unary(s_t op) const;
 
     /// Get a binary operation operation
-    MX get_binary(e_t op, const MX& y) const;
+    MX get_binary(s_t op, const MX& y) const;
 
     /// Get a binary operation operation (matrix-matrix)
-    virtual MX _get_binary(e_t op, const MX& y, bool scX, bool scY) const;
+    virtual MX _get_binary(s_t op, const MX& y, bool scX, bool scY) const;
 
     /// Determinant
     virtual MX get_det() const;

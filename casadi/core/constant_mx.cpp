@@ -112,7 +112,7 @@ namespace casadi {
     return !is_zero();
   }
 
-  ConstantMX* ConstantMX::create(const Sparsity& sp, i_t val) {
+  ConstantMX* ConstantMX::create(const Sparsity& sp, int val) {
     return create(static_cast<s_t>(val));
   }
 
@@ -236,11 +236,11 @@ namespace casadi {
     return shared_from_this<MX>();
   }
 
-  MX ZeroByZero::get_unary(e_t op) const {
+  MX ZeroByZero::get_unary(s_t op) const {
     return shared_from_this<MX>();
   }
 
-  MX ZeroByZero::_get_binary(e_t op, const MX& y, bool ScX, bool ScY) const {
+  MX ZeroByZero::_get_binary(s_t op, const MX& y, bool ScX, bool ScY) const {
     return shared_from_this<MX>();
   }
 

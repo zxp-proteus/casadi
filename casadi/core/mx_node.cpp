@@ -500,7 +500,7 @@ namespace casadi {
     return MX::create(new SubAssign(shared_from_this<MX>(), y, i, j));
   }
 
-  MX MXNode::get_unary(e_t op) const {
+  MX MXNode::get_unary(s_t op) const {
     if (operation_checker<F0XChecker>(op) && is_zero()) {
       // If identically zero
       return MX::zeros(sparsity());
@@ -510,7 +510,7 @@ namespace casadi {
     }
   }
 
-  MX MXNode::get_binary(e_t op, const MX& y) const {
+  MX MXNode::get_binary(s_t op, const MX& y) const {
     // Make sure that dimensions match
     casadi_assert(sparsity().is_scalar() || y.is_scalar() || sparsity().size()==y.size(),
       "Dimension mismatch for " + casadi_math<double>::print(op, "lhs", "rhs") +
@@ -552,7 +552,7 @@ namespace casadi {
     }
   }
 
-  MX MXNode::_get_binary(e_t op, const MX& y, bool scX, bool scY) const {
+  MX MXNode::_get_binary(s_t op, const MX& y, bool scX, bool scY) const {
     casadi_assert_dev(sparsity()==y.sparsity() || scX || scY);
 
     if (GlobalOptions::simplification_on_the_fly) {

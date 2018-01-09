@@ -82,7 +82,7 @@ namespace casadi {
                   const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_HORZREPMAT;}
+    s_t op() const override { return OP_HORZREPMAT;}
 
     s_t n_;
   };
@@ -135,7 +135,7 @@ namespace casadi {
                   const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_HORZREPSUM;}
+    s_t op() const override { return OP_HORZREPSUM;}
 
     s_t n_;
   };

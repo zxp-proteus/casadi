@@ -81,7 +81,7 @@ namespace casadi {
                           const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_RESHAPE;}
+    s_t op() const override { return OP_RESHAPE;}
 
     /// Can the operation be performed inplace (i.e. overwrite the result)
     s_t n_inplace() const override { return 1;}

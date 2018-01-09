@@ -71,7 +71,7 @@ namespace casadi {
     virtual std::vector<s_t> all() const = 0;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_GETNONZEROS;}
+    s_t op() const override { return OP_GETNONZEROS;}
 
     /// Get the nonzeros of matrix
     MX get_nzref(const Sparsity& sp, const std::vector<s_t>& nz) const override;

@@ -134,8 +134,8 @@ namespace casadi {
     // Buffers for calling the NLP solver
     const double** arg1 = arg + n_in_;
     double** res1 = res + n_out_;
-    fill_n(arg1, static_cast<e_t>(NLPSOL_NUM_IN), nullptr);
-    fill_n(res1, static_cast<e_t>(NLPSOL_NUM_OUT), nullptr);
+    fill_n(arg1, static_cast<s_t>(NLPSOL_NUM_IN), nullptr);
+    fill_n(res1, static_cast<s_t>(NLPSOL_NUM_OUT), nullptr);
 
     // NLP inputs
     arg1[NLPSOL_X0] = x0_;

@@ -61,11 +61,9 @@
 
 namespace casadi {
 
-  typedef unsigned char e_t;
   typedef int r_t; // To be changed to signed char
   typedef signed long long int s_t;
   typedef unsigned long long int u_t;
-  typedef int i_t;
 
   /// Forward declarations
   class SXElem;
@@ -131,7 +129,7 @@ namespace casadi {
 
   // Number of directions we can deal with at a time
   // the size of bvec_t in bits (CHAR_BIT is the number of bits per byte, usually 8)
-  const i_t bvec_size = CHAR_BIT*sizeof(bvec_t);
+  const int bvec_size = CHAR_BIT*sizeof(bvec_t);
 
   // Make sure that the integer datatype is indeed smaller or equal to the double
   //assert(sizeof(bvec_t) <= sizeof(double)); // doesn't work - very strange

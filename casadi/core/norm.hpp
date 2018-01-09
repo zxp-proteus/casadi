@@ -88,7 +88,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_NORMF;}
+    s_t op() const override { return OP_NORMF;}
   };
 
   /** \brief Represents a 2-norm (spectral norm)
@@ -108,7 +108,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_NORM2;}
+    s_t op() const override { return OP_NORM2;}
   };
 
   /** \brief 1-norm
@@ -128,7 +128,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_NORM1;}
+    s_t op() const override { return OP_NORM1;}
   };
 
   /** \brief Represents an infinity-norm operation on a MX
@@ -148,7 +148,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_NORMINF;}
+    s_t op() const override { return OP_NORMINF;}
   };
 
 } // namespace casadi

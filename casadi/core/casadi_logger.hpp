@@ -100,7 +100,7 @@ namespace casadi {
         write<Err>(s, num);
         return num;
       }
-      i_t sync() override {
+      int sync() override {
         flush(Err);
         return 0;
       }

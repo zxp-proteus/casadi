@@ -48,7 +48,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return op_;}
+    s_t op() const override { return op_;}
 
     /** \brief Check if binary operation */
     bool is_binary() const override { return true;}
@@ -88,10 +88,10 @@ namespace casadi {
                   const std::vector<s_t>& arg, const std::vector<s_t>& res) const override;
 
     /// Get a unary operation
-    MX get_unary(e_t op) const override;
+    MX get_unary(s_t op) const override;
 
     /// Get a binary operation operation
-    MX _get_binary(e_t op, const MX& y, bool scX, bool scY) const override;
+    MX _get_binary(s_t op, const MX& y, bool scX, bool scY) const override;
 
     /** \brief Check if two nodes are equivalent up to a given depth */
     bool is_equal(const MXNode* node, s_t depth) const override {

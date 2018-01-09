@@ -77,7 +77,7 @@ namespace casadi {
     /// Constructors (implicit type conversion)
     GenericType(bool b);
     GenericType(s_t i);
-    GenericType(i_t i);
+    GenericType(int i);
     GenericType(double d);
     GenericType(const std::string& s);
     GenericType(const std::vector<bool>& iv);

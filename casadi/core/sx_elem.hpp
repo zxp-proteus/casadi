@@ -74,7 +74,7 @@ namespace casadi {
     */
     SXElem(double val);
     SXElem(s_t val);
-    SXElem(i_t val);
+    SXElem(int val);
 
     /** \brief Create a symbolic primitive
          \param name Name of the symbolic primitive
@@ -126,8 +126,8 @@ namespace casadi {
     /// \endcond
 
     /** \brief  Perform operations by ID */
-    static SXElem binary(e_t op, const SXElem& x, const SXElem& y);
-    static SXElem unary(e_t op, const SXElem& x);
+    static SXElem binary(s_t op, const SXElem& x, const SXElem& y);
+    static SXElem unary(s_t op, const SXElem& x);
 
     /** \brief Check the truth value of this node
      * Introduced to catch bool(x) situations in python
@@ -152,8 +152,8 @@ namespace casadi {
     bool is_inf() const;
     bool is_minus_inf() const;
     const std::string& name() const;
-    e_t op() const;
-    bool is_op(e_t op) const;
+    s_t op() const;
+    bool is_op(s_t op) const;
 
     /// Checks if expression does not contain NaN or Inf
     bool is_regular() const;
@@ -190,10 +190,10 @@ namespace casadi {
 
     /// \cond INTERNAL
     /// Get the temporary variable
-    i_t get_temp() const;
+    int get_temp() const;
 
     /// Set the temporary variable
-    void set_temp(i_t t) const;
+    void set_temp(int t) const;
 
     /// Check if marked (i.e. temporary is negative)
     bool marked() const;

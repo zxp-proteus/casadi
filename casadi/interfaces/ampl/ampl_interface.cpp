@@ -169,7 +169,7 @@ namespace casadi {
     // Loop over the algorithm
     for (s_t k=0; k<F.n_instructions(); ++k) {
       // Get the atomic operation
-      e_t op = F.instruction_id(k);
+      s_t op = F.instruction_id(k);
       // Get the operation indices
       std::vector<s_t> o = F.instruction_output(k);
       s_t o0=-1, o1=-1, i0=-1, i1=-1;

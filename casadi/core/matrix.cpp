@@ -843,7 +843,7 @@ namespace casadi {
   }
 
   /**template<typename Scalar>
-  Matrix<Scalar>::Matrix(i_t val) :
+  Matrix<Scalar>::Matrix(int val) :
       sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
   }*/
 
@@ -915,7 +915,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::unary(e_t op, const Matrix<Scalar> &x) {
+  Matrix<Scalar> Matrix<Scalar>::unary(s_t op, const Matrix<Scalar> &x) {
     // Return value
     Matrix<Scalar> ret = Matrix<Scalar>::zeros(x.sparsity());
 
@@ -1128,7 +1128,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::binary(e_t op,
+  Matrix<Scalar> Matrix<Scalar>::binary(s_t op,
                                             const Matrix<Scalar> &x,
                                             const Matrix<Scalar> &y) {
     if (x.numel()==1)
@@ -1140,7 +1140,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::scalar_matrix(e_t op,
+  Matrix<Scalar> Matrix<Scalar>::scalar_matrix(s_t op,
                                                    const Matrix<Scalar> &x,
                                                    const Matrix<Scalar> &y) {
 
@@ -1176,7 +1176,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::matrix_scalar(e_t op,
+  Matrix<Scalar> Matrix<Scalar>::matrix_scalar(s_t op,
                                                    const Matrix<Scalar> &x,
                                                    const Matrix<Scalar> &y) {
 
@@ -1212,7 +1212,7 @@ namespace casadi {
   }
 
   template<typename Scalar>
-  Matrix<Scalar> Matrix<Scalar>::matrix_matrix(e_t op,
+  Matrix<Scalar> Matrix<Scalar>::matrix_matrix(s_t op,
                                                const Matrix<Scalar> &x,
                                                const Matrix<Scalar> &y) {
     casadi_assert(x.size()==y.size(),
@@ -3473,11 +3473,11 @@ namespace casadi {
       v.push_back(SXElem::sym(v_name.str()));
     }
 
-    casadi_assert(vdef.size()<numeric_limits<i_t>::max(), "Integer overflow");
+    casadi_assert(vdef.size()<numeric_limits<int>::max(), "Integer overflow");
 
     // Mark the above expressions
     for (s_t i=0; i<vdef.size(); ++i) {
-      vdef[i].set_temp(static_cast<i_t>(i)+1);
+      vdef[i].set_temp(static_cast<int>(i)+1);
     }
 
     // Save the marked nodes for later cleanup

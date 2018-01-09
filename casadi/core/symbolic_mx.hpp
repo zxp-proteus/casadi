@@ -79,7 +79,7 @@ namespace casadi {
     const std::string& name() const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_PARAMETER;}
+    s_t op() const override { return OP_PARAMETER;}
 
     /** \brief  Check if valid function input */
     bool is_valid_input() const override { return true;}

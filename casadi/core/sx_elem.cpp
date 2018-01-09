@@ -62,7 +62,7 @@ namespace casadi {
     node->count++;
   }
 
-  SXElem::SXElem(i_t val) : SXElem(static_cast<s_t>(val)) {}
+  SXElem::SXElem(int val) : SXElem(static_cast<s_t>(val)) {}
 
   SXElem::SXElem(s_t val) {
     if (val == 0)             node = casadi_limits<SXElem>::zero.node;
@@ -187,7 +187,7 @@ namespace casadi {
     return node;
   }
 
-  SXElem SXElem::binary(e_t op, const SXElem& x, const SXElem& y) {
+  SXElem SXElem::binary(s_t op, const SXElem& x, const SXElem& y) {
     // Simplifications
     if (GlobalOptions::simplification_on_the_fly) {
       switch (op) {
@@ -380,7 +380,7 @@ namespace casadi {
     return BinarySX::create(Operation(op), x, y);
   }
 
-  SXElem SXElem::unary(e_t op, const SXElem& x) {
+  SXElem SXElem::unary(s_t op, const SXElem& x) {
     // Simplifications
     if (GlobalOptions::simplification_on_the_fly) {
       switch (op) {
@@ -473,11 +473,11 @@ namespace casadi {
     return node->name();
   }
 
-  e_t SXElem::op() const {
+  s_t SXElem::op() const {
     return node->op();
   }
 
-  bool SXElem::is_op(e_t op) const {
+  bool SXElem::is_op(s_t op) const {
     return node->is_op(op);
   }
 
@@ -579,11 +579,11 @@ namespace casadi {
     return SX(Sparsity::scalar(), *this, false);
   }
 
-  i_t SXElem::get_temp() const {
+  int SXElem::get_temp() const {
     return (*this)->temp;
   }
 
-  void SXElem::set_temp(i_t t) const {
+  void SXElem::set_temp(int t) const {
     (*this)->temp = t;
   }
 

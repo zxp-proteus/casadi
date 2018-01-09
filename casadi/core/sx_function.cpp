@@ -298,7 +298,7 @@ namespace casadi {
       AlgEl ae;
 
       // Get operation
-      ae.op = n==0 ? static_cast<e_t>(OP_OUTPUT) : n->op();
+      ae.op = n==0 ? static_cast<s_t>(OP_OUTPUT) : n->op();
 
       // Get instruction
       switch (ae.op) {
@@ -842,7 +842,7 @@ namespace casadi {
 
     for (s_t k=0;k<f.n_instructions();++k) {
       // Get operation
-      e_t op = static_cast<e_t>(f.instruction_id(k));
+      s_t op = static_cast<s_t>(f.instruction_id(k));
       // Get input positions into workvector
       std::vector<s_t> o = f.instruction_output(k);
       // Get output positions into workvector

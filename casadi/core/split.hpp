@@ -108,7 +108,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_HORZSPLIT;}
+    s_t op() const override { return OP_HORZSPLIT;}
 
     /// Create a horizontal concatenation node
     MX get_horzcat(const std::vector<MX>& x) const override;
@@ -143,7 +143,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_DIAGSPLIT;}
+    s_t op() const override { return OP_DIAGSPLIT;}
 
     /// Create a diagonal concatenation node
     MX get_diagcat(const std::vector<MX>& x) const override;
@@ -177,7 +177,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_VERTSPLIT;}
+    s_t op() const override { return OP_VERTSPLIT;}
 
     /// Create a vertical concatenation node (vectors only)
     MX get_vertcat(const std::vector<MX>& x) const override;

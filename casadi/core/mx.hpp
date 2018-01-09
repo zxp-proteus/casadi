@@ -86,7 +86,7 @@ namespace casadi {
     /** \brief  Create scalar constant (also implicit type conversion) */
     MX(double x);
     MX(s_t x);
-    MX(i_t x);
+    MX(int x);
 
     /** \brief  Copy constructor */
     MX(const MX& x);
@@ -203,7 +203,7 @@ namespace casadi {
     s_t which_output() const;
 
     /// Is it a certain operation
-    bool is_op(e_t op) const;
+    bool is_op(s_t op) const;
 
     /// Check if multiplication
     bool is_multiplication() const;
@@ -270,7 +270,7 @@ namespace casadi {
     bool is_unary() const;
 
     /// Get operation type
-    e_t op() const;
+    s_t op() const;
 
     /** Obtain information about node */
     Dict info() const;
@@ -285,8 +285,8 @@ namespace casadi {
 
     ///@{
     /** \brief  Create nodes by their ID */
-    static MX binary(e_t op, const MX &x, const MX &y);
-    static MX unary(e_t op, const MX &x);
+    static MX binary(s_t op, const MX &x, const MX &y);
+    static MX unary(s_t op, const MX &x);
     ///@}
 
     ///@{
@@ -605,7 +605,7 @@ namespace casadi {
 #ifndef SWIG
     /// Construct constant matrix with a given sparsity and values
     MX(const Sparsity& sp, s_t val, bool dummy);
-    MX(const Sparsity& sp, i_t val, bool dummy);
+    MX(const Sparsity& sp, int val, bool dummy);
     MX(const Sparsity& sp, double val, bool dummy);
 
     // Create matrix symbolic primitive

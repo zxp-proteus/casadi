@@ -125,7 +125,7 @@ namespace casadi {
     #ifdef HAVE_MKSTEMPS
     // Preferred solution
     string ret = prefix + "XXXXXX" + suffix;
-    if (mkstemps(&ret[0], static_cast<i_t>(suffix.size())) == -1) {
+    if (mkstemps(&ret[0], static_cast<int>(suffix.size())) == -1) {
       casadi_error("Failed to create temporary file: '" + ret + "'");
     }
     return ret;

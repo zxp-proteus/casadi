@@ -84,7 +84,7 @@ namespace casadi {
     std::string disp(const std::vector<std::string>& arg) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_RANK1;}
+    s_t op() const override { return OP_RANK1;}
   };
 
 

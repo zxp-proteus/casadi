@@ -150,7 +150,7 @@ namespace casadi {
     for (MXNode* n : nodes) {
 
       // Get the operation
-      e_t op = n->op();
+      s_t op = n->op();
 
       // Store location if parameter (or input)
       if (op==OP_PARAMETER) {
@@ -1313,7 +1313,7 @@ namespace casadi {
     // Loop over algorithm
     for (s_t k=0;k<f.n_instructions();++k) {
       // Get operation
-      e_t op = static_cast<e_t>(f.instruction_id(k));
+      s_t op = static_cast<s_t>(f.instruction_id(k));
       // Get MX node
       MX x = f.instruction_MX(k);
       // Get input positions into workvector

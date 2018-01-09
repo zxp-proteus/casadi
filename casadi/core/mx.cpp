@@ -62,7 +62,7 @@ namespace casadi {
     own(ConstantMX::create(Sparsity::dense(1, 1), static_cast<double>(x)));
   }
 
-  MX::MX(i_t x) {
+  MX::MX(int x) {
     own(ConstantMX::create(Sparsity::dense(1, 1), static_cast<double>(x)));
   }
 
@@ -111,7 +111,7 @@ namespace casadi {
     own(ConstantMX::create(sp, val));
   }
 
-  MX::MX(const Sparsity& sp, i_t val, bool dummy) {
+  MX::MX(const Sparsity& sp, int val, bool dummy) {
     own(ConstantMX::create(sp, val));
   }
 
@@ -458,11 +458,11 @@ namespace casadi {
     *this = m->get_nzassign(*this, kk.nonzeros());
   }
 
-  MX MX::binary(e_t op, const MX &x, const MX &y) {
+  MX MX::binary(s_t op, const MX &x, const MX &y) {
     return x->get_binary(op, y);
   }
 
-  MX MX::unary(e_t op, const MX &x) {
+  MX MX::unary(s_t op, const MX &x) {
     return x->get_unary(Operation(op));
   }
 
@@ -673,7 +673,7 @@ namespace casadi {
     return (*this)->which_output();
   }
 
-  bool MX::is_op(e_t op) const {
+  bool MX::is_op(s_t op) const {
     return (*this)->op()==op;
   }
 
@@ -701,7 +701,7 @@ namespace casadi {
     return (*this)->is_unary();
   }
 
-  e_t MX::op() const {
+  s_t MX::op() const {
     return (*this)->op();
   }
 

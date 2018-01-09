@@ -57,7 +57,7 @@ double to_double() const override = 0;
 bool is_constant() const override { return true; }
 
 /** \brief  Get the operation */
-e_t op() const override { return OP_CONST;}
+s_t op() const override { return OP_CONST;}
 
 /** \brief Check if two nodes are equivalent up to a given depth */
 bool is_equal(const SXNode* node, s_t depth) const override {
@@ -141,8 +141,8 @@ class RealtypeSX : public ConstantSX {
 class IntegerSX : public ConstantSX {
   private:
     /// Constructor is private, use "create" below
-    explicit IntegerSX(s_t value) : value(static_cast<i_t>(value)) {
-      casadi_assert(value<std::numeric_limits<i_t>::max(), "Integer overflow");
+    explicit IntegerSX(s_t value) : value(static_cast<int>(value)) {
+      casadi_assert(value<std::numeric_limits<int>::max(), "Integer overflow");
     }
 
   public:
@@ -190,7 +190,7 @@ class IntegerSX : public ConstantSX {
     static CACHING_MAP<s_t, IntegerSX*> cached_constants_;
 
     /** \brief  Data members */
-    i_t value;
+    int value;
 };
 
 /** \brief  Represents a zero SX

@@ -52,7 +52,7 @@ namespace casadi {
 
     // Creator (all values are the same integer)
     static ConstantMX* create(const Sparsity& sp, s_t val);
-    static ConstantMX* create(const Sparsity& sp, i_t val);
+    static ConstantMX* create(const Sparsity& sp, int val);
 
     // Creator (all values are the same floating point value)
     static ConstantMX* create(const Sparsity& sp, double val);
@@ -85,7 +85,7 @@ namespace casadi {
     r_t sp_reverse(bvec_t** arg, bvec_t** res, s_t* iw, bvec_t* w) const override;
 
     /** \brief Get the operation */
-    e_t op() const override { return OP_CONST;}
+    s_t op() const override { return OP_CONST;}
 
     /// Get the value (only for scalar constant nodes)
     double to_double() const override = 0;
@@ -233,10 +233,10 @@ namespace casadi {
     MX get_transpose() const override;
 
     /// Get a unary operation
-    MX get_unary(e_t op) const override;
+    MX get_unary(s_t op) const override;
 
     /// Get a binary operation operation
-    MX _get_binary(e_t op, const MX& y, bool ScX, bool ScY) const override;
+    MX _get_binary(s_t op, const MX& y, bool ScX, bool ScY) const override;
 
     /// Reshape
     MX get_reshape(const Sparsity& sp) const override;
@@ -319,10 +319,10 @@ namespace casadi {
     MX get_transpose() const override;
 
     /// Get a unary operation
-    MX get_unary(e_t op) const override;
+    MX get_unary(s_t op) const override;
 
     /// Get a binary operation operation
-    MX _get_binary(e_t op, const MX& y, bool ScX, bool ScY) const override;
+    MX _get_binary(s_t op, const MX& y, bool ScX, bool ScY) const override;
 
     /// Reshape
     MX get_reshape(const Sparsity& sp) const override;
@@ -383,7 +383,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  MX Constant<Value>::get_unary(e_t op) const {
+  MX Constant<Value>::get_unary(s_t op) const {
     // Constant folding
     double ret(0);
     casadi_math<double>::fun(op, to_double(), 0.0, ret);
@@ -405,7 +405,7 @@ namespace casadi {
   }
 
   template<typename Value>
-  MX Constant<Value>::_get_binary(e_t op, const MX& y, bool ScX, bool ScY) const {
+  MX Constant<Value>::_get_binary(s_t op, const MX& y, bool ScX, bool ScY) const {
     casadi_assert_dev(sparsity()==y.sparsity() || ScX || ScY);
 
     if (ScX && !operation_checker<FX0Checker>(op)) {
