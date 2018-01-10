@@ -41,18 +41,11 @@
 #endif
 
 
-%{
-//  typedef int r_t; // To be changed to signed char
-//  typedef signed long long int s_t;
- // typedef unsigned long long int u_t;
-%}
-
 namespace casadi {
   typedef int r_t; // To be changed to signed char
-  typedef signed long long int casadi::s_t;
+  typedef signed long long int s_t;
   typedef unsigned long long int u_t;
 }
-
 
 // Define printing routine
 
@@ -244,7 +237,7 @@ def IM_from_array(m, check_only=True):
     if len(m.shape)>2:
       return False
     try:
-      m = m.astype(casadi::s_t,casting="same_kind",copy=False)
+      m = m.astype(int,casting="same_kind",copy=False)
     except:
       return False
     if check_only:
@@ -3444,7 +3437,7 @@ namespace casadi{
 
   %pythoncode %{
     def __abs__(self):
-      return abs(casadi::s_t(self))
+      return abs(int(self))
   %}
 
   %pythoncode %{
@@ -3454,7 +3447,7 @@ namespace casadi{
       with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         from scipy.sparse import csc_matrix
-      return csc_matrix( (self.nonzeros(),self.row(),self.colind()), shape = self.shape, dtype=np.casadi::s_t )
+      return csc_matrix( (self.nonzeros(),self.row(),self.colind()), shape = self.shape, dtype=np.int )
     def toarray(self):
       import numpy as np
       return np.array(self.T.elements()).reshape(self.shape)
@@ -3702,7 +3695,7 @@ def pyevaluate(f):
   return attach_return_type(f,None)
 
 def pycallback(f):
-  return attach_return_type(f,casadi::s_t)
+  return attach_return_type(f,int)
 
 
 def pyfunction(inputs,outputs):

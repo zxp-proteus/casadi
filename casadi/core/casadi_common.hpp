@@ -62,8 +62,14 @@
 namespace casadi {
 
   typedef int r_t; // To be changed to signed char
+
+#ifdef WITH_LONGLONG_CORE
   typedef signed long long int s_t;
   typedef unsigned long long int u_t;
+#else // WITH_LONGLONG_CORE
+  typedef signed int s_t;
+  typedef unsigned int u_t;
+#endif // WITH_LONGLONG_CORE
 
   /// Forward declarations
   class SXElem;
