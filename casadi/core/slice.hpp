@@ -57,6 +57,9 @@ namespace casadi {
 
     /// A slice
     Slice(s_t start, s_t stop, s_t step=1);
+    Slice(int start, int stop, int step=1);
+    Slice(int start, s_t stop, int step=1);
+    Slice(s_t start, int stop, int step=1);
 
     /// Get a vector of indices
     std::vector<s_t> all(s_t len, bool ind1=false) const;

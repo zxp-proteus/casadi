@@ -842,10 +842,10 @@ namespace casadi {
       sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
   }
 
-  /**template<typename Scalar>
+  template<typename Scalar>
   Matrix<Scalar>::Matrix(int val) :
       sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
-  }*/
+  }
 
   template<typename Scalar>
   Matrix<Scalar>::Matrix(const std::vector< std::vector<double> >& d) {

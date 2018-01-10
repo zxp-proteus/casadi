@@ -44,6 +44,12 @@ namespace casadi {
   Slice::Slice(s_t start, s_t stop, s_t step) : start(start), stop(stop), step(step) {
   }
 
+  Slice::Slice(int start, int stop, int step) : start(start), stop(stop), step(step) {
+  }
+  Slice::Slice(int start, s_t stop, int step) : start(start), stop(stop), step(step) {
+  }
+  Slice::Slice(s_t start, int stop, int step) : start(start), stop(stop), step(step) {
+  }
   std::vector<s_t> Slice::all(s_t len, bool ind1) const {
     s_t start = this->start;
     if (start==std::numeric_limits<s_t>::min()) {
