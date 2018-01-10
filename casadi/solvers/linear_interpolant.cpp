@@ -106,7 +106,7 @@ namespace casadi {
     alloc_iw(2*ndim_, true);
   }
 
-  s_t LinearInterpolant::
+  r_t LinearInterpolant::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     if (res[0]) {
       casadi_interpn(res[0], ndim_, get_ptr(grid_), get_ptr(offset_),
@@ -157,7 +157,7 @@ namespace casadi {
     alloc_iw(2*m->ndim_, true);
   }
 
-  s_t LinearInterpolantJac::
+  r_t LinearInterpolantJac::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = derivative_of_.get<LinearInterpolant>();
     casadi_interpn_grad(res[0], m->ndim_, get_ptr(m->grid_), get_ptr(m->offset_),

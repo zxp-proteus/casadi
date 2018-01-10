@@ -103,8 +103,8 @@ namespace casadi {
     auto m = static_cast<LapackLuMemory*>(mem);
 
     // Dimensions
-    s_t nrow = this->nrow();
-    s_t ncol = this->ncol();
+    int nrow = this->nrow();
+    int ncol = this->ncol();
 
     // Get the elements of the matrix, dense format
     casadi_densify(A, sp_, get_ptr(m->mat), false);
@@ -113,7 +113,7 @@ namespace casadi {
       // Calculate the col and row scaling factors
       double colcnd, rowcnd; // ratio of the smallest to the largest col/row scaling factor
       double amax; // absolute value of the largest matrix element
-      s_t info = -100;
+      int info = -100;
       dgeequ_(&ncol, &nrow, get_ptr(m->mat), &ncol, get_ptr(m->r),
               get_ptr(m->c), &colcnd, &rowcnd, &amax, &info);
       if (info < 0) return 1;
@@ -136,7 +136,7 @@ namespace casadi {
     }
 
     // Factorize the matrix
-    s_t info = -100;
+    int info = -100;
     dgetrf_(&ncol, &ncol, get_ptr(m->mat), &ncol, get_ptr(m->ipiv), &info);
     if (info) {
       if (verbose_) casadi_warning("dgetrf_ failed: Info: " + str(info));
@@ -149,8 +149,10 @@ namespace casadi {
     auto m = static_cast<LapackLuMemory*>(mem);
 
     // Dimensions
-    s_t nrow = this->nrow();
-    s_t ncol = this->ncol();
+    int nrow = this->nrow();
+    int ncol = this->ncol();
+
+    int n_rhs = nrhs;
 
     // Scale the right hand side
     if (tr) {
@@ -166,9 +168,9 @@ namespace casadi {
     }
 
     // Solve the system of equations
-    s_t info = 100;
+    int info = 100;
     char trans = tr ? 'T' : 'N';
-    dgetrs_(&trans, &ncol, &nrhs, get_ptr(m->mat), &ncol, get_ptr(m->ipiv), x, &ncol, &info);
+    dgetrs_(&trans, &ncol, &n_rhs, get_ptr(m->mat), &ncol, get_ptr(m->ipiv), x, &ncol, &info);
     if (info) return 1;
 
     // Scale the solution

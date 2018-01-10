@@ -61,12 +61,12 @@ namespace casadi {
 
     /// Stats
     long nsteps, nfevals, nlinsetups, netfails;
-    s_t qlast, qcur;
+    int qlast, qcur;
     double hinused, hlast, hcur, tcur;
     long nniters, nncfails;
 
     long nstepsB, nfevalsB, nlinsetupsB, netfailsB;
-    s_t qlastB, qcurB;
+    int qlastB, qcurB;
     double hinusedB, hlastB, hcurB, tcurB;
     long nnitersB, nncfailsB;
 
@@ -74,7 +74,7 @@ namespace casadi {
     double *v1, *v2;
 
     /// number of checkpoints stored so far
-    s_t ncheck;
+    int ncheck;
 
     /// Constructor
     SundialsMemory();

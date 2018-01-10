@@ -157,16 +157,16 @@ namespace casadi {
     bool get_starting_point(BonminMemory* m, bool init_x, double* x,
                             bool init_z, double* z_L, double* z_U,
                             bool init_lambda, double* lambda) const;
-    void get_nlp_info(BonminMemory* m, s_t& nx, s_t& ng,
-                      s_t& nnz_jac_g, s_t& nnz_h_lag) const;
-    s_t get_number_of_nonlinear_variables() const;
-    bool get_list_of_nonlinear_variables(s_t num_nonlin_vars, s_t* pos_nonlin_vars) const;
+    void get_nlp_info(BonminMemory* m, int& nx, int& ng,
+                      int& nnz_jac_g, int& nnz_h_lag) const;
+    int get_number_of_nonlinear_variables() const;
+    bool get_list_of_nonlinear_variables(int num_nonlin_vars, int* pos_nonlin_vars) const;
     bool intermediate_callback(BonminMemory* m, const double* x, const double* z_L,
                                const double* z_U, const double* g,
-                               const double* lambda, double obj_value, s_t iter,
+                               const double* lambda, double obj_value, int iter,
                                double inf_pr, double inf_du, double mu, double d_norm,
                                double regularization_size, double alpha_du, double alpha_pr,
-                               s_t ls_trials, bool full_callback) const;
+                               int ls_trials, bool full_callback) const;
 
     /// Can discrete variables be treated
     bool integer_support() const override { return true;}

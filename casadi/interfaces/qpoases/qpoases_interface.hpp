@@ -70,6 +70,8 @@ namespace casadi {
     // Sparsity pattern as sparse triplet
     std::vector<s_t> row, col, nz_map;
 
+    std::vector<int> h_row, h_colind, a_row, a_colind;
+
     // Nonzero entries
     std::vector<double> nz;
 
@@ -138,16 +140,16 @@ namespace casadi {
     static const std::string meta_doc;
 
     /// qpOASES linear solver initialization
-    static s_t qpoases_init(void* mem, s_t dim, s_t nnz, const s_t* row, const s_t* col);
+    static int qpoases_init(void* mem, int dim, int nnz, const int* row, const int* col);
 
     /// qpOASES linear solver symbolical factorization
-    static s_t qpoases_sfact(void* mem, const double* vals);
+    static int qpoases_sfact(void* mem, const double* vals);
 
     /// qpOASES linear solver numerical factorization
-    static s_t qpoases_nfact(void* mem, const double* vals, s_t* neig, s_t* rank);
+    static int qpoases_nfact(void* mem, const double* vals, int* neig, int* rank);
 
     /// qpOASES linear solver solve
-    static s_t qpoases_solve(void* mem, s_t nrhs, double* rhs);
+    static int qpoases_solve(void* mem, int nrhs, double* rhs);
 
     /// qpOases printing function
     static void qpoases_printf(const char* s);

@@ -58,7 +58,7 @@ namespace casadi {
     void* mem;
 
     // Ids of backward problem
-    s_t whichB;
+    int whichB;
 
     /// Constructor
     IdasMemory(const IdasInterface& s);
@@ -155,45 +155,45 @@ namespace casadi {
   protected:
 
     // Sundials callback functions
-    static s_t res(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, void *user_data);
-    static s_t resB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
+    static int res(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, void *user_data);
+    static int resB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
                     N_Vector rrB, void *user_data);
-    static void ehfun(s_t error_code, const char *module, const char *function, char *msg,
+    static void ehfun(int error_code, const char *module, const char *function, char *msg,
                       void *eh_data);
-    static s_t jtimes(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, N_Vector v,
+    static int jtimes(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, N_Vector v,
                       N_Vector Jv, double cj, void *user_data,
                       N_Vector tmp1, N_Vector tmp2);
-    static s_t jtimesB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
+    static int jtimesB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
                        N_Vector resvalB, N_Vector vB, N_Vector JvB, double cjB,
                        void *user_data, N_Vector tmp1B, N_Vector tmp2B);
-    static s_t rhsQ(double t, N_Vector xz, N_Vector xzdot, N_Vector qdot, void *user_data);
-    static s_t rhsQB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
+    static int rhsQ(double t, N_Vector xz, N_Vector xzdot, N_Vector qdot, void *user_data);
+    static int rhsQB(double t, N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
                      N_Vector qdotA, void *user_data);
-    static s_t psolve(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, N_Vector rvec,
+    static int psolve(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, N_Vector rvec,
                       N_Vector zvec, double cj, double delta, void *user_data,
                       N_Vector tmp);
-    static s_t psetup(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, double cj,
+    static int psetup(double t, N_Vector xz, N_Vector xzdot, N_Vector rr, double cj,
                       void* user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    static s_t psolveB(double t,
+    static int psolveB(double t,
                        N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
                        N_Vector resvalB, N_Vector rvecB, N_Vector zvecB, double cjB,
                        double deltaB, void *user_dataB, N_Vector tmpB);
-    static s_t psetupB(double t,
+    static int psetupB(double t,
                        N_Vector xz, N_Vector xzdot, N_Vector xzB, N_Vector xzdotB,
                        N_Vector resvalB, double cjB, void *user_dataB,
                        N_Vector tmp1B, N_Vector tmp2B, N_Vector tmp3B);
-    static s_t lsetup(IDAMem IDA_mem, N_Vector xz, N_Vector xzdot, N_Vector resp,
+    static int lsetup(IDAMem IDA_mem, N_Vector xz, N_Vector xzdot, N_Vector resp,
                       N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
-    static s_t lsolve(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector ycur,
+    static int lsolve(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector ycur,
                       N_Vector xzdotcur, N_Vector rescur);
-    static s_t lsetupB(IDAMem IDA_mem, N_Vector xz, N_Vector xzdot, N_Vector resp,
+    static int lsetupB(IDAMem IDA_mem, N_Vector xz, N_Vector xzdot, N_Vector resp,
                        N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
-    static s_t lsolveB(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector ycur,
+    static int lsolveB(IDAMem IDA_mem, N_Vector b, N_Vector weight, N_Vector ycur,
                        N_Vector xzdotcur, N_Vector rescur);
   public:
 
     // Throw error
-    static void idas_error(const char* module, s_t flag);
+    static void idas_error(const char* module, int flag);
 
     // Options
     bool cj_scaling_;

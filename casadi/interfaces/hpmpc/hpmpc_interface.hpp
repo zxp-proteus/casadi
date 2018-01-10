@@ -81,21 +81,21 @@ namespace casadi {
     std::vector<double> x, u, pi, lam;
     std::vector<double*> xs, us, pis, lams;
 
-    std::vector<s_t> hidxb;
-    std::vector<s_t*> hidxbs;
+    std::vector<int> hidxb;
+    std::vector<int*> hidxbs;
 
-    std::vector<s_t> nx;
-    std::vector<s_t> nu;
-    std::vector<s_t> ng;
-    std::vector<s_t> nb;
+    std::vector<int> nx;
+    std::vector<int> nu;
+    std::vector<int> ng;
+    std::vector<int> nb;
     std::vector<double> stats;
 
     std::vector<char> workspace;
 
     std::vector<double> pv;
 
-    s_t iter_count;
-    s_t return_status;
+    int iter_count;
+    int return_status;
     std::vector<double> res;
 
     /// Constructor
@@ -176,10 +176,10 @@ namespace casadi {
 
 #ifdef HPMPC_DLOPEN
     /// hpmpc_d_ip_ocp_hard_tv_work_space_size_bytes function
-    typedef s_t (*Work_size)(s_t N, s_t *nx, s_t *nu, s_t *nb, s_t **hidxb, s_t *ng, s_t N2);
+    typedef int (*Work_size)(int N, int *nx, int *nu, int *nb, int **hidxb, int *ng, int N2);
     /// fortran_order_d_ip_ocp_hard_tv function
-    typedef s_t (*Ocp_solve)(s_t *kk, s_t k_max, double mu0, double mu_tol,
-      s_t N, s_t *nx, s_t *nu, s_t *nb, s_t **hidxb, s_t *ng, s_t N2, s_t warm_start,
+    typedef int (*Ocp_solve)(int *kk, int k_max, double mu0, double mu_tol,
+      int N, int *nx, int *nu, int *nb, int **hidxb, int *ng, int N2, int warm_start,
       double **A, double **B, double **b, double **Q, double **S, double **R, double **q,
       double **r, double **lb, double **ub, double **C, double **D, double **lg, double **ug,
       double **x, double **u, double **pi, double **lam, /*double **t,*/

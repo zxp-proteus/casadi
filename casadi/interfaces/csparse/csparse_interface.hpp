@@ -53,6 +53,8 @@ namespace casadi {
 
     // Temporary
     std::vector<double> temp_;
+
+    std::vector<int> colind, row;
   };
 
   /** \brief \pluginbrief{LinsolInternal,csparse}

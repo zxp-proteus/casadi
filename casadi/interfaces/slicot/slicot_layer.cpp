@@ -28,19 +28,19 @@
 #include <vector>
 
 // Need an 8-byte integer since libslicot0 is compiled with  fdefault-integer-8
-typedef long long s_t f_int;
+typedef long long int f_int;
 
 extern "C" {
-  s_t mb03vd_(f_int* n, f_int* p, f_int* ilo, f_int* ihi, double *a, f_int* lda1, f_int* lda2,
+  int mb03vd_(f_int* n, f_int* p, f_int* ilo, f_int* ihi, double *a, f_int* lda1, f_int* lda2,
               double* tau, f_int* ldtau, double* dwork, f_int *info);
-  s_t mb03vy_(f_int* n, f_int* p, f_int* ilo, f_int* ihi, double *a, f_int* lda1, f_int* lda2,
+  int mb03vy_(f_int* n, f_int* p, f_int* ilo, f_int* ihi, double *a, f_int* lda1, f_int* lda2,
               const double* tau, f_int* ldtau, double* dwork, f_int *ld_work, f_int *info);
-  s_t mb03wd_(char* job, char* compz, f_int* n, f_int* p, f_int* ilo, f_int* ihi, f_int* iloz,
+  int mb03wd_(char* job, char* compz, f_int* n, f_int* p, f_int* ilo, f_int* ihi, f_int* iloz,
               f_int* ihiz, double *h, f_int* ldh1, f_int* ldh2, double* z, f_int* ldz1,
               f_int* ldz2, double* wr, double *wi, double* dwork, f_int *ld_work, f_int *info);
 
 
-  s_t mb05nd_(f_int* n, double* delta, const double* a, f_int* lda,
+  int mb05nd_(f_int* n, double* delta, const double* a, f_int* lda,
                 double* ex, f_int* ldex, double * exint, f_int* ldexin,
                 double* tol, f_int* iwork, double * dwork, f_int* ldwork, f_int *info);
 
@@ -48,8 +48,8 @@ extern "C" {
 
 namespace casadi {
 
-  s_t slicot_mb03vd(s_t n, s_t p, s_t ilo, s_t ihi, double * a, s_t lda1, s_t lda2, double * tau,
-                     s_t ldtau, double * dwork) {
+  int slicot_mb03vd(int n, int p, int ilo, int ihi, double * a, int lda1, int lda2, double * tau,
+                     int ldtau, double * dwork) {
      f_int n_ = n;
      f_int p_ = p;
      f_int ilo_ = ilo;
@@ -63,8 +63,8 @@ namespace casadi {
      return ret_;
   }
 
-  s_t slicot_mb03vy(s_t n, s_t p, s_t ilo, s_t ihi, double * a, s_t lda1, s_t lda2,
-                     const double * tau, s_t ldtau, double * dwork, s_t ldwork) {
+  int slicot_mb03vy(int n, int p, int ilo, int ihi, double * a, int lda1, int lda2,
+                     const double * tau, int ldtau, double * dwork, int ldwork) {
      f_int n_ = n;
      f_int p_ = p;
      f_int ilo_ = ilo;
@@ -80,9 +80,9 @@ namespace casadi {
 
   }
 
-  s_t slicot_mb03wd(char job, char compz, s_t n, s_t p, s_t ilo, s_t ihi, s_t iloz, s_t ihiz,
-                     double *h, s_t ldh1, s_t ldh2, double* z, s_t ldz1, s_t ldz2, double* wr,
-                     double *wi, double * dwork, s_t ldwork) {
+  int slicot_mb03wd(char job, char compz, int n, int p, int ilo, int ihi, int iloz, int ihiz,
+                     double *h, int ldh1, int ldh2, double* z, int ldz1, int ldz2, double* wr,
+                     double *wi, double * dwork, int ldwork) {
      f_int n_ = n;
      f_int p_ = p;
      f_int ilo_ = ilo;
@@ -102,9 +102,9 @@ namespace casadi {
   }
 
 
-  s_t slicot_mb05nd(s_t n, double delta, const double* a, s_t lda,
-                     double* ex, s_t ldex, double * exint, s_t ldexin,
-                     double tol, s_t* iwork, double * dwork, s_t ldwork) {
+  int slicot_mb05nd(int n, double delta, const double* a, int lda,
+                     double* ex, int ldex, double * exint, int ldexin,
+                     double tol, int* iwork, double * dwork, int ldwork) {
     f_int n_ = n;
     f_int lda_ = lda;
     f_int ldex_ = ldex;

@@ -448,14 +448,14 @@ namespace casadi {
     if (Conic::init_mem(mem)) return 1;
     auto m = static_cast<HpmpcMemory*>(mem);
 
-    m->nx = nxs_;
-    m->nu = nus_; m->nu.push_back(0);
-    m->ng = ngs_;
+    init_vector(m->nx, nxs_);
+    init_vector(m->nu, nus_); m->nu.push_back(0);
+    init_vector(m->ng, ngs_);
 
-    const std::vector<s_t>& nx = m->nx;
-    const std::vector<s_t>& nu = m->nu;
-    const std::vector<s_t>& ng = m->ng;
-    const std::vector<s_t>& nb = m->nb;
+    const std::vector<int>& nx = m->nx;
+    const std::vector<int>& nu = m->nu;
+    const std::vector<int>& ng = m->ng;
+    const std::vector<int>& nb = m->nb;
 
     m->nb.resize(N_+1);
     s_t offset = 0;
@@ -537,7 +537,7 @@ namespace casadi {
     }
 
     // Allocate extra workspace as per HPMPC request
-    s_t workspace_size = hpmpc_d_ip_ocp_hard_tv_work_space_size_bytes(
+    int workspace_size = hpmpc_d_ip_ocp_hard_tv_work_space_size_bytes(
       N_, get_ptr(m->nx), get_ptr(m->nu), get_ptr(m->nb), get_ptr(m->hidxbs), get_ptr(m->ng), N_);
     m->workspace.resize(workspace_size);
     m->stats.resize(max_iter_*5);
@@ -573,7 +573,7 @@ namespace casadi {
     }
   }
 
-  s_t HpmpcInterface::
+  r_t HpmpcInterface::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     if (inputs_check_) {
       check_inputs(arg[CONIC_LBX], arg[CONIC_UBX], arg[CONIC_LBA], arg[CONIC_UBA]);

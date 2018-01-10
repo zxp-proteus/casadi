@@ -269,7 +269,7 @@ namespace casadi {
     casadi_copy(m->iarg[iin_], nnz_in(iin_), NV_DATA_S(m->u));
 
     // Solve the nonlinear system of equations
-    s_t flag = KINSol(m->mem, m->u, strategy_, u_scale_, f_scale_);
+    int flag = KINSol(m->mem, m->u, strategy_, u_scale_, f_scale_);
     if (flag<KIN_SUCCESS) kinsol_error("KINSol", flag);
 
     // Warn if not successful return
@@ -301,7 +301,7 @@ namespace casadi {
 
     // Make sure that all entries of the linear system are valid
     double *fdata = NV_DATA_S(fval);
-    for (s_t k=0; k<n_; ++k) {
+    for (int k=0; k<n_; ++k) {
       try {
         casadi_assert(!isnan(fdata[k]),
           "Nonzero " + str(k) + " is not-a-number");
@@ -320,7 +320,7 @@ namespace casadi {
     }
   }
 
-  s_t KinsolInterface::func_wrapper(N_Vector u, N_Vector fval, void *user_data) {
+  int KinsolInterface::func_wrapper(N_Vector u, N_Vector fval, void *user_data) {
     try {
       casadi_assert_dev(user_data);
       auto this_ = static_cast<KinsolMemory*>(user_data);
@@ -332,7 +332,7 @@ namespace casadi {
     }
   }
 
-  s_t KinsolInterface::djac_wrapper(long N, N_Vector u, N_Vector fu, DlsMat J,
+  int KinsolInterface::djac_wrapper(long N, N_Vector u, N_Vector fu, DlsMat J,
                                  void *user_data, N_Vector tmp1, N_Vector tmp2) {
     try {
       casadi_assert_dev(user_data);
@@ -372,7 +372,7 @@ namespace casadi {
     }
   }
 
-  s_t KinsolInterface::bjac_wrapper(long N, long mupper, long mlower, N_Vector u,
+  int KinsolInterface::bjac_wrapper(long N, long mupper, long mlower, N_Vector u,
                                             N_Vector fu, DlsMat J, void *user_data,
                                             N_Vector tmp1, N_Vector tmp2) {
     try {
@@ -415,7 +415,7 @@ namespace casadi {
     }
   }
 
-  s_t KinsolInterface::jtimes_wrapper(N_Vector v, N_Vector Jv, N_Vector u, s_t* new_u,
+  int KinsolInterface::jtimes_wrapper(N_Vector v, N_Vector Jv, N_Vector u, int* new_u,
                                    void *user_data) {
     try {
       casadi_assert_dev(user_data);
@@ -429,7 +429,7 @@ namespace casadi {
   }
 
   void KinsolInterface::jtimes(KinsolMemory& m, N_Vector v, N_Vector Jv,
-                            N_Vector u, s_t* new_u) const {
+                            N_Vector u, int* new_u) const {
     // Evaluate f_fwd_
     copy_n(m.iarg, n_in_, m.arg);
     m.arg[iin_] = NV_DATA_S(u);
@@ -438,7 +438,7 @@ namespace casadi {
     jtimes_(m.arg, m.res, m.iw, m.w, 0);
   }
 
-  s_t KinsolInterface::
+  int KinsolInterface::
   psetup_wrapper(N_Vector u, N_Vector uscale, N_Vector fval, N_Vector fscale,
                  void* user_data, N_Vector tmp1, N_Vector tmp2) {
     try {
@@ -463,15 +463,15 @@ namespace casadi {
     if (calc_function(&m, "jac_f_z")) casadi_error("Jacobian calculation failed");
 
     // Get sparsity and non-zero elements
-    //const s_t* colind = sp_jac_.colind();
-    //s_t ncol = sp_jac_.size2();
-    //const s_t* row = sp_jac_.row();
+    //const int* colind = sp_jac_.colind();
+    //int ncol = sp_jac_.size2();
+    //const int* row = sp_jac_.row();
 
     // Factorize the linear system
     if (linsol_.nfact(m.jac)) casadi_error("'nfact' failed");
   }
 
-  s_t KinsolInterface::psolve_wrapper(N_Vector u, N_Vector uscale, N_Vector fval,
+  int KinsolInterface::psolve_wrapper(N_Vector u, N_Vector uscale, N_Vector fval,
                                      N_Vector fscale, N_Vector v, void* user_data, N_Vector tmp) {
     try {
       casadi_assert_dev(user_data);
@@ -490,7 +490,7 @@ namespace casadi {
     if (linsol_.solve(m.jac, NV_DATA_S(v))) casadi_error("'solve' failed");
   }
 
-  s_t KinsolInterface::lsetup(KINMem kin_mem) {
+  int KinsolInterface::lsetup(KINMem kin_mem) {
     try {
       auto m = to_mem(kin_mem->kin_lmem);
       auto& s = m->self;
@@ -510,7 +510,7 @@ namespace casadi {
     }
   }
 
-  s_t KinsolInterface::
+  int KinsolInterface::
   lsolve(KINMem kin_mem, N_Vector x, N_Vector b, double *sJpnorm, double *sFdotJp) {
     try {
       auto m = to_mem(kin_mem->kin_lmem);
@@ -529,7 +529,7 @@ namespace casadi {
       s.psolve(*m, u, uscale, fval, fscale, x, tmp1);
 
       // Calculate residuals
-      s_t flag = KINSpilsAtimes(kin_mem, x, b);
+      int flag = KINSpilsAtimes(kin_mem, x, b);
       if (flag) return flag;
       *sJpnorm = N_VWL2Norm(b, fscale);
       N_VProd(b, fscale, b);
@@ -544,7 +544,7 @@ namespace casadi {
   }
 
   void KinsolInterface::
-  ehfun(s_t error_code, const char *module, const char *function,
+  ehfun(int error_code, const char *module, const char *function,
                 char *msg, void *eh_data) {
     try {
       auto m = to_mem(eh_data);
@@ -557,7 +557,7 @@ namespace casadi {
     }
   }
 
-  void KinsolInterface::kinsol_error(const string& module, s_t flag, bool fatal) const {
+  void KinsolInterface::kinsol_error(const string& module, int flag, bool fatal) const {
     // Get the error message
     const char *id, *msg;
     switch (flag) {
@@ -701,7 +701,7 @@ namespace casadi {
     kin_mem->kin_inexact_ls = FALSE;
 
     // Set optional inputs
-    s_t flag = KINSetUserData(m->mem, m);
+    int flag = KINSetUserData(m->mem, m);
     casadi_assert(flag==KIN_SUCCESS, "KINSetUserData");
 
     // Set error handler function

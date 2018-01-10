@@ -373,10 +373,10 @@ namespace casadi {
 
   bool IpoptInterface::
   intermediate_callback(IpoptMemory* m, const double* x, const double* z_L, const double* z_U,
-                        const double* g, const double* lambda, double obj_value, s_t iter,
+                        const double* g, const double* lambda, double obj_value, int iter,
                         double inf_pr, double inf_du, double mu, double d_norm,
                         double regularization_size, double alpha_du, double alpha_pr,
-                        s_t ls_trials, bool full_callback) const {
+                        int ls_trials, bool full_callback) const {
     m->n_iter += 1;
     try {
       m->inf_pr.push_back(inf_pr);
@@ -446,7 +446,7 @@ namespace casadi {
   void IpoptInterface::
   finalize_solution(IpoptMemory* m, const double* x, const double* z_L, const double* z_U,
                     const double* g, const double* lambda, double obj_value,
-                    s_t iter_count) const {
+                    int iter_count) const {
     try {
       // Get primal solution
       casadi_copy(x, nx_, m->xk);
@@ -525,8 +525,8 @@ namespace casadi {
     }
   }
 
-  void IpoptInterface::get_nlp_info(IpoptMemory* m, s_t& nx, s_t& ng,
-                                    s_t& nnz_jac_g, s_t& nnz_h_lag) const {
+  void IpoptInterface::get_nlp_info(IpoptMemory* m, int& nx, int& ng,
+                                    int& nnz_jac_g, int& nnz_h_lag) const {
     try {
       // Number of variables
       nx = nx_;
@@ -545,14 +545,14 @@ namespace casadi {
     }
   }
 
-  s_t IpoptInterface::get_number_of_nonlinear_variables() const {
+  int IpoptInterface::get_number_of_nonlinear_variables() const {
     try {
       if (!pass_nonlinear_variables_) {
         // No Hessian has been interfaced
         return -1;
       } else {
         // Number of variables that appear nonlinearily
-        s_t nv = 0;
+        int nv = 0;
         for (auto&& i : nl_ex_) if (i) nv++;
         return nv;
       }
@@ -563,9 +563,9 @@ namespace casadi {
   }
 
   bool IpoptInterface::
-  get_list_of_nonlinear_variables(s_t num_nonlin_vars, s_t* pos_nonlin_vars) const {
+  get_list_of_nonlinear_variables(int num_nonlin_vars, int* pos_nonlin_vars) const {
     try {
-      for (s_t i=0; i<nl_ex_.size(); ++i) {
+      for (int i=0; i<nl_ex_.size(); ++i) {
         if (nl_ex_[i]) *pos_nonlin_vars++ = i;
       }
       return true;
@@ -577,10 +577,10 @@ namespace casadi {
 
   bool IpoptInterface::
   get_var_con_metadata(map<string, vector<string> >& var_string_md,
-                       map<string, vector<s_t> >& var_integer_md,
+                       map<string, vector<int> >& var_integer_md,
                        map<string, vector<double> >& var_numeric_md,
                        map<string, vector<string> >& con_string_md,
-                       map<string, vector<s_t> >& con_integer_md,
+                       map<string, vector<int> >& con_integer_md,
                        map<string, vector<double> >& con_numeric_md) const {
     for (auto&& op : var_string_md_) var_string_md[op.first] = op.second;
     for (auto&& op : var_integer_md_) var_integer_md[op.first] = op.second;

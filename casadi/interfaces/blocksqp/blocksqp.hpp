@@ -102,9 +102,9 @@ namespace casadi {
     double **hess1;  // [blockwise] first Hessian approximation
     double **hess2;  // [blockwise] second Hessian approximation (convexified)
     double *hess_lag;  // nonzero elements of Hessian (length)
-    s_t *hessIndRow;  // row indices (length)
-    s_t *hessIndCol;  // indices to first entry of columns (nCols+1)
-    s_t *hessIndLo;  // Indices to first entry of lower triangle (including diagonal) (nCols)
+    int *hessIndRow;  // row indices (length)
+    int *hessIndCol;  // indices to first entry of columns (nCols+1)
+    int *hessIndLo;  // Indices to first entry of lower triangle (including diagonal) (nCols)
 
     /*
      * Variables for QP solver
@@ -132,6 +132,8 @@ namespace casadi {
     double* delta_h; // inertia correction (filter line search w indef Hessian)
     double* trial_xk;  // new trial iterate (for line search)
     std::set< std::pair<double, double> > filter; // Filter contains pairs (constrVio, objective)
+
+    std::vector<int> colind, row;
 
     // Temporary memory
     double* jac;

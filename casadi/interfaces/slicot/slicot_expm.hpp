@@ -47,7 +47,7 @@ namespace casadi {
 
     double *A, *H;
     double *dwork;
-    s_t* iwork;
+    int* iwork;
 
     /// Constructor
     SlicotExpmMemory() {}

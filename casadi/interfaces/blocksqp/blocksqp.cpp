@@ -504,6 +504,9 @@ namespace casadi {
       m->qpoases_mem = new QpoasesMemory();
       m->qpoases_mem->linsol_plugin = linsol_plugin_;
     }
+
+    m->colind.resize(Asp_.size2()+1);
+    m->row.resize(Asp_.nnz());
     return 0;
   }
 
@@ -538,7 +541,7 @@ namespace casadi {
     m->gammaMat = w; w += nx_*hess_memsize_;
     m->jac_g = w; w += Asp_.nnz();
     m->hess_lag = w; w += nnz_H_;
-    m->hessIndRow = iw; iw += nnz_H_ + (nx_+1) + nx_;
+    m->hessIndRow = reinterpret_cast<int*>(iw); iw += nnz_H_ + (nx_+1) + nx_;
     m->noUpdateCounter = iw; iw += nblocks_;
 
     // First Hessian
@@ -2006,8 +2009,10 @@ namespace casadi {
     if (matricesChanged) {
       if (m->A) delete m->A;
       m->A = 0;
-      s_t* jacIndRow = const_cast<s_t*>(Asp_.row());
-      s_t* jacIndCol = const_cast<s_t*>(Asp_.colind());
+      copy_vector(Asp_.colind(), m->colind);
+      copy_vector(Asp_.row(), m->row);
+      int* jacIndRow = get_ptr(m->row);
+      int* jacIndCol = get_ptr(m->colind);
       m->A = new qpOASES::SparseMatrix(ng_, nx_,
                                        jacIndRow, jacIndCol, m->jac_g);
     }
@@ -2032,7 +2037,7 @@ namespace casadi {
 
     // Other variables for qpOASES
     double cpuTime = matricesChanged ? max_time_qp_ : 0.1*max_time_qp_;
-    s_t maxIt = matricesChanged ? max_it_qp_ : 0.1*max_it_qp_;
+    int maxIt = matricesChanged ? max_it_qp_ : 0.1*max_it_qp_;
     qpOASES::SolutionAnalysis solAna;
     qpOASES::returnValue ret;
 
@@ -2362,7 +2367,7 @@ namespace casadi {
     m->gamma = m->gammaMat;
 
     // Scalars that are used in various Hessian update procedures
-    casadi_fill(m->noUpdateCounter, nblocks_, -1);
+    casadi_fill(m->noUpdateCounter, nblocks_, s_t(-1));
 
     // For selective sizing: for each block save sTs, sTs_, sTy, sTy_
     casadi_fill(m->delta_norm, nblocks_, 1.);

@@ -339,6 +339,17 @@ namespace casadi {
     return as_string();
   }
 
+  vector<int> GenericType::to_int_type_vector() const {
+    casadi_assert(is_int_vector(), "type mismatch");
+    std::vector<s_t> ret = as_int_vector();
+    std::vector<int> r(ret.size());
+    for (s_t i=0;i<ret.size();++i) {
+      casadi_assert(ret[i]<=std::numeric_limits<int>::max(), "Integer overflow detected.");
+      r[i] = ret[i];
+    }
+    return r;
+  }
+
   vector<s_t> GenericType::to_int_vector() const {
     casadi_assert(is_int_vector(), "type mismatch");
     return as_int_vector();

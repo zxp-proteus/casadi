@@ -151,7 +151,7 @@ namespace casadi {
     return "Unknown";
   }
 
-  s_t GurobiInterface::
+  r_t GurobiInterface::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<GurobiMemory*>(mem);
 
@@ -183,9 +183,9 @@ namespace casadi {
 
     // Temporary memory
     double *val=w; w+=nx_;
-    s_t *ind=iw; iw+=nx_;
-    s_t *ind2=iw; iw+=nx_;
-    s_t *tr_ind=iw; iw+=nx_;
+    int *ind=reinterpret_cast<int*>(iw); iw+=nx_;
+    int *ind2=reinterpret_cast<int*>(iw); iw+=nx_;
+    int *tr_ind=reinterpret_cast<int*>(iw); iw+=nx_;
 
     // Greate an empty model
     GRBmodel *model = 0;
@@ -222,11 +222,11 @@ namespace casadi {
 
       // Add quadratic terms
       const s_t *H_colind=H_.colind(), *H_row=H_.row();
-      for (s_t i=0; i<nx_; ++i) {
+      for (int i=0; i<nx_; ++i) {
 
         // Quadratic term nonzero indices
         s_t numqnz = H_colind[1]-H_colind[0];
-        casadi_copy(H_row, numqnz, ind);
+        for (s_t k=0;k<numqnz;++k) ind[k]=H_row[k];
         H_colind++;
         H_row += numqnz;
 
@@ -249,7 +249,7 @@ namespace casadi {
 
       // Add constraints
       const s_t *A_colind=A_.colind(), *A_row=A_.row();
-      casadi_copy(A_colind, nx_, tr_ind);
+      for (s_t k=0;k<nx_;++k) tr_ind[k]=H_row[k];
       for (s_t i=0; i<na_; ++i) {
         // Get bounds
         double lb = lba ? lba[i] : 0., ub = uba ? uba[i] : 0.;
@@ -303,7 +303,7 @@ namespace casadi {
       m->fstats.at("solver").toc();
       m->fstats.at("postprocessing").tic();
 
-      s_t optimstatus;
+      int optimstatus;
       flag = GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimstatus);
       casadi_assert(!flag, GRBgeterrormsg(m->env));
 

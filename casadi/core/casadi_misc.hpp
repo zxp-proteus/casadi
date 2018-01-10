@@ -348,6 +348,25 @@ namespace casadi {
   void applymap(void (*f)(T &), std::vector<T>& comp) {
     std::for_each(comp.begin(), comp.end(), f);
   }
+
+  template<class S, class D>
+  void copy_vector(const std::vector<S>& s, std::vector<D>& d) {
+    casadi_assert(s.size()==d.size(), "Dimension mismatch.");
+    std::copy(s.begin(), s.end(), d.begin());
+  }
+
+  template<class S, class D>
+  void copy_vector(const S* s, std::vector<D>& d) {
+    for (s_t i=0;i<d.size();++i) {
+      d[i] = static_cast<D>(s[i]);
+    }
+  }
+
+  template<class S, class D>
+  void init_vector(std::vector<S>& d, const std::vector<D>& s) {
+    d.resize(s.size());
+    std::copy(s.begin(), s.end(), d.begin());
+  }
 #endif //SWIG
 
   template<typename T>

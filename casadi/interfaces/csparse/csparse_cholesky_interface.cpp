@@ -74,9 +74,13 @@ namespace casadi {
     m->A.nzmax = this->nnz();  // maximum number of entries
     m->A.m = this->nrow(); // number of columns
     m->A.n = this->ncol(); // number of rows
-    m->A.p = const_cast<s_t*>(this->colind()); // row pointers (size n+1)
+    m->colind.resize(m->A.n+1);
+    copy_vector(this->colind(), m->colind);
+    copy_vector(this->row(), m->row);
+    m->row.resize(m->A.nzmax);
+    m->A.p = get_ptr(m->colind); // row pointers (size n+1)
     // or row indices (size nzmax)
-    m->A.i = const_cast<s_t*>(this->row()); // column indices, size nzmax
+    m->A.i = get_ptr(m->row); // column indices, size nzmax
     m->A.x = 0; // numerical values, size nzmax
     m->A.nz = -1; // of entries in triplet matrix, -1 for compressed-row
 
@@ -119,7 +123,7 @@ namespace casadi {
     return 0;
   }
 
-  s_t CSparseCholeskyInterface::
+  r_t CSparseCholeskyInterface::
   solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const {
     auto m = static_cast<CsparseCholMemory*>(mem);
 

@@ -77,10 +77,13 @@ namespace casadi {
     m->fstats["preprocessing"]  = FStats();
     m->fstats["solver"]         = FStats();
     m->fstats["postprocessing"] = FStats();
+
+    m->colind.resize(A_.size2()+1);
+    m->row.resize(A_.nnz());
     return 0;
   }
 
-  s_t ClpInterface::
+  r_t ClpInterface::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<ClpMemory*>(mem);
 
@@ -108,9 +111,12 @@ namespace casadi {
     double* A=w; w += nnz_in(CONIC_A);
     casadi_copy(arg[CONIC_A], nnz_in(CONIC_A), A);
 
+    copy_vector(A_.colind(), m->colind);
+    copy_vector(A_.row(), m->row);
+
     // Create model
     ClpSimplex model;
-    model.loadProblem(A_.size2(), A_.size1(), A_.colind(), A_.row(), A,
+    model.loadProblem(A_.size2(), A_.size1(), get_ptr(m->colind), get_ptr(m->row), A,
                       lbx, ubx, g, lba, uba, nullptr);
 
     m->fstats.at("preprocessing").toc();

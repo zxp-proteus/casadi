@@ -273,7 +273,7 @@ namespace casadi {
   public:
     BonMinMessageHandler(): CoinMessageHandler() { }
     /// Core of the class: the method that directs the messages
-    s_t print() override {
+    int print() override {
       uout() << messageBuffer_ << std::endl;
       return 0;
     }
@@ -392,10 +392,10 @@ namespace casadi {
 
   bool BonminInterface::
   intermediate_callback(BonminMemory* m, const double* x, const double* z_L, const double* z_U,
-                        const double* g, const double* lambda, double obj_value, s_t iter,
+                        const double* g, const double* lambda, double obj_value, int iter,
                         double inf_pr, double inf_du, double mu, double d_norm,
                         double regularization_size, double alpha_du, double alpha_pr,
-                        s_t ls_trials, bool full_callback) const {
+                        int ls_trials, bool full_callback) const {
     m->n_iter += 1;
     try {
       if (verbose_) casadi_message("intermediate_callback started");
@@ -446,7 +446,7 @@ namespace casadi {
         m->res[0] = &ret_double;
 
         fcallback_(m->arg, m->res, m->iw, m->w, 0);
-        s_t ret = static_cast<s_t>(ret_double);
+        int ret = static_cast<int>(ret_double);
 
         m->fstats.at("callback_fun").toc();
         return  !ret;
@@ -548,8 +548,8 @@ namespace casadi {
     }
   }
 
-  void BonminInterface::get_nlp_info(BonminMemory* m, s_t& nx, s_t& ng,
-                                    s_t& nnz_jac_g, s_t& nnz_h_lag) const {
+  void BonminInterface::get_nlp_info(BonminMemory* m, int& nx, int& ng,
+                                    int& nnz_jac_g, int& nnz_h_lag) const {
     try {
       // Number of variables
       nx = nx_;
@@ -568,14 +568,14 @@ namespace casadi {
     }
   }
 
-  s_t BonminInterface::get_number_of_nonlinear_variables() const {
+  int BonminInterface::get_number_of_nonlinear_variables() const {
     try {
       if (!pass_nonlinear_variables_) {
         // No Hessian has been interfaced
         return -1;
       } else {
         // Number of variables that appear nonlinearily
-        s_t nv = 0;
+        int nv = 0;
         for (auto&& i : nl_ex_) if (i) nv++;
         return nv;
       }
@@ -586,7 +586,7 @@ namespace casadi {
   }
 
   bool BonminInterface::
-  get_list_of_nonlinear_variables(s_t num_nonlin_vars, s_t* pos_nonlin_vars) const {
+  get_list_of_nonlinear_variables(int num_nonlin_vars, int* pos_nonlin_vars) const {
     try {
       for (s_t i=0; i<nl_ex_.size(); ++i) {
         if (nl_ex_[i]) *pos_nonlin_vars++ = i;

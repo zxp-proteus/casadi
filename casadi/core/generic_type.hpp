@@ -114,6 +114,7 @@ namespace casadi {
     operator std::string() const { return to_string();}
     operator std::vector<bool>() const { return to_bool_vector();}
     operator std::vector<s_t>() const { return to_int_vector();}
+    operator std::vector<int>() const { return to_int_type_vector();}
     operator std::vector<std::vector<s_t> >() const { return to_int_vector_vector();}
     operator std::vector<double>() const { return to_double_vector();}
     operator std::vector<std::string>() const { return to_string_vector();}
@@ -181,6 +182,7 @@ namespace casadi {
     Function to_function() const;
     std::vector<Function> to_function_vector() const;
     void* to_void_pointer() const;
+    std::vector<int> to_int_type_vector() const;
     ///@}
 
     //! \brief Equality

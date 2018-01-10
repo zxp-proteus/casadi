@@ -31,18 +31,18 @@
 
 extern "C" {
   /// LU-Factorize dense matrix (lapack)
-  void dgetrf_(s_t *m, s_t *n, double *a, s_t *lda, s_t *ipiv, s_t *info);
+  void dgetrf_(int *m, int *n, double *a, int *lda, int *ipiv, int *info);
 
   /// Solve a system of equation using an LU-factorized matrix (lapack)
-  void dgetrs_(char* trans, s_t *n, s_t *nrhs, double *a,
-               s_t *lda, s_t *ipiv, double *b, s_t *ldb, s_t *info);
+  void dgetrs_(char* trans, int *n, int *nrhs, double *a,
+               int *lda, int *ipiv, double *b, int *ldb, int *info);
 
   /// Calculate col and row scaling
-  void dgeequ_(s_t *m, s_t *n, double *a, s_t *lda, double *r, double *c,
-               double *colcnd, double *rowcnd, double *amax, s_t *info);
+  void dgeequ_(int *m, int *n, double *a, int *lda, double *r, double *c,
+               double *colcnd, double *rowcnd, double *amax, int *info);
 
   /// Equilibrate the system
-  void dlaqge_(s_t *m, s_t *n, double *a, s_t *lda, double *r, double *c,
+  void dlaqge_(int *m, int *n, double *a, int *lda, double *r, double *c,
                double *colcnd, double *rowcnd, double *amax, char *equed);
 }
 
@@ -62,7 +62,7 @@ namespace casadi {
     std::vector<double> mat;
 
     /// Pivoting elements
-    std::vector<s_t> ipiv;
+    std::vector<int> ipiv;
 
     /// Col and row scaling
     std::vector<double> r, c;

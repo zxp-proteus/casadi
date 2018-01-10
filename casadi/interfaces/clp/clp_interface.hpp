@@ -51,6 +51,9 @@ namespace casadi {
 
     /// Destructor
     ~ClpMemory();
+
+    std::vector<int> colind, row;
+
   };
 
   /** \brief \pluginbrief{Conic,clp}

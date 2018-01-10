@@ -129,8 +129,8 @@ namespace casadi {
     double * z_U_;
     double * g_;
     double * lambda_;
-    s_t n_;
-    s_t m_;
+    int n_;
+    int m_;
     double obj_value_;
   };
 

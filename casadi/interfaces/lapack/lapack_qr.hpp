@@ -31,17 +31,17 @@
 
 extern "C" {
   /// QR-factorize dense matrix (lapack)
-  void dgeqrf_(s_t *m, s_t *n, double *a, s_t *lda, double *tau,
-               double *work, s_t *lwork, s_t *info);
+  void dgeqrf_(int *m, int *n, double *a, int *lda, double *tau,
+               double *work, int *lwork, int *info);
 
   /// Multiply right hand side with Q-transpose (lapack)
-  void dormqr_(char *side, char *trans, s_t *n, s_t *m, s_t *k, double *a,
-               s_t *lda, double *tau, double *c, s_t *ldc,
-               double *work, s_t *lwork, s_t *info);
+  void dormqr_(char *side, char *trans, int *n, int *m, int *k, double *a,
+               int *lda, double *tau, double *c, int *ldc,
+               double *work, int *lwork, int *info);
 
   /// Solve upper triangular system (lapack)
-  void dtrsm_(char *side, char *uplo, char *transa, char *diag, s_t *m, s_t *n,
-                         double *alpha, double *a, s_t *lda, double *b, s_t *ldb);
+  void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n,
+                         double *alpha, double *a, int *lda, double *b, int *ldb);
 }
 
 /** \defgroup plugin_Linsol_lapackqr
@@ -106,7 +106,7 @@ namespace casadi {
     r_t nfact(void* mem, const double* A) const override;
 
     // Solve the linear system
-    s_t solve_batch(void* mem, const double* A, double* x, s_t nrhs, bool tr) const;
+    r_t solve_batch(void* mem, const double* A, double* x, s_t nrhs, bool tr) const;
 
     // Solve the linear system
     r_t solve(void* mem, const double* A, double* x, s_t nrhs, bool tr) const override;
