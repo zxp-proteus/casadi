@@ -35,7 +35,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_CONIC_SQIC_EXPORT
+  r_t CASADI_CONIC_SQIC_EXPORT
   casadi_register_conic_sqic(Conic::Plugin* plugin) {
     plugin->creator = SqicInterface::creator;
     plugin->name = "sqic";

@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_ROOTFINDER_NLPSOL_EXPORT
+  r_t CASADI_ROOTFINDER_NLPSOL_EXPORT
   casadi_register_rootfinder_nlpsol(Rootfinder::Plugin* plugin) {
     plugin->creator = ImplicitToNlp::creator;
     plugin->name = "nlpsol";

@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_LINSOL_SYMBOLICQR_EXPORT
+  r_t CASADI_LINSOL_SYMBOLICQR_EXPORT
   casadi_register_linsol_symbolicqr(LinsolInternal::Plugin* plugin) {
     plugin->creator = SymbolicQr::creator;
     plugin->name = "symbolicqr";

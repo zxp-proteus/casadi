@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_KNITRO_EXPORT
+  r_t CASADI_NLPSOL_KNITRO_EXPORT
   casadi_register_nlpsol_knitro(Nlpsol::Plugin* plugin) {
     plugin->creator = KnitroInterface::creator;
     plugin->name = "knitro";

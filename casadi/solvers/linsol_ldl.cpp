@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_LINSOL_LDL_EXPORT
+  r_t CASADI_LINSOL_LDL_EXPORT
   casadi_register_linsol_ldl(LinsolInternal::Plugin* plugin) {
     plugin->creator = LinsolLdl::creator;
     plugin->name = "ldl";

@@ -37,7 +37,7 @@ namespace casadi {
   using namespace std;
 
   extern "C"
-  s_t CASADI_CONIC_CPLEX_EXPORT
+  r_t CASADI_CONIC_CPLEX_EXPORT
   casadi_register_conic_cplex(Conic::Plugin* plugin) {
     plugin->creator = CplexInterface::creator;
     plugin->name = "cplex";

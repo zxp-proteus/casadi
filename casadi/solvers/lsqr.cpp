@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_LINSOL_LSQR_EXPORT
+  r_t CASADI_LINSOL_LSQR_EXPORT
   casadi_register_linsol_lsqr(LinsolInternal::Plugin* plugin) {
     plugin->creator = Lsqr::creator;
     plugin->name = "lsqr";

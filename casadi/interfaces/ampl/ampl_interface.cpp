@@ -32,7 +32,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_AMPL_EXPORT
+  r_t CASADI_NLPSOL_AMPL_EXPORT
   casadi_register_nlpsol_ampl(Nlpsol::Plugin* plugin) {
     plugin->creator = AmplInterface::creator;
     plugin->name = "ampl";

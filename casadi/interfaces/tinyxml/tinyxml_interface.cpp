@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_XMLFILE_TINYXML_EXPORT
+  r_t CASADI_XMLFILE_TINYXML_EXPORT
   casadi_register_xmlfile_tinyxml(XmlFileInternal::Plugin* plugin) {
     plugin->creator = TinyXmlInterface::creator;
     plugin->name = "tinyxml";

@@ -34,7 +34,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_INTEGRATOR_IDAS_EXPORT
+  r_t CASADI_INTEGRATOR_IDAS_EXPORT
       casadi_register_integrator_idas(Integrator::Plugin* plugin) {
     plugin->creator = IdasInterface::creator;
     plugin->name = "idas";

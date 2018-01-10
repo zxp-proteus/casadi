@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_CONIC_NLPSOL_EXPORT
+  r_t CASADI_CONIC_NLPSOL_EXPORT
   casadi_register_conic_nlpsol(Conic::Plugin* plugin) {
     plugin->creator = QpToNlp::creator;
     plugin->name = "nlpsol";

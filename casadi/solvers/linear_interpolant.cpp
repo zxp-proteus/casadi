@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_INTERPOLANT_LINEAR_EXPORT
+  r_t CASADI_INTERPOLANT_LINEAR_EXPORT
   casadi_register_interpolant_linear(Interpolant::Plugin* plugin) {
     plugin->creator = LinearInterpolant::creator;
     plugin->name = "linear";

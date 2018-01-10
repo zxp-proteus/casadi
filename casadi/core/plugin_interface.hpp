@@ -88,7 +88,7 @@ namespace casadi {
       typename Derived::Creator creator;
       const char* name;
       const char* doc;
-      s_t version;
+      int version;
       typename Derived::Exposed exposed;
       const Options* options;
       // Constructor
@@ -96,7 +96,7 @@ namespace casadi {
     };
 
     // Plugin registration function
-    typedef s_t (*RegFcn)(Plugin* plugin);
+    typedef r_t (*RegFcn)(Plugin* plugin);
 
     /// Check if a plugin is available or can be loaded
     static bool has_plugin(const std::string& pname, bool verbose=false);
@@ -165,7 +165,7 @@ namespace casadi {
     Plugin plugin;
 
     // Set the fields
-    s_t flag = regfcn(&plugin);
+    r_t flag = regfcn(&plugin);
     casadi_assert_dev(flag==0);
 
     return plugin;

@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_ROOTFINDER_NEWTON_EXPORT
+  r_t CASADI_ROOTFINDER_NEWTON_EXPORT
   casadi_register_rootfinder_newton(Rootfinder::Plugin* plugin) {
     plugin->creator = Newton::creator;
     plugin->name = "newton";

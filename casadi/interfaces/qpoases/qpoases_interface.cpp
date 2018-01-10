@@ -33,7 +33,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_CONIC_QPOASES_EXPORT
+  r_t CASADI_CONIC_QPOASES_EXPORT
   casadi_register_conic_qpoases(Conic::Plugin* plugin) {
     plugin->creator = QpoasesInterface::creator;
     plugin->name = "qpoases";

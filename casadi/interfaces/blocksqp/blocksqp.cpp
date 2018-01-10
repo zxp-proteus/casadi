@@ -31,7 +31,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_BLOCKSQP_EXPORT
+  r_t CASADI_NLPSOL_BLOCKSQP_EXPORT
   casadi_register_nlpsol_blocksqp(Nlpsol::Plugin* plugin) {
     plugin->creator = Blocksqp::creator;
     plugin->name = "blocksqp";

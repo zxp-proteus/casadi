@@ -39,7 +39,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_EXPM_SLICOT_EXPORT
+  r_t CASADI_EXPM_SLICOT_EXPORT
   casadi_register_expm_slicot(Expm::Plugin* plugin) {
     plugin->creator = SlicotExpm::creator;
     plugin->name = "slicot";

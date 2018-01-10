@@ -39,7 +39,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_CONIC_OOQP_EXPORT
+  r_t CASADI_CONIC_OOQP_EXPORT
   casadi_register_conic_ooqp(Conic::Plugin* plugin) {
     plugin->creator = OoqpInterface::creator;
     plugin->name = "ooqp";

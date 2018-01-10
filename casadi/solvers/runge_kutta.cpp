@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_INTEGRATOR_RK_EXPORT
+  r_t CASADI_INTEGRATOR_RK_EXPORT
       casadi_register_integrator_rk(Integrator::Plugin* plugin) {
     plugin->creator = RungeKutta::creator;
     plugin->name = "rk";

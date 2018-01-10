@@ -35,7 +35,7 @@
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_SNOPT_EXPORT
+  r_t CASADI_NLPSOL_SNOPT_EXPORT
   casadi_register_nlpsol_snopt(Nlpsol::Plugin* plugin) {
     plugin->creator = SnoptInterface::creator;
     plugin->name = "snopt";

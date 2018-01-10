@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_LINSOL_QR_EXPORT
+  r_t CASADI_LINSOL_QR_EXPORT
   casadi_register_linsol_qr(LinsolInternal::Plugin* plugin) {
     plugin->creator = LinsolQr::creator;
     plugin->name = "qr";

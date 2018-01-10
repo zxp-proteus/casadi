@@ -39,7 +39,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_SQPMETHOD_EXPORT
+  r_t CASADI_NLPSOL_SQPMETHOD_EXPORT
       casadi_register_nlpsol_sqpmethod(Nlpsol::Plugin* plugin) {
     plugin->creator = Sqpmethod::creator;
     plugin->name = "sqpmethod";

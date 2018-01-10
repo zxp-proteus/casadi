@@ -34,7 +34,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_WORHP_EXPORT
+  r_t CASADI_NLPSOL_WORHP_EXPORT
   casadi_register_nlpsol_worhp(Nlpsol::Plugin* plugin) {
     plugin->creator = WorhpInterface::creator;
     plugin->name = "worhp";

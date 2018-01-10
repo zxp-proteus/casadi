@@ -31,7 +31,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_LINSOL_MA27_EXPORT
+  r_t CASADI_LINSOL_MA27_EXPORT
   casadi_register_linsol_ma27(LinsolInternal::Plugin* plugin) {
     plugin->creator = Ma27Interface::creator;
     plugin->name = "ma27";

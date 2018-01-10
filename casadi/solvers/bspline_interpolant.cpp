@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_INTERPOLANT_BSPLINE_EXPORT
+  r_t CASADI_INTERPOLANT_BSPLINE_EXPORT
   casadi_register_interpolant_bspline(Interpolant::Plugin* plugin) {
     plugin->creator = BSplineInterpolant::creator;
     plugin->name = "bspline";

@@ -30,7 +30,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_LINSOL_LAPACKLU_EXPORT
+  r_t CASADI_LINSOL_LAPACKLU_EXPORT
   casadi_register_linsol_lapacklu(LinsolInternal::Plugin* plugin) {
     plugin->creator = LapackLu::creator;
     plugin->name = "lapacklu";

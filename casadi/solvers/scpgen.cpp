@@ -36,7 +36,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_NLPSOL_SCPGEN_EXPORT
+  r_t CASADI_NLPSOL_SCPGEN_EXPORT
       casadi_register_nlpsol_scpgen(Nlpsol::Plugin* plugin) {
     plugin->creator = Scpgen::creator;
     plugin->name = "scpgen";

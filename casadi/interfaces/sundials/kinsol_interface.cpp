@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_ROOTFINDER_KINSOL_EXPORT
+  r_t CASADI_ROOTFINDER_KINSOL_EXPORT
   casadi_register_rootfinder_kinsol(Rootfinder::Plugin* plugin) {
     plugin->creator = KinsolInterface::creator;
     plugin->name = "kinsol";

@@ -29,7 +29,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_CONIC_HPMPC_EXPORT
+  r_t CASADI_CONIC_HPMPC_EXPORT
   casadi_register_conic_hpmpc(Conic::Plugin* plugin) {
     plugin->creator = HpmpcInterface::creator;
     plugin->name = "hpmpc";

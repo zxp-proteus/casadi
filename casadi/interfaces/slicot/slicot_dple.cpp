@@ -39,7 +39,7 @@ using namespace std;
 namespace casadi {
 
   extern "C"
-  s_t CASADI_DPLE_SLICOT_EXPORT
+  r_t CASADI_DPLE_SLICOT_EXPORT
   casadi_register_dple_slicot(Dple::Plugin* plugin) {
     plugin->creator = SlicotDple::creator;
     plugin->name = "slicot";

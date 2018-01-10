@@ -41,7 +41,7 @@ using namespace std;
 
 namespace casadi {
   extern "C"
-  s_t CASADI_NLPSOL_IPOPT_EXPORT
+  r_t CASADI_NLPSOL_IPOPT_EXPORT
   casadi_register_nlpsol_ipopt(Nlpsol::Plugin* plugin) {
     plugin->creator = IpoptInterface::creator;
     plugin->name = "ipopt";

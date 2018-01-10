@@ -40,7 +40,7 @@ using namespace std;
 
 namespace casadi {
   extern "C"
-  s_t CASADI_NLPSOL_BONMIN_EXPORT
+  r_t CASADI_NLPSOL_BONMIN_EXPORT
   casadi_register_nlpsol_bonmin(Nlpsol::Plugin* plugin) {
     plugin->creator = BonminInterface::creator;
     plugin->name = "bonmin";
