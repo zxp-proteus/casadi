@@ -113,7 +113,7 @@ namespace casadi {
   }
 
   ConstantMX* ConstantMX::create(const Sparsity& sp, int val) {
-    return create(static_cast<s_t>(val));
+    return create(sp, static_cast<s_t>(val));
   }
 
   ConstantMX* ConstantMX::create(const Sparsity& sp, s_t val) {

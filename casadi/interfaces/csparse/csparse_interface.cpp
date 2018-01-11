@@ -72,10 +72,12 @@ namespace casadi {
     m->A.nzmax = this->nnz();  // maximum number of entries
     m->A.m = this->nrow(); // number of rows
     m->A.n = this->ncol(); // number of columns
+    m->colind.resize(this->ncol()+1);
+    m->row.resize(this->nnz());
     copy_vector(this->colind(), m->colind);
     copy_vector(this->row(), m->row);
-    m->row.resize(m->A.nzmax);
     m->A.p = get_ptr(m->colind); // row pointers (size n+1)
+    m->A.i = get_ptr(m->row); // row pointers (size n+1)
     m->A.x = 0; // numerical values, size nzmax
     m->A.nz = -1; // of entries in triplet matrix, -1 for compressed-column
 
