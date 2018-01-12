@@ -94,7 +94,7 @@ namespace casadi {
     const s_t* row = this->row();
 
     // Get actual nonzeros
-    s_t nnz=0;
+    int nnz=0;
     for (s_t cc=0; cc<ncol; ++cc) {
       for (s_t el=colind[cc]; el<colind[cc+1]; ++el) {
         s_t rr=row[el];
@@ -110,12 +110,12 @@ namespace casadi {
     m->nnz = nnz;
 
     // Order of the matrix
-    s_t N = this->ncol();
+    int N = this->ncol();
 
     // Symbolic factorization (MA27AD)
-    s_t LIW = m->iw.size();
-    s_t iflag = 0;
-    s_t info[20];
+    int LIW = m->iw.size();
+    int iflag = 0;
+    int info[20];
     double ops;
     ma27ad_(&N, &nnz, get_ptr(m->irn), get_ptr(m->jcn), &m->iw[0], &LIW,
             get_ptr(m->ikeep), get_ptr(m->iw1), &m->nsteps, &iflag, m->icntl, m->cntl,
@@ -136,7 +136,7 @@ namespace casadi {
     if (liw_min > m->iw.size()) m->iw.resize(liw_min);
 
     // Numerical factorization (MA27BD)
-    s_t LA = m->nz.size();
+    int LA = m->nz.size();
     LIW = m->iw.size();
     ma27bd_(&N, &nnz, get_ptr(m->irn), get_ptr(m->jcn), get_ptr(m->nz),
            &LA, get_ptr(m->iw), &LIW, get_ptr(m->ikeep), &m->nsteps,
@@ -177,9 +177,9 @@ namespace casadi {
     auto m = static_cast<Ma27Memory*>(mem);
 
     // Solve for each right-hand-side
-    s_t N = this->ncol();
-    s_t LA = m->nz.size();
-    s_t LIW = m->iw.size();
+    int N = this->ncol();
+    int LA = m->nz.size();
+    int LIW = m->iw.size();
     for (s_t k=0; k<nrhs; ++k) {
       ma27cd_(&N, get_ptr(m->nz), &LA, get_ptr(m->iw), &LIW, get_ptr(m->w),
               &m->maxfrt, x, get_ptr(m->iw1), &m->nsteps, m->icntl, m->cntl);
