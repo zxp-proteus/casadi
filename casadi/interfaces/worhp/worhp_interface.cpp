@@ -131,7 +131,7 @@ namespace casadi {
     alloc_w(nx_); // for fetching diagonal entries form Hessian
   }
 
-  void worhp_disp(s_t mode, const char message[]) {
+  void worhp_disp(int mode, const char message[]) {
     if (mode & WORHP_PRINT_MESSAGE) {
       uout() << message << std::endl;
     }
@@ -152,7 +152,7 @@ namespace casadi {
     WorhpPreInit(&m->worhp_o, &m->worhp_w, &m->worhp_p, &m->worhp_c);
 
     // Initialize parameters to default values
-    s_t status;
+    int status;
     InitParams(&status, &m->worhp_p);
 
     // Pass boolean parameters
