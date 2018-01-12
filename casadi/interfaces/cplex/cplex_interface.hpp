@@ -53,7 +53,7 @@ namespace casadi {
     std::vector<char> sense;
 
     /// Coefficients of matrix A (constraint Jacobian)
-    std::vector<s_t> matcnt;
+    std::vector<int> matcnt;
 
     /// Right-hand side of constraints
     std::vector<double> rhs;
@@ -62,17 +62,19 @@ namespace casadi {
     std::vector<double> rngval;
 
     /// Coefficients of matrix H (objective Hessian)
-    std::vector<s_t> qmatcnt;
+    std::vector<int> qmatcnt;
 
     /// Storage for basis info of primal variables
-    std::vector<s_t> cstat;
+    std::vector<int> cstat;
 
     /// Storage for basis info of slack variables
-    std::vector<s_t> rstat;
+    std::vector<int> rstat;
 
     /// CPLEX environment
     CPXENVptr env;
     CPXLPptr lp;
+
+    std::vector<int> a_colind, a_row, h_colind, h_row;
 
     /// Constructor
     CplexMemory();

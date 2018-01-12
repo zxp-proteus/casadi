@@ -144,7 +144,7 @@ namespace casadi {
     auto m = static_cast<CplexMemory*>(mem);
 
     // Start CPLEX
-    s_t status;
+    int status;
     casadi_assert_dev(m->env==0);
     m->env = CPXopenCPLEX(&status);
     if (m->env==0) {
@@ -193,13 +193,13 @@ namespace casadi {
     // Set parameters
     for (auto&& op : opts_) {
       // Get parameter index
-      s_t whichparam;
+      int whichparam;
       if (CPXgetparamnum(m->env, op.first.c_str(), &whichparam)) {
         casadi_error("No such CPLEX parameter: " + op.first);
       }
 
       // Get type of parameter
-      s_t paramtype;
+      int paramtype;
       if (CPXgetparamtype(m->env, whichparam, &paramtype)) {
         casadi_error("CPXgetparamtype failed");
       }
@@ -262,13 +262,23 @@ namespace casadi {
     m->lp = CPXcreateprob(m->env, &status, "QP from CasADi");
     casadi_assert(m->lp!=0, "CPXcreateprob failed");
 
+    m->a_colind.resize(A_.size2()+1);
+    m->a_row.resize(A_.nnz());
+    m->h_colind.resize(H_.size2()+1);
+    m->h_row.resize(H_.nnz());
+
+    copy_vector(A_.colind(), m->a_colind);
+    copy_vector(A_.row(), m->a_row);
+    copy_vector(H_.colind(), m->h_colind);
+    copy_vector(H_.row(), m->h_row);
+
     m->fstats["preprocessing"]  = FStats();
     m->fstats["solver"]         = FStats();
     m->fstats["postprocessing"] = FStats();
     return 0;
   }
 
-  s_t CplexInterface::
+  r_t CplexInterface::
   eval(const double** arg, double** res, s_t* iw, double* w, void* mem) const {
     auto m = static_cast<CplexMemory*>(mem);
 
@@ -335,8 +345,9 @@ namespace casadi {
     }
 
     // Copying objective, constraints, and bounds.
-    const s_t* matbeg = A_.colind();
-    const s_t* matind = A_.row();
+    const int* matbeg = get_ptr(m->a_colind);
+    const int* matind = get_ptr(m->a_row);
+
     const double* matval = A;
     const double* obj = g;
     const double* lb = lbx;
@@ -347,8 +358,8 @@ namespace casadi {
     }
 
     // Preparing coefficient matrix Q
-    const s_t* qmatbeg = H_.colind();
-    const s_t* qmatind = H_.row();
+    const int* qmatbeg = get_ptr(m->h_colind);
+    const int* qmatind = get_ptr(m->h_row);
     const double* qmatval = H;
     if (CPXcopyquad(m->env, m->lp, qmatbeg, get_ptr(m->qmatcnt), qmatind, qmatval)) {
     }
@@ -373,7 +384,7 @@ namespace casadi {
     // Solution
     double f;
     std::vector<double> slack(na_);
-    s_t solstat;
+    int solstat;
 
     if (mip_) {
       // Pass type of variables
