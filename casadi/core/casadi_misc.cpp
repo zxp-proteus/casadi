@@ -51,7 +51,8 @@ namespace casadi {
     double margin = (v[v.size()-1]-v[0])*1e-14;
 
     for (s_t i=2;i<v.size();++i) {
-      double ref = v[0]+(static_cast<double>(i)*(v[v.size()-1]-v[0]))/static_cast<double>(v.size()-1);
+      double ref = v[0]+(static_cast<double>(i)*(v[v.size()-1]-v[0]))/
+        static_cast<double>(v.size()-1);
       if (abs(ref-v[i])>margin) return false;
     }
     return true;

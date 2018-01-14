@@ -796,7 +796,8 @@ namespace casadi {
       print_scalar(stream);
     } else if (is_column()) {
       print_vector(stream);
-    } else if (std::max(size1(), size2())<=10 || static_cast<double>(nnz())/static_cast<double>(numel())>=0.5) {
+    } else if (std::max(size1(), size2())<=10 ||
+        static_cast<double>(nnz())/static_cast<double>(numel())>=0.5) {
       // if "small" or "dense"
       print_dense(stream);
     } else {
@@ -834,17 +835,23 @@ namespace casadi {
 
   template<typename Scalar>
   Matrix<Scalar>::Matrix(double val) :
-      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
+      sparsity_(
+        Sparsity::dense(1, 1)),
+        nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
   }
 
   template<typename Scalar>
   Matrix<Scalar>::Matrix(s_t val) :
-      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
+      sparsity_(
+        Sparsity::dense(1, 1)),
+        nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
   }
 
   template<typename Scalar>
   Matrix<Scalar>::Matrix(int val) :
-      sparsity_(Sparsity::dense(1, 1)), nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
+      sparsity_(
+        Sparsity::dense(1, 1)),
+        nonzeros_(std::vector<Scalar>(1, static_cast<Scalar>(val))) {
   }
 
   template<typename Scalar>
@@ -3347,7 +3354,8 @@ namespace casadi {
                                     order-order_contributions[i],
                                     order_contributions,
                                     current_dx*(x->at(i)-a->at(i)),
-                                    current_denom*static_cast<double>(current_order), current_order+1);
+                                    current_denom*static_cast<double>(current_order),
+                                    current_order+1);
       }
     }
     return result;

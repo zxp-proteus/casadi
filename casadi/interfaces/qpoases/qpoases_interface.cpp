@@ -385,7 +385,8 @@ namespace casadi {
       double* h=w; w += H_.nnz();
       casadi_copy(arg[CONIC_H], H_.nnz(), h);
       if (m->h) delete m->h;
-      m->h = new qpOASES::SymSparseMat(H_.size1(), H_.size2(), get_ptr(m->h_row), get_ptr(m->h_colind), h);
+      m->h = new qpOASES::SymSparseMat(H_.size1(), H_.size2(),
+        get_ptr(m->h_row), get_ptr(m->h_colind), h);
       m->h->createDiagInfo();
 
       // Get linear term
@@ -394,7 +395,8 @@ namespace casadi {
       double* a=w; w += A_.nnz();
       casadi_copy(arg[CONIC_A], A_.nnz(), a);
       if (m->a) delete m->a;
-      m->a = new qpOASES::SparseMatrix(A_.size1(), A_.size2(), get_ptr(m->a_row), get_ptr(m->a_colind), a);
+      m->a = new qpOASES::SparseMatrix(A_.size1(), A_.size2(),
+        get_ptr(m->a_row), get_ptr(m->a_colind), a);
 
       m->fstats.at("preprocessing").toc();
       m->fstats.at("solver").tic();

@@ -954,8 +954,10 @@ namespace casadi {
       }
 
       // Use whatever required less colors if we tried both (with preference to forward mode)
-      double fwd_cost = static_cast<double>(use_fwd ? granularity_row : granularity_col) * sp_w*static_cast<double>(D1.size2());
-      double adj_cost = static_cast<double>(use_fwd ? granularity_col : granularity_row) * (1-sp_w)*static_cast<double>(D2.size2());
+      double fwd_cost = static_cast<double>(use_fwd ? granularity_row : granularity_col) *
+        sp_w*static_cast<double>(D1.size2());
+      double adj_cost = static_cast<double>(use_fwd ? granularity_col : granularity_row) *
+        (1-sp_w)*static_cast<double>(D2.size2());
       use_fwd = fwd_cost <= adj_cost;
       if (verbose_) {
         casadi_message(string(use_fwd ? "Forward" : "Reverse") + " mode chosen "
@@ -1301,7 +1303,8 @@ namespace casadi {
       double best_coloring = numeric_limits<double>::infinity();
 
       // Test forward mode first?
-      bool test_fwd_first = allow_forward && w*static_cast<double>(A.size1()) <= (1-w)*static_cast<double>(A.size2());
+      bool test_fwd_first = allow_forward && w*static_cast<double>(A.size1()) <=
+        (1-w)*static_cast<double>(A.size2());
       s_t mode_fwd = test_fwd_first ? 0 : 1;
 
       // Test both coloring modes
@@ -2011,7 +2014,8 @@ namespace casadi {
 
     // Heuristic 2: Jac calculated via reverse mode likely cheaper
     double w = ad_weight();
-    if (enable_reverse_ && jac_penalty_*(1-w)*static_cast<double>(nnz_out())<w*static_cast<double>(nfwd))
+    if (enable_reverse_ &&
+        jac_penalty_*(1-w)*static_cast<double>(nnz_out())<w*static_cast<double>(nfwd))
       return true;
 
     return false;
@@ -2026,7 +2030,8 @@ namespace casadi {
 
     // Heuristic 2: Jac calculated via forward mode likely cheaper
     double w = ad_weight();
-    if ((enable_forward_ || enable_fd_) && jac_penalty_*w*static_cast<double>(nnz_in())<(1-w)*static_cast<double>(nadj))
+    if ((enable_forward_ || enable_fd_) &&
+        jac_penalty_*w*static_cast<double>(nnz_in())<(1-w)*static_cast<double>(nadj))
       return true;
 
     return false;
