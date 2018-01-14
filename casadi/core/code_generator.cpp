@@ -327,6 +327,8 @@ namespace casadi {
     // Consistency check
     casadi_assert_dev(current_indent_ == 0);
 
+    s << "typedef signed long long int s_t;" << endl;
+
     // Prefix internal symbols to avoid symbol collisions
     s << "/* How to prefix internal symbols */\n"
       << "#ifdef CODEGEN_PREFIX\n"
