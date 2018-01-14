@@ -75,6 +75,7 @@ namespace casadi {
     m->A.m = this->nrow(); // number of columns
     m->A.n = this->ncol(); // number of rows
     m->colind.resize(m->A.n+1);
+    m->row.resize(this->nnz());
     copy_vector(this->colind(), m->colind);
     copy_vector(this->row(), m->row);
     m->row.resize(m->A.nzmax);
@@ -104,7 +105,6 @@ namespace casadi {
 
   r_t CSparseCholeskyInterface::nfact(void* mem, const double* A) const {
     auto m = static_cast<CsparseCholMemory*>(mem);
-
     // Set the nonzeros of the matrix
     m->A.x = const_cast<double*>(A);
 
