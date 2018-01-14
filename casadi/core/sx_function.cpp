@@ -397,6 +397,8 @@ namespace casadi {
       }
     }
 
+    worksize_ = worksize;
+
     if (verbose_) {
       if (live_variables) {
         casadi_message("Using live variables: work array is " + str(worksize_)
@@ -405,8 +407,6 @@ namespace casadi {
         casadi_message("Live variables disabled.");
       }
     }
-
-    worksize_ = worksize;
 
     // Allocate work vectors (symbolic/numeric)
     alloc_w(worksize_);
