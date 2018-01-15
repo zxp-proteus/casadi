@@ -265,7 +265,7 @@ namespace casadi {
 
     // Function prototype
     if (this->cpp) s << "extern \"C\"\n"; // C linkage
-    s << "void mexFunction(s_t resc, mxArray *resv[], s_t argc, const mxArray *argv[]) {"
+    s << "void mexFunction(int resc, mxArray *resv[], int argc, const mxArray *argv[]) {"
       << endl;
 
     // Create a buffer
@@ -276,7 +276,7 @@ namespace casadi {
     s << "  char buf[" << (buf_len+1) << "];\n";
 
     // Read string argument
-    s << "  s_t buf_ok = --argc >= 0 && !mxGetString(*argv++, buf, sizeof(buf));\n";
+    s << "  int buf_ok = --argc >= 0 && !mxGetString(*argv++, buf, sizeof(buf));\n";
 
     // Create switch
     s << "  if (!buf_ok) {\n"
@@ -300,7 +300,7 @@ namespace casadi {
   }
 
   void CodeGenerator::generate_main(std::ostream &s) const {
-    s << "s_t main(s_t argc, char* argv[]) {\n";
+    s << "int main(int argc, char* argv[]) {\n";
 
     // Create switch
     s << "  if (argc<2) {\n"
