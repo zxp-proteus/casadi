@@ -309,12 +309,12 @@ branches:
     - /.*appveyor.*/
 
 before_install:
+  - shell_session_update() { :; } # Workaround for travis-ci/travis-ci#6522
   - export casadi_build_flags="-DWITH_COMMON=ON "
   - pushd ../../ && git clone https://github.com/casadi/testbot.git
   - pushd testbot && source recipes/setup.sh && popd
   - |
     if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      shell_session_update() { :; } # Workaround for travis-ci/travis-ci#6522
       brew update
       brew tap homebrew/science
       brew outdated swig ; brew install swig
