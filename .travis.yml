@@ -318,8 +318,18 @@ before_install:
   - export casadi_build_flags="-DWITH_COMMON=ON "
   - pushd ../../ && git clone https://github.com/casadi/testbot.git
   - pushd testbot && source recipes/setup.sh && popd
+  - |
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      shell_session_update() { :; } # Workaround for travis-ci/travis-ci#6522
+      brew update
+      brew tap homebrew/science
+      brew outdated swig ; brew install swig
+    else
+      sudo apt-get install p7zip-full -y
+      sudo apt-get update -qq
+      sudo apt-get install -q -y binutils gcc g++ gfortran git cmake liblapack-dev liblapack3 libblas3 coinor-libipopt-dev libmumps-seq-dev libxml2-dev
+    fi
   - python_setup
-  - sudo apt-get install p7zip-full -y
   - |
     if [ $NEEDMATLAB ]
     then
@@ -340,8 +350,7 @@ before_install:
   - slurp worhp
   - slurp slicot
   - popd
-  - sudo apt-get update -qq
-  - sudo apt-get install -q -y binutils gcc g++ gfortran git cmake liblapack-dev liblapack3 libblas3 coinor-libipopt-dev libmumps-seq-dev libxml2-dev
+
   - pip install github3.py
  
 after_failure:
