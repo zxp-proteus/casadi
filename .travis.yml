@@ -14,8 +14,8 @@ env:
     - NUMPYVERSION=1.11
 
 before_script:
-  - set -e
-  - set -o pipefail  # otherwise, piping with grep discards exit statuses
+  #- set -e
+  #- set -o pipefail  # otherwise, piping with grep discards exit statuses
 
 language: generic
 
