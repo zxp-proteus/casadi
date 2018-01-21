@@ -236,6 +236,7 @@ matrix:
           #fi
           fi
     - os: osx
+      osx_image: xcode7.3
       env: TESTMODE=minimal SLURP_OS=osx
       compiler: clang
       script:
